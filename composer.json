@@ -2,6 +2,7 @@
     "name": "foxman/phpcios" ,
     "description": "CIOS For PHP" ,
     "homepage": "http://image.intervention.io/" ,
+    "keywords": ["CIOS"],
     "type": "library" ,
     "license": "LGPL" ,
     "authors": [
@@ -10,8 +11,12 @@
             "email": "lin.vladimir@gmail.com"
         }
     ],
-    "minimum-stability": "dev" ,
-    "require": { } ,
+    "minimum-stability": "stable" ,
+    "require": {
+        "php": ">=7.2.0",
+    },
+    "require-dev": {
+    },
     "autoload": {
         "psr-4": {
             "CIOS\\": "src/"
