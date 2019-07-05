@@ -4,7 +4,7 @@
     "homepage": "http://image.intervention.io/" ,
     "keywords": ["CIOS"],
     "type": "library" ,
-    "license": "LGPL" ,
+    "license": "GPL" ,
     "authors": [
         {
             "name": "foxman",
