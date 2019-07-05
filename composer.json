@@ -1,15 +1,16 @@
 {
-    "name": "foxman/phpcios",
-    "description": "CIOS For PHP",
-    "type": "library",
-    "license": "LGPL",
+    "name": "foxman/phpcios" ,
+    "description": "CIOS For PHP" ,
+    "homepage": "http://image.intervention.io/" ,
+    "type": "library" ,
+    "license": "LGPL" ,
     "authors": [
         {
             "name": "foxman",
             "email": "lin.vladimir@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "dev" ,
     "require": {} ,
     "autoload": {
         "psr-4": {
