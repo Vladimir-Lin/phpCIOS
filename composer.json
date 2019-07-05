@@ -1,7 +1,7 @@
 {
     "name": "foxman/phpcios" ,
     "description": "CIOS For PHP" ,
-    "homepage": "http://image.intervention.io/" ,
+    "homepage": "https://github.com/Vladimir-Lin/phpCIOS" ,
     "keywords": ["CIOS"],
     "type": "library" ,
     "license": "MIT" ,
