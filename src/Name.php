@@ -2,7 +2,7 @@
 
 namespace CIOS ;
 
-class Name
+class Name extends Columns
 {
 
 public $Id                ;
@@ -30,25 +30,25 @@ public $Usages    = array (
 
 function __construct()
 {
-  $this -> clear ( )  ;
+  parent::__construct ( ) ;
+  $this -> clear      ( ) ;
 }
 
 function __destruct()
 {
-  unset ( $this -> Columns ) ;
+  parent::__destruct ( ) ;
 }
 
 public function clear()
 {
-  $this -> Id        = 0         ;
-  $this -> Uuid      = 0         ;
-  $this -> Locality  = 0         ;
-  $this -> Priority  = 0         ;
-  $this -> Relevance = 0         ;
-  $this -> Flags     = 0         ;
-  $this -> Length    = 0         ;
-  $this -> Name      = ""        ;
-  $this -> Columns   = array ( ) ;
+  $this -> Id        = 0  ;
+  $this -> Uuid      = 0  ;
+  $this -> Locality  = 0  ;
+  $this -> Priority  = 0  ;
+  $this -> Relevance = 0  ;
+  $this -> Flags     = 0  ;
+  $this -> Length    = 0  ;
+  $this -> Name      = "" ;
 }
 
 public function assign($Item)
@@ -95,17 +95,6 @@ public function Items( $S = "," )
   $L = $this -> JoinItems  ( $X , $S ) ;
   unset                    ( $X      ) ;
   return $L                            ;
-}
-
-public function ClearColumns()
-{
-  unset ( $this -> Columns )     ;
-  $this -> Columns   = array ( ) ;
-}
-
-public function AddColumn ( $C )
-{
-  array_push ( $this -> Columns , $C ) ;
 }
 
 public function isFlag($Mask)
