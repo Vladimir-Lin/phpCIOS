@@ -26,17 +26,26 @@ public function Connect ( $Host )
 
 public function Close ( )
 {
-  return $this -> SQL -> close ( ) ;
+  if ( is_a ( $this -> SQL , "mysqli" ) ) {
+    return $this -> SQL -> close ( )      ;
+  }                                       ;
+  return false                            ;
 }
 
 public function ConnectionError ( )
 {
-  $DB -> SQL -> connect_error ;
+  if ( is_a ( $this -> SQL , "mysqli" ) ) {
+    return $this -> SQL -> connect_error  ;
+  }                                       ;
+  return ""                               ;
 }
 
 public function Query ( $CMD )
 {
-  return $this -> SQL -> query ( $CMD ) ;
+  if ( is_a ( $this -> SQL , "mysqli" ) ) {
+    return $this -> SQL -> query ( $CMD ) ;
+  }                                       ;
+  return false                            ;
 }
 
 public function Queries($CMDs)
@@ -50,14 +59,17 @@ public function Queries($CMDs)
 
 public function Prepare($CMD)
 {
-  return $this -> SQL -> prepare ( $CMD ) ;
+  if ( is_a ( $this -> SQL , "mysqli" ) )   {
+    return $this -> SQL -> prepare ( $CMD ) ;
+  }                                         ;
+  return false                              ;
 }
 
-public function hasResult ( $q )
+public function hasResult ( $qq )
 {
-  if ( ! $q                  ) return false ;
-  if (   $q -> num_rows <= 0 ) return false ;
-  return true                               ;
+  if ( ! $qq                  ) return false ;
+  if (   $qq -> num_rows <= 0 ) return false ;
+  return true                                ;
 }
 
 public function OrderBy($Item,$Sort)
@@ -80,10 +92,10 @@ public function OrderByDesc($Item)
 
 public function Limit($SID,$CNT)
 {
-  if ( strlen ( $CNT ) <= 0 )  {
-    return "limit {$SID}"      ;
-  }                            ;
-  return   "limit {$SID},$CNT" ;
+  if ( strlen ( $CNT ) <= 0 )    {
+    return "limit {$SID}"        ;
+  }                              ;
+  return   "limit {$SID} , $CNT" ;
 }
 
 public function LimitFirst()
@@ -107,8 +119,7 @@ public function FetchUuids($qq,$UU)
 {
   if ( $this -> hasResult ( $qq ) )                    {
     while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) ) {
-      $UV = $rr [ 0 ]                                  ;
-      array_push ( $UU , $UV )                         ;
+      array_push ( $UU , $rr [ 0 ] )                   ;
     }                                                  ;
   }                                                    ;
   return $UU                                           ;
@@ -118,10 +129,9 @@ public function ObtainUuids($QQ)
 {
   $UU  = array               (           ) ;
   $qq  = $this -> Query      ( $QQ       ) ;
+  if ( $qq === false ) return $UU          ;
   return $this -> FetchUuids ( $qq , $UU ) ;
 }
-
-/////////////////////////////////////////////////////////
 
 public function LastUuid ( $Table , $Item , $Heading )
 {
@@ -138,7 +148,7 @@ public function LastUuid ( $Table , $Item , $Heading )
     return $U                                     ;
   }                                               ;
   /////////////////////////////////////////////////
-  $Q = "select count(*) from " . $Table . " ;"    ;
+  $Q = "select count(*) from {$Table} ;"          ;
   $q = $this -> Query ( $Q )                      ;
   if ( $q -> num_rows > 0 )                       {
     $N = $q -> fetch_array  ( MYSQLI_BOTH )       ;
@@ -152,16 +162,12 @@ public function LastUuid ( $Table , $Item , $Heading )
   return $U                                       ;
 }
 
-/////////////////////////////////////////////////////////
-
 public function AddUuid ( $Table , $U , $T )
 {
-  $Q = "insert into " . $Table . " (`uuid`,`type`,`used`) " .
-       "values (" . (string) $U . "," . $T . ",1) ;"        ;
-  return $this -> Query ( $Q )                              ;
+  $QQ = "insert into {$Table} (`uuid`,`type`,`used`) " .
+        "values ( {$U} , {$T} , 1 ) ;"                 ;
+  return $this -> Query ( $QQ )                        ;
 }
-
-/////////////////////////////////////////////////////////
 
 public function AppendUuid ( $Table , $U )
 {
@@ -176,58 +182,44 @@ public function GetLast ( $Table , $Item , $Heading )
   return "0"                                           ;
 }
 
-/////////////////////////////////////////////////////////
-
 public function UnusedUuid ( $Table , $Item = "`uuid`" )
 {
-  $Q = "select " . $Item . " from " . $Table           .
-       " where `used` = 0 order by " . $Item . " asc " .
-       "limit 0,1 ;"                                   ;
-  $q = $this -> Query        ( $Q          )           ;
-  $N = $q    -> fetch_array  ( MYSQLI_BOTH )           ;
-  return $N [ 0 ]                                      ;
+  $QQ = "select {$Item} from {$Table}"          .
+       " where `used` = 0 order by {$Item} asc" .
+       " limit 0,1 ;"                           ;
+  $qq = $this -> Query        ( $QQ         )   ;
+  $NN = $qq   -> fetch_array  ( MYSQLI_BOTH )   ;
+  return $NN [ 0 ]                              ;
 }
-
-/////////////////////////////////////////////////////////
 
 public function UseUuid ( $Table , $U )
 {
   return $this -> UuidUsage ( $Table , $U , 1 ) ;
 }
 
-/////////////////////////////////////////////////////////
-
 public function UselessUuid ( $Table , $U )
 {
   return $this -> UuidUsage ( $Table , $U , 0 ) ;
 }
 
-/////////////////////////////////////////////////////////
-
 public function UuidUsage ( $Table , $U , $usage )
 {
-  $Q = "update {$Table}"                .
-       " set `used` = {$usage}"         .
-       $this -> WhereUuid ( $U , true ) ;
-  return $this -> Query ( $Q )          ;
+  $WH = $this -> WhereUuid ( $U , true )              ;
+  $QQ = "update {$Table} set `used` = {$usage} {$WH}" ;
+  return $this -> Query ( $QQ )                       ;
 }
-
-/////////////////////////////////////////////////////////
 
 public function DeleteUuid ( $Table , $U )
 {
-  $Q = "delete from {$Table} "          .
-       $this -> WhereUuid ( $U , true ) ;
-  return $this -> Query ( $Q )          ;
+  $WH = $this -> WhereUuid ( $U , true ) ;
+  $QQ = "delete from {$Table} {$WH}"     ;
+  return $this -> Query ( $QQ )          ;
 }
-
-/////////////////////////////////////////////////////////
 
 public function ObtainsUuid($MainTable,$UuidTable)
 {
   //////////////////////////////////////////////////////////////////////
-  $QQ    = "lock tables {$MainTable} write, {$UuidTable} write ;"      ;
-  $this -> Query ( $QQ )                                               ;
+  $this -> LockWrites ( [ $MainTable , $UuidTable ] )                  ;
   //////////////////////////////////////////////////////////////////////
   $C = true                                                            ;
   $U = $this -> UnusedUuid ( $MainTable )                              ;
@@ -254,7 +246,16 @@ public function Forget($T1,$T2,$U)
   return $Correct                                             ;
 }
 
-/////////////////////////////////////////////////////////
+public function LockWrites($TABLES)
+{
+  $TX    = array   (                    ) ;
+  foreach          ( $TABLES as $t      ) {
+    array_push     ( $TX , "{$t} write" ) ;
+  }                                       ;
+  $TT    = implode ( " , " , $TX        ) ;
+  $QQ    = "lock tables {$TT} ;"          ;
+  $this -> Query ( $QQ )                  ;
+}
 
 public function LockWrite($TABLE)
 {
@@ -266,43 +267,6 @@ public function UnlockTables()
 {
   $QQ    = "unlock tables ;" ;
   $this -> Query ( $QQ )     ;
-}
-
-public function GetName($Table,$U,$Locality,$Usage = "Default")
-{
-  global $NameUsages                                 ;
-  $Q = "select `name` from " . $Table . " "          .
-       "where `uuid` = " . ( (string) $U ) . " and " .
-       "`locality` = " . $Locality . " and "         .
-       "`relevance` = " . $NameUsages [ $Usage ]     .
-       " order by `priority` asc"                    .
-       " limit 0,1 ;"                                ;
-  $q = $this -> Query ( $Q )                         ;
-  if ( $this -> hasResult ( $q ) )                   {
-    $N = $q -> fetch_array  ( MYSQLI_BOTH )          ;
-    return $N [ "name" ]                             ;
-  }                                                  ;
-  return ""                                          ;
-}
-
-public function GetNameByLocalities($Table,$U,$Localities,$Usage = "Default")
-{
-  $NN = ""                                               ;
-  foreach ( $Localities as $L )                          {
-    $NN = $this -> GetName ( $Table , $U , $L , $Usage ) ;
-    if ( strlen ( $NN ) > 0 ) return $NN                 ;
-  }                                                      ;
-  return $NN                                             ;
-}
-
-public function GetMapNames($TABLE,$UU,$LANG,$Usage = "Default")
-{
-  $CNAMES  = array         (                               ) ;
-  foreach                  ( $UU as $cc                    ) {
-    $NN = $this -> GetName ( $TABLE , $cc , $LANG , $Usage ) ;
-    $CNAMES [ $cc ] = $NN                                    ;
-  }                                                          ;
-  return $CNAMES                                             ;
 }
 
 }

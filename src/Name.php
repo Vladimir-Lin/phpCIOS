@@ -77,26 +77,6 @@ public function tableItems()
   return $S                       ;
 }
 
-public function JoinItems ( $X , $S = "," )
-{
-  $U = array ( )               ;
-  foreach ( $X as $V )         {
-    $W = "`" . $V . "`"        ;
-    array_push ( $U , $W )     ;
-  }                            ;
-  $L = implode ( $S , $U )     ;
-  unset ( $U )                 ;
-  return $L                    ;
-}
-
-public function Items( $S = "," )
-{
-  $X = $this -> tableItems (         ) ;
-  $L = $this -> JoinItems  ( $X , $S ) ;
-  unset                    ( $X      ) ;
-  return $L                            ;
-}
-
 public function isFlag($Mask)
 {
   return ( ( gmp_and ( $Mask , $this -> Flags ) ) == $Mask ) ;
@@ -140,20 +120,6 @@ public function setRelevance($N)
   $this -> Relevance = $this -> Usages [ $N ] ;
 }
 
-public function OptionsTail($Options,$Limits)
-{
-  $Q = ""                        ;
-  if ( strlen ( $Options ) > 0 ) {
-    $Q .= " "                    ;
-    $Q .= $Options               ;
-  }                              ;
-  if ( strlen ( $Limits  ) > 0 ) {
-    $Q .= " "                    ;
-    $Q .= $Limits                ;
-  }                              ;
-  return $Q                      ;
-}
-
 public function ItemPair($item)
 {
   $a = strtolower ( $item )                                ;
@@ -182,38 +148,6 @@ public function ItemPair($item)
     return "`" . $a . "` = " . (string) $this -> Name      ;
   }                                                        ;
   return ""                                                ;
-}
-
-public function ItemPairs($items)
-{
-  $I = array ( )                                 ;
-  foreach ( $items as $i )                       {
-    array_push ( $I , $this -> ItemPair ( $i ) ) ;
-  }                                              ;
-  $L = implode ( " and " , $I )                  ;
-  unset        (           $I )                  ;
-  return $L                                      ;
-}
-
-public function QueryItems($items,$Options = "",$Limits = "")
-{
-  $Q = " where " . $this -> ItemPairs ( $items )        ;
-  $Q = $Q . $this -> OptionsTail ( $Options , $Limits ) ;
-  return $Q                                             ;
-}
-
-public function SelectItems($Table,$items,$Options = "",$Limits = "")
-{
-  return "select " . $this -> Items ( ) . " from " . $Table         .
-         $this -> QueryItems ( $items , $Options , $Limits ) . " ;" ;
-}
-
-public function SelectColumns($Table,$Options = "order by `priority` asc",$Limits = "")
-{
-  return $this -> SelectItems ( $Table           ,
-                                $this -> Columns ,
-                                $Options         ,
-                                $Limits        ) ;
 }
 
 public function Select                                 (

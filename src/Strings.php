@@ -69,6 +69,15 @@ public static function isEnglish ( $S )
   return 2                           ;
 }
 
+public static function Replacement ( $NAME )
+{
+  $NAME = str_replace ( "\r" , ""     , $NAME ) ;
+  $NAME = str_replace ( "\n" , ""     , $NAME ) ;
+  $NAME = str_replace ( "\t" , " "    , $NAME ) ;
+  $NAME = str_replace ( "\"" , "\\\"" , $NAME ) ;
+  return $NAME                                  ;
+}
+
 }
 
 ?>

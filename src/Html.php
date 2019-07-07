@@ -326,44 +326,16 @@ public function addTr()
 
 public function addTd ( $MSG = "" )
 {
-  $HD    = new Html    (      )    ;
-  $HD   -> setTag      ( "td" )    ;
-  $this -> AddTag      ( $HD  )    ;
+  $HD    = new Html    (      )      ;
+  $HD   -> setTag      ( "td" )      ;
+  $this -> AddTag      ( $HD  )      ;
   if ( is_a ( $MSG , "CIOS\Html" ) ) {
-    $HD -> AddTag      ( $MSG )    ;
+    $HD -> AddTag      ( $MSG )      ;
   } else
-  if ( strlen ( $MSG ) > 0 )       {
-    $HD -> AddText     ( $MSG )    ;
-  }                                ;
-  return $HD                       ;
-}
-
-public function addLabelTd ( $MSGID = "" )
-{
-  global $Translations                            ;
-  /////////////////////////////////////////////////
-  $MSG   = ""                                     ;
-  if                    ( strlen ( $MSGID ) > 0 ) {
-    $MSG = $Translations [ $MSGID ]               ;
-  }                                               ;
-  $HD  = $this -> addTd ( $MSG                  ) ;
-  $HD -> AddPair        ( "align"  , "center"   ) ;
-  $HD -> AddPair        ( "nowrap" , "nowrap"   ) ;
-  return $HD                                      ;
-}
-
-public function addTagTd ( $MSGID = "" )
-{
-  global $Translations                            ;
-  /////////////////////////////////////////////////
-  $MSG   = ""                                     ;
-  if                    ( strlen ( $MSGID ) > 0 ) {
-    $MSG = $Translations [ $MSGID ]               ;
-  }                                               ;
-  $HD  = $this -> addTd ( $MSG                  ) ;
-  $HD -> AddPair        ( "nowrap" , "nowrap"   ) ;
-  $HD -> AddPair        ( "width"  , "1%"       ) ;
-  return $HD                                      ;
+  if ( strlen ( $MSG ) > 0 )         {
+    $HD -> AddText     ( $MSG )      ;
+  }                                  ;
+  return $HD                         ;
 }
 
 public function addTDs($MSGs)
