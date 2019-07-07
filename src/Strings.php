@@ -54,7 +54,7 @@ public function at ( $index )
   return $this -> Listings [ $index ] ;
 }
 
-public function ReplaceByKeys($SOURCE,$REPLACES)
+public static function ReplaceByKeys($SOURCE,$REPLACES)
 {
   $SRCS = $SOURCE                             ;
   $KEYS = array_keys    ( $REPLACES         ) ;
