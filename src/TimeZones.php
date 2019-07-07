@@ -2,6 +2,9 @@
 
 namespace CIOS ;
 
+$CiosTimeZoneKey = "CIOS-TimeZone" ;
+$CiosTzUuidKey   = "CIOS-TZ-Uuid"  ;
+
 class TimeZones
 {
 
@@ -134,6 +137,44 @@ public function addSelection($CurrentTimeZone,$TzMenu,$TzClass="",$LANG=0)
                                 $CurrentTimeZone ,
                                 $TzMenu          ,
                                 $TzClass       ) ;
+}
+
+public static function SetTZ ( $TZ )
+{
+  global $CiosTimeZoneKey              ;
+  $_SESSION [ $CiosTimeZoneKey ] = $TZ ;
+  return $TZ                           ;
+}
+
+public static function GetTZ ( )
+{
+  global $CiosTimeZoneKey                           ;
+  if   ( isset ( $_SESSION [ $CiosTimeZoneKey ] ) ) {
+    $TZ = $_SESSION [ $CiosTimeZoneKey ]            ;
+    if ( strlen ( $TZ ) > 0                       ) {
+      return $TZ                                    ;
+    }                                               ;
+  }                                                 ;
+  return ""                                         ;
+}
+
+public static function SetTzUuid ( $TZ )
+{
+  global $CiosTzUuidKey              ;
+  $_SESSION [ $CiosTzUuidKey ] = $TZ ;
+  return $TZ                         ;
+}
+
+public static function GetTzUuid ( )
+{
+  global $CiosTzUuidKey                           ;
+  if   ( isset ( $_SESSION [ $CiosTzUuidKey ] ) ) {
+    $TZ = $_SESSION [ $CiosTzUuidKey ]            ;
+    if ( strlen ( $TZ ) > 0                     ) {
+      return $TZ                                  ;
+    }                                             ;
+  }                                               ;
+  return ""                                       ;
 }
 
 }

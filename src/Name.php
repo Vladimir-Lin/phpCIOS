@@ -122,32 +122,32 @@ public function setRelevance($N)
 
 public function ItemPair($item)
 {
-  $a = strtolower ( $item )                                ;
-  if ( "id"        == $a )                                 {
-    return "`" . $a . "` = " . (string) $this -> Id        ;
-  }                                                        ;
-  if ( "uuid"      == $a )                                 {
-    return "`" . $a . "` = " . (string) $this -> Uuid      ;
-  }                                                        ;
-  if ( "locality"  == $a )                                 {
-    return "`" . $a . "` = " . (string) $this -> Locality  ;
-  }                                                        ;
-  if ( "priority"  == $a )                                 {
-    return "`" . $a . "` = " . (string) $this -> Priority  ;
-  }                                                        ;
-  if ( "relevance" == $a )                                 {
-    return "`" . $a . "` = " . (string) $this -> Relevance ;
-  }                                                        ;
-  if ( "flags"     == $a )                                 {
-    return "`" . $a . "` = " . (string) $this -> Flags     ;
-  }                                                        ;
-  if ( "length"    == $a )                                 {
-    return "`" . $a . "` = " . (string) $this -> Length    ;
-  }                                                        ;
-  if ( "name"      == $a )                                 {
-    return "`" . $a . "` = " . (string) $this -> Name      ;
-  }                                                        ;
-  return ""                                                ;
+  $a = strtolower ( $item )                          ;
+  if ( "id"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Id        ;
+  }                                                  ;
+  if ( "uuid"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Uuid      ;
+  }                                                  ;
+  if ( "locality"  == $a )                           {
+    return "`{$a}` = " . (string) $this -> Locality  ;
+  }                                                  ;
+  if ( "priority"  == $a )                           {
+    return "`{$a}` = " . (string) $this -> Priority  ;
+  }                                                  ;
+  if ( "relevance" == $a )                           {
+    return "`{$a}` = " . (string) $this -> Relevance ;
+  }                                                  ;
+  if ( "flags"     == $a )                           {
+    return "`{$a}` = " . (string) $this -> Flags     ;
+  }                                                  ;
+  if ( "length"    == $a )                           {
+    return "`{$a}` = " . (string) $this -> Length    ;
+  }                                                  ;
+  if ( "name"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Name      ;
+  }                                                  ;
+  return ""                                          ;
 }
 
 public function Select                                 (
