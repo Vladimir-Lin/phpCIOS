@@ -38,8 +38,8 @@ public function isValid()
 // unix timestamp to stardate
 public function setTime($T)
 {
-  $this -> Stardate += 1420092377704080000 ;
-  return $this -> Stardate                 ;
+  $this -> Stardate = $T + 1420092377704080000 ;
+  return $this -> Stardate                     ;
 }
 
 public function Seconds($D,$H,$M,$S)
@@ -119,13 +119,13 @@ public function fromDateTime($DT)
 
 public function fromFormat($dtString,$TZ="")
 {
-  if ( strlen ( $TZ ) > 0 ) {
-    $TX = new DateTimeZone           ( $TZ                             ) ;
-    $DT = DateTime::createFromFormat ( "Y/m/d H:i:s" , $dtString , $TX ) ;
-  } else                                                                 {
-    $DT = DateTime::createFromFormat ( "Y/m/d H:i:s" , $dtString       ) ;
-  }                                                                      ;
-  return $this -> fromDateTime       ( $DT                             ) ;
+  if                                  ( strlen ( $TZ ) > 0              ) {
+    $TX = new \DateTimeZone           ( $TZ                             ) ;
+    $DT = \DateTime::createFromFormat ( "Y/m/d H:i:s" , $dtString , $TX ) ;
+  } else                                                                  {
+    $DT = \DateTime::createFromFormat ( "Y/m/d H:i:s" , $dtString       ) ;
+  }                                                                       ;
+  return $this -> fromDateTime        ( $DT                             ) ;
 }
 
 public function fromInput($inpString,$TZ="")
@@ -153,12 +153,12 @@ public function ShrinkHour()
 
 public function toDateTime($TZ)
 {
-  $TX  = new DateTimeZone ( $TZ                    ) ;
-  $DT  = new DateTime     (                        ) ;
-  $DT -> setTimezone      ( $TX                    ) ;
-  $DT -> setTimestamp     ( $this -> Timestamp ( ) ) ;
-  unset                   ( $TX                    ) ;
-  return $DT                                         ;
+  $TX  = new \DateTimeZone ( $TZ                    ) ;
+  $DT  = new \DateTime     (                        ) ;
+  $DT -> setTimezone       ( $TX                    ) ;
+  $DT -> setTimestamp      ( $this -> Timestamp ( ) ) ;
+  unset                    ( $TX                    ) ;
+  return $DT                                          ;
 }
 
 public function Weekday($TZ)
@@ -210,12 +210,21 @@ public function toDateTimeString($TZ,$JOIN="T",$DateFormat="Y-m-d",$TimeFormat="
 
 public function toLongString($TZ,$DateFormat="Y-m-d",$TimeFormat="H:i:s")
 {
-  global $WeekDays                                                           ;
-  global $AMPM                                                               ;
+  $Correct = true                                                            ;
   ////////////////////////////////////////////////////////////////////////////
-  $SW  = $WeekDays [ $this -> Weekday ( $TZ ) ]                              ;
-  $SP  = $AMPM     [ $this -> isPM    ( $TZ ) ]                              ;
-  $SJ  = " {$SW} {$SP} "                                                     ;
+  if  ( isset ( $GLOBALS [ "WeekDays" ] )                                  ) {
+    $WeekDays = $GLOBALS [ "WeekDays" ]                                      ;
+  } else $Correct = false                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  if  ( isset ( $GLOBALS [ "AMPM"     ] )                                  ) {
+    $AMPM     = $GLOBALS [ "AMPM"     ]                                      ;
+  } else $Correct = false                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( $Correct                                                            ) {
+    $SW  = $WeekDays [ $this -> Weekday ( $TZ ) ]                            ;
+    $SP  = $AMPM     [ $this -> isPM    ( $TZ ) ]                            ;
+    $SJ  = " {$SW} {$SP} "                                                   ;
+  } else $SJ = " "                                                           ;
   ////////////////////////////////////////////////////////////////////////////
   return $this -> toDateTimeString ( $TZ , $SJ , $DateFormat , $TimeFormat ) ;
 }
@@ -241,7 +250,7 @@ public function SecondsOfDay($TZ)
 public function YearsOld($TZ)
 {
   $TDT = $this -> toDateTime ( $TZ  ) ;
-  $NDT = new DateTime        (      ) ;
+  $NDT = new \DateTime       (      ) ;
   $DIF = $NDT -> diff        ( $TDT ) ;
   return $DIF -> y                    ;
 }

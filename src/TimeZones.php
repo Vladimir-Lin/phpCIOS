@@ -149,13 +149,15 @@ public static function SetTZ ( $TZ )
 public static function GetTZ ( )
 {
   global $CiosTimeZoneKey                           ;
+  ///////////////////////////////////////////////////
   if   ( isset ( $_SESSION [ $CiosTimeZoneKey ] ) ) {
     $TZ = $_SESSION [ $CiosTimeZoneKey ]            ;
     if ( strlen ( $TZ ) > 0                       ) {
       return $TZ                                    ;
     }                                               ;
   }                                                 ;
-  return ""                                         ;
+  ///////////////////////////////////////////////////
+  return date_default_timezone_get ( )              ;
 }
 
 public static function SetTzUuid ( $TZ )

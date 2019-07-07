@@ -2,7 +2,7 @@
 
 namespace CIOS ;
 
-class Note
+class Note extends Columns
 {
 
 public $Id     ;
