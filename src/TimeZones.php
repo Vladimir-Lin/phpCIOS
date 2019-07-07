@@ -79,6 +79,19 @@ public function Query ( $DB , $Table )
   }                                                                          ;
 }
 
+public function ZoneNames ( $DB , $Table , $LANGs )
+{
+  $this -> NAMEs = array        (                                ) ;
+  $NI            = new Name     (                                ) ;
+  $NI           -> set          ( "Priority"  , 0                ) ;
+  $NI           -> setRelevance ( "Default"                      ) ;
+  foreach                       ( $LANGs as $kk                  ) {
+    $NI   -> set                ( "Locality"  , $kk              ) ;
+    $NAMES = $NI -> FetchUuids  ( $DB  , $Table , $this -> Uuids ) ;
+    $this -> NAMEs [ $kk ] = $NAMES                                ;
+  }                                                                ;
+}
+
 }
 
 ?>

@@ -211,6 +211,16 @@ public function Fetch ( $DB , $Table )
   return ""                                   ;
 }
 
+public function FetchUuids ( $DB , $Table , $UUIDs )
+{
+  $NAMEs = array (                                ) ;
+  foreach        ( $UUIDs as $u                   ) {
+    $this -> Uuid = $u                              ;
+    $NAMEs [ $u ] = $this -> Fetch ( $DB , $Table ) ;
+  }                                                 ;
+  return $NAMEs                                     ;
+}
+
 public function Insert($Table)
 {
   return "insert into " . $Table              .

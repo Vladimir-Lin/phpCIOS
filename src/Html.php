@@ -40,10 +40,28 @@ public function setType($T)
   $this -> Type = $T ;
 }
 
+public function setExport($T)
+{
+  $v = strtolower ( $T )   ;
+  if ( $v == "dom"       ) {
+    $this -> Type = 1      ;
+  } else
+  if ( $v == "tag"       ) {
+    $this -> Type = 2      ;
+  } else
+  if ( $v == "context"   ) {
+    $this -> Type = 3      ;
+  } else
+  if ( $v == "container" ) {
+    $this -> Type = 4      ;
+  }
+}
+
 public function setTag($T)
 {
   $t = strtolower ( $T )    ;
   $this -> Tag = $T         ;
+  ///////////////////////////
   if ( 0 == $this -> Type ) {
     $this -> Type = 1       ;
   }                         ;
@@ -107,9 +125,9 @@ public function setTail( $T = "\n" )
 
 public function NewChild()
 {
-  $NT = new HtmlTag (     ) ;
-  $this -> AddTag   ( $NT ) ;
-  return $NT                ;
+  $NT = new Html  (     ) ;
+  $this -> AddTag ( $NT ) ;
+  return $NT              ;
 }
 
 public function AddTag($T)
@@ -143,7 +161,7 @@ public function SafePair ( $N , $V )
   return $this -> AddPair ( $N , $V ) ;
 }
 
-public function EndTag()
+public function EndTag ( )
 {
   if ( strlen ( $this -> Tag ) <= 0 ) return "" ;
   return "</" . $this -> Tag . ">"              ;
@@ -151,30 +169,30 @@ public function EndTag()
 
 public function DoubleQuote($T)
 {
-  return "\"" . $T . "\"" ;
+  return "\"{$T}\"" ;
 }
 
 public function SingleQuote($T)
 {
-  return "'" . $T . "'" ;
+  return "'{$T}'" ;
 }
 
-public function DQ($T)
+public function DQ ( $T )
 {
   return DoubleQuote ( $T ) ;
 }
 
-public function SQ($T)
+public function SQ ( $T )
 {
   return SingleQuote ( $T ) ;
 }
 
-public function NewLine()
+public function NewLine ( )
 {
   return "\n" ;
 }
 
-public function Html()
+public function Html ( )
 {
   $H = "<" . $this -> Tag                                 ;
   if ( count ( $this -> Attributes ) > 0 )                {
@@ -193,50 +211,37 @@ public function Inside($Content)
 
 public function TagsContent()
 {
-  if ( count ( $this -> Tags ) <= 0 ) return "" ;
-  $A = array ( )                                ;
-  foreach ( $this -> Tags as $T )               {
-    array_push ( $A , $T -> Content ( ) )       ;
+  if           ( count ( $this -> Tags ) <= 0 ) {
+    return ""                                   ;
   }                                             ;
-  $L = implode ( $this -> Splitter , $A )       ;
+  $A = array   (                              ) ;
+  foreach      ( $this -> Tags as $T          ) {
+    array_push ( $A , $T -> Content ( )       ) ;
+  }                                             ;
+  $L = implode ( $this -> Splitter , $A       ) ;
   return $L                                     ;
-}
-
-public function Content()
-{
-  switch ( $this -> Type )                              {
-    case 1                                              :
-    return $this -> Inside ( $this -> TagsContent ( ) ) ;
-    case 2                                              :
-    return $this -> Html        ( ) . $this -> Tail     ;
-    case 3                                              :
-    return $this -> Tag             . $this -> Tail     ;
-    case 4                                              :
-    return $this -> TagsContent ( ) . $this -> Tail     ;
-  }                                                     ;
-  return ""                                             ;
 }
 
 public function setDiv($Msg="",$IDNAME="",$CLASSNAME="")
 {
-  $this -> Tag  = "div"                      ;
-  $this -> Type = 1                          ;
-  $this -> SafePair ( "id"    , $IDNAME    ) ;
-  $this -> SafePair ( "class" , $CLASSNAME ) ;
-  if ( strlen ( $Msg ) > 0 )                 {
-    $this -> AddText ( $Msg )                ;
-  }                                          ;
+  $this -> Tag  = "div"                       ;
+  $this -> Type = 1                           ;
+  $this -> SafePair  ( "id"    , $IDNAME    ) ;
+  $this -> SafePair  ( "class" , $CLASSNAME ) ;
+  if                 ( strlen ( $Msg ) > 0  ) {
+    $this -> AddText ( $Msg                 ) ;
+  }                                           ;
 }
 
 public function setSpan($Msg="",$IDNAME="",$CLASSNAME="")
 {
-  $this -> Tag  = "span"                     ;
-  $this -> Type = 1                          ;
-  $this -> SafePair ( "id"    , $IDNAME    ) ;
-  $this -> SafePair ( "class" , $CLASSNAME ) ;
-  if ( strlen ( $Msg ) > 0 )                 {
-    $this -> AddText ( $Msg )                ;
-  }                                          ;
+  $this -> Tag  = "span"                      ;
+  $this -> Type = 1                           ;
+  $this -> SafePair  ( "id"    , $IDNAME    ) ;
+  $this -> SafePair  ( "class" , $CLASSNAME ) ;
+  if                 ( strlen ( $Msg ) > 0  ) {
+    $this -> AddText ( $Msg                 ) ;
+  }                                           ;
 }
 
 public function setInput()
@@ -268,20 +273,8 @@ public function LoadScript($FILENAME)
 public function setMain($CLASSID)
 {
   $this -> setTag      ( "main"             ) ;
-  $this -> AddPair     ( "class" , $CLASSID ) ;
+  $this -> SafePair    ( "class" , $CLASSID ) ;
   $this -> setSplitter ( "\n"               ) ;
-}
-
-public function asTable()
-{
-  $this -> setTag      ( "table" ) ;
-  //////////////////////////////////
-  $HB    = new HtmlTag (         ) ;
-  $HB   -> setTag      ( "tbody" ) ;
-  $HB   -> setSplitter ( "\n"    ) ;
-  $this -> AddTag      ( $HB     ) ;
-  //////////////////////////////////
-  return $HB                       ;
 }
 
 public function ConfigureTable($BORDER=0,$SPACING=0,$PADDING=0)
@@ -292,7 +285,7 @@ public function ConfigureTable($BORDER=0,$SPACING=0,$PADDING=0)
   $this -> AddPair     ( "cellspacing" , $SPACING ) ;
   $this -> AddPair     ( "cellpadding" , $PADDING ) ;
   ///////////////////////////////////////////////////
-  $HB    = new HtmlTag (                          ) ;
+  $HB    = new Html    (                          ) ;
   $HB   -> setTag      ( "tbody"                  ) ;
   $HB   -> setSplitter ( "\n"                     ) ;
   $this -> AddTag      ( $HB                      ) ;
@@ -302,18 +295,18 @@ public function ConfigureTable($BORDER=0,$SPACING=0,$PADDING=0)
 
 public function addDiv($Msg = "",$IDNAME="",$CLASSNAME="")
 {
-  $HD    = new HtmlTag (                             ) ;
-  $HD   -> setDiv      ( $Msg , $IDNAME , $CLASSNAME ) ;
-  $this -> AddTag      ( $HD                         ) ;
-  return $HD                                           ;
+  $HD    = new Html (                             ) ;
+  $HD   -> setDiv   ( $Msg , $IDNAME , $CLASSNAME ) ;
+  $this -> AddTag   ( $HD                         ) ;
+  return $HD                                        ;
 }
 
 public function addSpan($Msg = "",$IDNAME="",$CLASSNAME="")
 {
-  $HD    = new HtmlTag (                             ) ;
-  $HD   -> setSpan     ( $Msg , $IDNAME , $CLASSNAME ) ;
-  $this -> AddTag      ( $HD                         ) ;
-  return $HD                                           ;
+  $HD    = new Html (                             ) ;
+  $HD   -> setSpan  ( $Msg , $IDNAME , $CLASSNAME ) ;
+  $this -> AddTag   ( $HD                         ) ;
+  return $HD                                        ;
 }
 
 public function addTr()
@@ -321,31 +314,31 @@ public function addTr()
   $HR    = new Html (      ) ;
   $HR   -> setTag   ( "tr" ) ;
   $this -> AddTag   ( $HR  ) ;
-  return $HR                    ;
+  return $HR                 ;
 }
 
 public function addTd ( $MSG = "" )
 {
-  $HD    = new Html    (      )      ;
-  $HD   -> setTag      ( "td" )      ;
-  $this -> AddTag      ( $HD  )      ;
-  if ( is_a ( $MSG , "CIOS\Html" ) ) {
-    $HD -> AddTag      ( $MSG )      ;
+  $HD    = new Html (                             ) ;
+  $HD   -> setTag   ( "td"                        ) ;
+  $this -> AddTag   ( $HD                         ) ;
+  if                ( is_a ( $MSG , "CIOS\Html" ) ) {
+    $HD -> AddTag   ( $MSG                        ) ;
   } else
-  if ( strlen ( $MSG ) > 0 )         {
-    $HD -> AddText     ( $MSG )      ;
-  }                                  ;
-  return $HD                         ;
+  if                ( strlen ( $MSG ) > 0         ) {
+    $HD -> AddText  ( $MSG                        ) ;
+  }                                                 ;
+  return $HD                                        ;
 }
 
 public function addTDs($MSGs)
 {
-  $HDs = array ( )                ;
-  foreach ( $MSGs as $msg )       {
-    $HD = $this -> addTd ( $msg ) ;
-    array_push ( $HDs , $HD )     ;
-  }                               ;
-  return $HDs                     ;
+  $HDs  = array          (               ) ;
+  foreach                ( $MSGs as $msg ) {
+    $HD = $this -> addTd ( $msg          ) ;
+    array_push           ( $HDs , $HD    ) ;
+  }                                        ;
+  return $HDs                              ;
 }
 
 public function addTrLine($MSGs)
@@ -365,38 +358,36 @@ public function appendTrLine($Inner)
 
 public function addSelect($CLASSID="")
 {
-  $HS    = new Html  (                    ) ;
-  $HS   -> setTag      ( "select"           ) ;
-  if ( strlen ($CLASSID) > 0 )                {
-    $HS -> AddPair     ( "class" , $CLASSID ) ;
-  }                                           ;
-  $this -> AddTag      ( $HS                ) ;
-  return $HS                                  ;
+  $HS    = new Html (                    ) ;
+  $HS   -> setTag   ( "select"           ) ;
+  $HS   -> SafePair ( "class" , $CLASSID ) ;
+  $this -> AddTag   ( $HS                ) ;
+  return $HS                               ;
 }
 
 public function addOption ( $MSG = "" )
 {
-  $HD    = new Html (          ) ;
-  $HD   -> setTag      ( "option" ) ;
-  $this -> AddTag      ( $HD      ) ;
-  if ( strlen ( $MSG ) > 0 )        {
-    $HD -> AddText     ( $MSG     ) ;
-  }                                 ;
-  return $HD                        ;
+  $HD    = new Html (                     ) ;
+  $HD   -> setTag   ( "option"            ) ;
+  $this -> AddTag   ( $HD                 ) ;
+  if                ( strlen ( $MSG ) > 0 ) {
+    $HD -> AddText  ( $MSG                ) ;
+  }                                         ;
+  return $HD                                ;
 }
 
 public function addOptions($MAPs,$ID="")
 {
-  $KS = array_keys ( $MAPs )                    ;
-  foreach ( $KS as $ks )                        {
-    $HO  = $this -> addOption ( $MAPs [ $ks ] ) ;
-    $HO -> AddPair ( "value" , $ks )            ;
-    if ( strlen ( $ID ) > 0 )                   {
-      if ( $ID == $ks )                         {
-        $HO -> AddMember ( "selected" )         ;
-      }                                         ;
-    }                                           ;
-  }                                             ;
+  $KS    = array_keys         ( $MAPs              ) ;
+  foreach                     ( $KS as $ks         ) {
+    $HO  = $this -> addOption ( $MAPs [ $ks ]      ) ;
+    $HO -> AddPair            ( "value" , $ks      ) ;
+    if                        ( strlen ( $ID ) > 0 ) {
+      if                      ( $ID == $ks         ) {
+        $HO -> AddMember      ( "selected" )         ;
+      }                                              ;
+    }                                                ;
+  }                                                  ;
 }
 
 public function addSelection($MAPs,$ID="",$CLASSID="")
@@ -408,22 +399,22 @@ public function addSelection($MAPs,$ID="",$CLASSID="")
 
 public function addButton ( $MSG = "" )
 {
-  $HD    = new Html (          ) ;
-  $HD   -> setTag      ( "button" ) ;
-  $this -> AddTag      ( $HD      ) ;
-  if ( strlen ( $MSG ) > 0 )        {
-    $HD -> AddText     ( $MSG     ) ;
-  }                                 ;
-  return $HD                        ;
+  $HD    = new Html (                     ) ;
+  $HD   -> setTag   ( "button"            ) ;
+  $this -> AddTag   ( $HD                 ) ;
+  if                ( strlen ( $MSG ) > 0 ) {
+    $HD -> AddText  ( $MSG                ) ;
+  }                                         ;
+  return $HD                                ;
 }
 
 public function addInput($MSG="")
 {
   $HI    = new Html (                ) ;
-  $HI   -> setInput    (                ) ;
-  $HI   -> SafePair    ( "value" , $MSG ) ;
-  $this -> AddTag      ( $HI            ) ;
-  return $HI                              ;
+  $HI   -> setInput (                ) ;
+  $HI   -> SafePair ( "value" , $MSG ) ;
+  $this -> AddTag   ( $HI            ) ;
+  return $HI                           ;
 }
 
 public function addNameTd($NAME,$WIDTH="20%",$CLASSID="NameLabel")
@@ -439,11 +430,11 @@ public function addNameTd($NAME,$WIDTH="20%",$CLASSID="NameLabel")
 public function addHtml($TAG="")
 {
   $HI    = new Html (                     ) ;
-  if                   ( strlen ( $TAG ) > 0 ) {
-    $HI -> setTag      ( $TAG                ) ;
-  }                                            ;
-  $this -> AddTag      ( $HI                 ) ;
-  return $HI                                   ;
+  if                ( strlen ( $TAG ) > 0 ) {
+    $HI -> setTag   ( $TAG                ) ;
+  }                                         ;
+  $this -> AddTag   ( $HI                 ) ;
+  return $HI                                ;
 }
 
 public function NoWrap()
@@ -464,6 +455,21 @@ public function addEmptyLine($MSG="&nbsp;",$COLSPAN=1,$KEYID="Empty")
   $HD -> AddPair        ( "colspan" , $COLSPAN ) ;
   $HR -> setObject      ( $KEYID    , $HD      ) ;
   return $HR                                     ;
+}
+
+public function Content ( )
+{
+  switch                   ( $this -> Type            ) {
+    case 1                                              :
+    return $this -> Inside ( $this -> TagsContent ( ) ) ;
+    case 2                                              :
+    return $this -> Html        ( ) . $this -> Tail     ;
+    case 3                                              :
+    return $this -> Tag             . $this -> Tail     ;
+    case 4                                              :
+    return $this -> TagsContent ( ) . $this -> Tail     ;
+  }                                                     ;
+  return ""                                             ;
 }
 
 public function Report()

@@ -25,6 +25,18 @@ public function clear ( )
   unset ( $this -> Listings ) ;
 }
 
+public function toLower ( )
+{
+  $this -> String = strtolower ( $this -> String ) ;
+  return $this -> String                           ;
+}
+
+public function toUpper ( )
+{
+  $this -> String = strtoupper ( $this -> String ) ;
+  return $this -> String                           ;
+}
+
 public function count ( )
 {
   return count ( $this -> Listings ) ;
