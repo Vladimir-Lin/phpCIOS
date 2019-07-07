@@ -92,6 +92,50 @@ public function ZoneNames ( $DB , $Table , $LANGs )
   }                                                                ;
 }
 
+public function GetTimeZone ( $DB , $Table , $U , $Default , $Type = "People" )
+{
+  $CT  = 0                                     ;
+  $RI  = new Relation         (              ) ;
+  $RI -> set                  ( "first" , $U ) ;
+  $RI -> setT1                ( $Type        ) ;
+  $RI -> setT2                ( "TimeZone"   ) ;
+  $RI -> setRelation          ( "Originate"  ) ;
+  $UU  = $RI -> Subordination ( $DB , $Table ) ;
+  unset                       ( $RI          ) ;
+  if ( count ( $UU ) > 0 )                     {
+    $UX = $UU [ 0 ]                            ;
+    $CT = "{$UX}"                              ;
+  } else                                       {
+    $CT = "{$Default}"                         ;
+  }                                            ;
+  return $CT                                   ;
+}
+
+public function addSelector($NameMaps,$CurrentTimeZone,$TzMenu,$TzClass="")
+{
+  $CT  = $CurrentTimeZone                     ;
+  $HS  = new Html    (                      ) ;
+  $HS -> setSplitter ( "\n"                 ) ;
+  $HS -> setTag      ( "select"             ) ;
+  $HS -> SafePair    ( "id"      , $TzMenu  ) ;
+  $HS -> SafePair    ( "class"   , $TzClass ) ;
+  $HS -> SafePair    ( "name"    , $TzMenu  ) ;
+  $HS -> addOptions  ( $NameMaps , $CT      ) ;
+  return $HS                                  ;
+}
+
+public function addSelection($CurrentTimeZone,$TzMenu,$TzClass="",$LANG=0)
+{
+  $LANGs   = $this -> TzIds                      ;
+  if                          ( $LANG > 0      ) {
+    $LANGs = $this -> NAMEs [ $LANG ]            ;
+  }                                              ;
+  return $this -> addSelector ( $LANGs           ,
+                                $CurrentTimeZone ,
+                                $TzMenu          ,
+                                $TzClass       ) ;
+}
+
 }
 
 ?>

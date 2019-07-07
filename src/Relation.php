@@ -1,16 +1,9 @@
 <?php
 
-//////////////////////////////////////////////////////////////////////////////
+namespace CIOS ;
 
-require_once dirname(__FILE__) . "/constants.php" ;
-require_once dirname(__FILE__) . "/parameters.php" ;
-require_once dirname(__FILE__) . "/actionsdb.php" ;
-
-//////////////////////////////////////////////////////////////////////////////
-// PHP RelationItem Class
-
-class RelationItem {
-//////////////////////////////////////////////////////////////////////////////
+class Relation extends Columns
+{
 
 public $Id          ;
 public $First       ;
@@ -24,15 +17,103 @@ public $Prefer      ;
 public $Membership  ;
 public $Description ;
 
-//////////////////////////////////////////////////////////////////////////////
+public $Relations = array (
+  "Ignore"        =>  0   ,
+  "Subordination" =>  1   ,
+  "Icon"          =>  2   ,
+  "Sexuality"     =>  3   ,
+  "Trigger"       =>  4   ,
+  "StartTrigger"  =>  5   ,
+  "FinalTrigger"  =>  6   ,
+  "Action"        =>  7   ,
+  "Condition"     =>  8   ,
+  "Synonymous"    =>  9   ,
+  "Equivalent"    => 10   ,
+  "Contains"      => 11   ,
+  "Using"         => 12   ,
+  "Possible"      => 13   ,
+  "Originate"     => 14   ,
+  "Capable"       => 15   ,
+  "Estimate"      => 16   ,
+  "Alias"         => 17   ,
+  "Counterpart"   => 18   ,
+  "Explain"       => 19   ,
+  "Fuzzy"         => 20   ,
+  "Greater"       => 21   ,
+  "Less"          => 22   ,
+  "Before"        => 23   ,
+  "After"         => 24   ,
+  "Tendency"      => 25   ,
+  "Different"     => 26   ,
+  "Acting"        => 27   ,
+  "Forgotten"     => 28   ,
+  "Google"        => 29   ,
+  "Facebook"      => 30   ,
+  "End"           => 31   ,
+)                         ;
+
+public $Types         = array (
+  "None"              =>   0  ,
+  "Type"              =>   1  ,
+  "Picture"           =>   9  ,
+  "Video"             =>  11  ,
+  "PlainText"         =>  12  ,
+  "File"              =>  14  ,
+  "Schedule"          =>  15  ,
+  "Task"              =>  16  ,
+  "Subgroup"          =>  17  ,
+  "Account"           =>  18  ,
+  "TopLevelDomain"    =>  23  ,
+  "SecondLevelDomain" =>  24  ,
+  "DomainName"        =>  26  ,
+  "Username"          =>  27  ,
+  "ITU"               =>  28  ,
+  "Nation"            =>  43  ,
+  "Currency"          =>  45  ,
+  "Tag"               =>  75  ,
+  "SqlConnection"     =>  81  ,
+  "Division"          =>  91  ,
+  "Period"            =>  92  ,
+  "Variable"          =>  93  ,
+  "CountryCode"       =>  97  ,
+  "AreaCode"          =>  98  ,
+  "Language"          => 101  ,
+  "Place"             => 102  ,
+  "People"            => 103  ,
+  "Station"           => 104  ,
+  "Organization"      => 105  ,
+  "Role"              => 106  ,
+  "Relevance"         => 107  ,
+  "Locality"          => 108  ,
+  "Group"             => 109  ,
+  "Course"            => 110  ,
+  "Lesson"            => 111  ,
+  "IMApp"             => 112  ,
+  "InstantMessage"    => 113  ,
+  "Phone"             => 114  ,
+  "Occupation"        => 115  ,
+  "TimeZone"          => 116  ,
+  "IPA"               => 117  ,
+  "Address"           => 118  ,
+  "EMail"             => 119  ,
+  "Description"       => 120  ,
+  "SqlServer"         => 121  ,
+  "Lecture"           => 122  ,
+  "Trade"             => 123  ,
+  "Token"             => 124  ,
+  "BankAccount"       => 125  ,
+  "Class"             => 126  ,
+)                             ;
 
 function __construct()
 {
-  $this -> clear ( )  ;
+  parent::__construct ( ) ;
+  $this -> clear      ( ) ;
 }
 
 function __destruct()
 {
+  parent::__destruct ( ) ;
 }
 
 public function clear()
@@ -80,26 +161,6 @@ public function tableItems()
   array_push ( $S , "membership"  ) ;
   array_push ( $S , "description" ) ;
   return $S                         ;
-}
-
-public function JoinItems($X,$S)
-{
-  $U = array ( )               ;
-  foreach ( $X as $V )         {
-    $W = "`" . $V . "`"        ;
-    array_push ( $U , $W )     ;
-  }                            ;
-  $L = implode ( $S , $U )     ;
-  unset ( $U )                 ;
-  return $L                    ;
-}
-
-public function Items( $S = "," )
-{
-  $X = $this -> tableItems (         ) ;
-  $L = $this -> JoinItems  ( $X , $S ) ;
-  unset                    ( $X      ) ;
-  return $L                            ;
 }
 
 public function FullList()
@@ -199,34 +260,17 @@ public function set($item,$V)
 
 public function setT1($N)
 {
-  global $DataTypes               ;
-  $this -> T1 = $DataTypes [ $N ] ;
+  $this -> T1 = $this -> Types [ $N ] ;
 }
 
 public function setT2($N)
 {
-  global $DataTypes               ;
-  $this -> T2 = $DataTypes [ $N ] ;
+  $this -> T2 = $this -> Types [ $N ] ;
 }
 
 public function setRelation($N)
 {
-  global $DataRelations                     ;
-  $this -> Relation = $DataRelations [ $N ] ;
-}
-
-public function OptionsTail($Options,$Limits)
-{
-  $Q = ""                        ;
-  if ( strlen ( $Options ) > 0 ) {
-    $Q .= " "                    ;
-    $Q .= $Options               ;
-  }                              ;
-  if ( strlen ( $Limits  ) > 0 ) {
-    $Q .= " "                    ;
-    $Q .= $Limits                ;
-  }                              ;
-  return $Q                      ;
+  $this -> Relation = $this -> Relations [ $N ] ;
 }
 
 public function ItemPair($item)
@@ -268,17 +312,6 @@ public function ItemPair($item)
   return ""                                                  ;
 }
 
-public function ItemPairs($items)
-{
-  $I = array ( )                                 ;
-  foreach ( $items as $i )                       {
-    array_push ( $I , $this -> ItemPair ( $i ) ) ;
-  }                                              ;
-  $L = implode ( " and " , $I )                  ;
-  unset        (           $I )                  ;
-  return $L                                      ;
-}
-
 public function Value($item)
 {
   $a = strtolower ( $item )                                       ;
@@ -305,13 +338,6 @@ public function Values($items)
   $L = implode ( "," , $I )                   ;
   unset        (       $I )                   ;
   return $L                                   ;
-}
-
-public function QueryItems($items,$Options = "",$Limits = "")
-{
-  $Q = "where " . $this -> ItemPairs ( $items )         ;
-  $Q = $Q . $this -> OptionsTail ( $Options , $Limits ) ;
-  return $Q                                             ;
 }
 
 public function ExactItem ( $Options = "" , $Limits = "" )
@@ -520,8 +546,6 @@ public function ObtainOwners($DB,$TABLE,$MEMBERS,$TMP)
   return $MEMBERS                                     ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
 }
 
-//////////////////////////////////////////////////////////////////////////////
 ?>
