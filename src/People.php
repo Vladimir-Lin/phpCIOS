@@ -369,14 +369,15 @@ public function SessionStart ( )
   $_SESSION [ "ACTIONS_ROLE"      ] = (string) $this -> Role               ;
   $_SESSION [ "ACTIONS_ROLES"     ] = (string) $ROLESTR                    ;
   $_SESSION [ "ACTIONS_NAME"      ] = (string) $this -> Name               ;
-  $_SESSION [ "ACTIONS_TZID"      ] = (string) $this -> TzId               ;
-  $_SESSION [ "ACTIONS_TZ"        ] = (string) $this -> TZ                 ;
-  $_SESSION [ "ACTIONS_LANG"      ] = (string) $this -> Language           ;
   $_SESSION [ "ACTIONS_LEVEL"     ] = (string) $this -> Level              ;
   $_SESSION [ "ACTIONS_SENIORITY" ] = (string) $this -> Seniority          ;
   $_SESSION [ "ACTIONS_ITEM"      ] = (string) $this -> Item               ;
   $_SESSION [ "ACTIONS_COURSE"    ] = (string) $this -> Item               ;
   $_SESSION [ "ACTIONS_COURSES"   ] = (string) $COURSESTR                  ;
+  //////////////////////////////////////////////////////////////////////////
+  Browser::SetLanguage ( $this -> Language )                               ;
+  TimeZones::SetTZ     ( $this -> TZ       )                               ;
+  TimeZones::SetTzUuid ( $this -> TzId     )                               ;
   //////////////////////////////////////////////////////////////////////////
   $ROID                             = 1                                    ;
   while ( $ROID <= 17                                                    ) {
@@ -409,12 +410,13 @@ public function Recovery()
   $this -> Uuid      = (string) $_SESSION [ "ACTIONS_UUID"      ] ;
   $this -> Role      = (string) $_SESSION [ "ACTIONS_ROLE"      ] ;
   $this -> Name      = (string) $_SESSION [ "ACTIONS_NAME"      ] ;
-  $this -> TzId      = (string) $_SESSION [ "ACTIONS_TZID"      ] ;
-  $this -> TZ        = (string) $_SESSION [ "ACTIONS_TZ"        ] ;
-  $this -> Language  = (string) $_SESSION [ "ACTIONS_LANG"      ] ;
   $this -> Level     = (string) $_SESSION [ "ACTIONS_LEVEL"     ] ;
   $this -> Seniority = (string) $_SESSION [ "ACTIONS_SENIORITY" ] ;
   $this -> Item      = (string) $_SESSION [ "ACTIONS_ITEM"      ] ;
+  /////////////////////////////////////////////////////////////////
+  $this -> Language  = Browser::GetLanguage (  )                  ;
+  $this -> TzId      = TimeZones::GetTzUuid (  )                  ;
+  $this -> TZ        = TimeZones::GetTZ     (  )                  ;
   /////////////////////////////////////////////////////////////////
   $RRS               = (string) $_SESSION [ "ACTIONS_ROLES"     ] ;
   $this -> Roles     = explode ( " , " , $RRS )                   ;
