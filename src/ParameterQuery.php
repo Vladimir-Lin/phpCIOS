@@ -10,9 +10,7 @@ public $Variety ;
 public $Scope   ;
 public $Table   ;
 
-//////////////////////////////////////////////////////////////////////////////
-
-function __construct()
+function __construct ( )
 {
   $this -> clear ( )  ;
 }
@@ -21,35 +19,41 @@ function __destruct()
 {
 }
 
-public function clear()
+public function clear ( )
 {
-  $this -> Type    = 0                    ;
-  $this -> Variety = 0                    ;
-  $this -> Scope   = ""                   ;
-  $this -> Table   = "`erp`.`parameters`" ;
+  $TABLE = ""                                         ;
+  if ( isset ( $GLOBALS [ "TableMapping" ] ) )        {
+    $TableMapping  = $GLOBALS      [ "TableMapping" ] ;
+    $TABLE         = $TableMapping [ "Parameters"   ] ;
+  }                                                   ;
+  /////////////////////////////////////////////////////
+  $this -> Type    = 0                                ;
+  $this -> Variety = 0                                ;
+  $this -> Scope   = ""                               ;
+  $this -> Table   = $TABLE                           ;
 }
 
-public function setType($T)
+public function setType ( $T )
 {
   $this -> Type    = $T ;
 }
 
-public function setVariety($V)
+public function setVariety ( $V )
 {
   $this -> Variety = $V ;
 }
 
-public function setScope($S)
+public function setScope ( $S )
 {
   $this -> Scope   = $S ;
 }
 
-public function setTable($T)
+public function setTable ( $T )
 {
   $this -> Table   = $T ;
 }
 
-public function Where($Uuid,$Name)
+public function Where ( $Uuid , $Name )
 {
   return "where "                                      .
             "`uuid` = "  . (string) $Uuid   .  " and " .
@@ -59,25 +63,25 @@ public function Where($Uuid,$Name)
             "`name` = '" . $Name            . "'"      ;
 }
 
-public function SelectItem($Item,$Uuid,$Name)
+public function SelectItem ( $Item , $Uuid , $Name )
 {
   return "select `" . $Item . "` from " . $this -> Table . " " .
          $this -> Where ( $Uuid , $Name ) . " ;"               ;
 }
 
-public function UpdateItem($Item,$Uuid,$Name)
+public function UpdateItem ( $Item , $Uuid , $Name )
 {
   return "update " . $this -> Table . " set `" . $Item . "` = ? " .
          $this -> Where ( $Uuid , $Name ) . " ;"                  ;
 }
 
-public function UpdateId($Id,$Item,$Value)
+public function UpdateId ( $Id , $Item , $Value )
 {
   return "update " . $this -> Table . " set `" . $Item . "` = " . $Value .
          " where `id` = " . (string) $Id . " ;"                          ;
 }
 
-public function Fetch($DB,$Item,$Uuid,$Name)
+public function Fetch ( $DB , $Item , $Uuid , $Name )
 {
   $QQ   = $this -> SelectItem ( $Item , $Uuid , $Name ) ;
   $qq   = $DB   -> Query      ( $QQ                   ) ;
@@ -89,31 +93,31 @@ public function Fetch($DB,$Item,$Uuid,$Name)
   return $VV                                            ;
 }
 
-public function Value($DB,$Uuid,$Name)
+public function Value ( $DB , $Uuid , $Name )
 {
   $A = $this -> Fetch ( $DB , "value" , $Uuid , $Name ) ;
   if ( strlen ( $A ) <= 0 ) return 0                    ;
   return $A                                             ;
 }
 
-public function Floating($DB,$Uuid,$Name)
+public function Floating ( $DB , $Uuid , $Name )
 {
   $A = $this -> Fetch ( $DB , "floating" , $Uuid , $Name ) ;
   if ( strlen ( $A ) <= 0 ) return 0                       ;
   return $A                                                ;
 }
 
-public function Data($DB,$Uuid,$Name)
+public function Data ( $DB , $Uuid , $Name )
 {
   return $this -> Fetch ( $DB , "data" , $Uuid , $Name ) ;
 }
 
-public function ObtainsId($DB,$Uuid,$Name)
+public function ObtainsId ( $DB , $Uuid , $Name )
 {
   return $this -> Fetch ( $DB , "id" , $Uuid , $Name ) ;
 }
 
-public function InsertIntoValue($DB,$Uuid,$Name,$Value)
+public function InsertIntoValue ( $DB , $Uuid , $Name , $Value )
 {
   return "insert into " . $this -> Table                              .
          " (`uuid`,`type`,`variety`,`scope`,`name`,`value`) values (" .
@@ -125,7 +129,7 @@ public function InsertIntoValue($DB,$Uuid,$Name,$Value)
          (string) $Value                                      . ") ;" ;
 }
 
-public function InsertIntoFloating($DB,$Uuid,$Name,$Floating)
+public function InsertIntoFloating ( $DB , $Uuid , $Name , $Floating )
 {
   return "insert into " . $this -> Table                                 .
          " (`uuid`,`type`,`variety`,`scope`,`name`,`floating`) values (" .
@@ -137,7 +141,7 @@ public function InsertIntoFloating($DB,$Uuid,$Name,$Floating)
          (string) $Floating                                      . ") ;" ;
 }
 
-public function InsertIntoData($DB,$Uuid,$Name)
+public function InsertIntoData ( $DB , $Uuid , $Name )
 {
   return "insert into " . $this -> Table                             .
          " (`uuid`,`type`,`variety`,`scope`,`name`,`data`) values (" .
@@ -148,7 +152,7 @@ public function InsertIntoData($DB,$Uuid,$Name)
          "'" . (string) $Name                             . "',?) ;" ;
 }
 
-public function assureValue($DB,$Uuid,$Name,$Value)
+public function assureValue ( $DB , $Uuid , $Name , $Value )
 {
   $Id = $this -> ObtainsId ( $DB , $Uuid , $Name )                  ;
   $QQ = ""                                                          ;
@@ -160,7 +164,7 @@ public function assureValue($DB,$Uuid,$Name,$Value)
   return $DB -> Query ( $QQ )                                       ;
 }
 
-public function assureData($DB,$Uuid,$Name,$BLOB)
+public function assureData ( $DB , $Uuid , $Name , $BLOB )
 {
   $Id = $this -> ObtainsId        ( $DB , $Uuid , $Name ) ;
   $QQ = ""                                                ;
@@ -178,12 +182,7 @@ public function assureData($DB,$Uuid,$Name,$BLOB)
   return $rt                                              ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-}
-
-//////////////////////////////////////////////////////////////////////////////
-
-function NewParameter($T,$V,$S)
+public static function NewParameter ( $T , $V , $S )
 {
   $PQ  = new ParameterQuery (    ) ;
   $PQ -> setType            ( $T ) ;
@@ -192,27 +191,55 @@ function NewParameter($T,$V,$S)
   return $PQ                       ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
-function GetParameterDateTime($DB,$PEOPLE,$Item)
+public static function GetParameterData ( $DB , $PUID , $Item , $T , $V , $S )
 {
-  $PQ  = NewParameter  ( 3 , 12 , "DateTime"   ) ;
-  $PQ -> setTable      ( "`erp`.`parameters`"  ) ;
-  $DT  = $PQ -> Value  ( $DB , $PEOPLE , $Item ) ;
-  unset                ( $PQ                   ) ;
-  return $DT                                     ;
+  /////////////////////////////////////////////////////
+  $TABLE = "`erp`.`parameters`"                       ;
+  if ( isset ( $GLOBALS [ "TableMapping" ] ) )        {
+    $TableMapping  = $GLOBALS      [ "TableMapping" ] ;
+    $TABLE         = $TableMapping [ "Parameters"   ] ;
+  }                                                   ;
+  /////////////////////////////////////////////////////
+  $PQ  = self::NewParameter ( $T  , $V    , $S      ) ;
+  $PQ -> setTable           ( $TABLE                ) ;
+  $DT  = $PQ -> Data        ( $DB , $PUID , $Item   ) ;
+  unset                     ( $PQ                   ) ;
+  /////////////////////////////////////////////////////
+  return $DT                                          ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
-function GetParameterPersonal($DB,$PEOPLE,$Item)
+public static function GetParameter ( $DB , $PUID , $Item , $T , $V , $S )
 {
-  $PQ  = NewParameter  ( 0 , 48 , "Personal"   ) ;
-  $PQ -> setTable      ( "`erp`.`parameters`"  ) ;
-  $DT  = $PQ -> Value  ( $DB , $PEOPLE , $Item ) ;
-  unset                ( $PQ                   ) ;
-  return $DT                                     ;
+  /////////////////////////////////////////////////////
+  $TABLE = "`erp`.`parameters`"                       ;
+  if ( isset ( $GLOBALS [ "TableMapping" ] ) )        {
+    $TableMapping  = $GLOBALS      [ "TableMapping" ] ;
+    $TABLE         = $TableMapping [ "Parameters"   ] ;
+  }                                                   ;
+  /////////////////////////////////////////////////////
+  $PQ  = self::NewParameter ( $T  , $V    , $S      ) ;
+  $PQ -> setTable           ( $TABLE                ) ;
+  $DT  = $PQ -> Value       ( $DB , $PUID , $Item   ) ;
+  unset                     ( $PQ                   ) ;
+  /////////////////////////////////////////////////////
+  return $DT                                          ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
+public static function GetParameterDateTime ( $DB , $PUID , $Item )
+{
+  return self::GetParameter ( $DB , $PUID , $Item , 3 , 12 , "DateTime" ) ;
+}
+
+public static function GetParameterStatus ( $DB , $PUID , $Item )
+{
+  return self::GetParameter ( $DB , $PUID , $Item , 0 , 23 , "Status" ) ;
+}
+
+public static function GetParameterPersonal ( $DB , $PUID , $Item )
+{
+  return self::GetParameter ( $DB , $PUID , $Item , 0 , 48 , "Personal" ) ;
+}
+
+}
+
 ?>

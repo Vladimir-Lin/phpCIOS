@@ -269,6 +269,54 @@ public function UnlockTables()
   $this -> Query ( $QQ )     ;
 }
 
+public function GetPassword($Table,$Uuid,$Name)
+{
+  $QQ  = "select `secret` from {$Table}"          .
+         " where `uuid` = {$Uuid}"                .
+           " and `name` = '{$Name}' ;"            ;
+  $Pwd = ""                                       ;
+  $qq  = $this -> Query ( $QQ )                   ;
+  if ( ! $this -> hasResult ( $qq ) ) return $Pwd ;
+  $N   = $qq -> fetch_array ( MYSQLI_BOTH )       ;
+  $Pwd = $N [ "secret" ]                          ;
+  return $Pwd                                     ;
+}
+
+public function AssurePassword($Table,$Uuid,$Name,$Pwd)
+{
+  $Id  = 0                                     ;
+  $QQ  = "select `id` from {$Table}"           .
+         " where `uuid` = {$Uuid}"             .
+           " and `name` = '{$Name}' ;"         ;
+  $q   = $this -> Query ( $QQ )                ;
+  //////////////////////////////////////////////
+  if ( $this -> hasResult ( $q ) )             {
+    $N  = $q -> fetch_array  ( MYSQLI_BOTH )   ;
+    $Id = $N [ "id" ]                          ;
+  }                                            ;
+  //////////////////////////////////////////////
+  if ( $Id > 0 )                               {
+    if ( strlen ( $Pwd ) <= 0 )                {
+      $QQ = "delete from {$Table}"             .
+            " where `id` = {$Id}"              .
+            " and `uuid` = {$Uuid}"            .
+            " ;"                               ;
+    } else                                     {
+      $QQ = "update {$Table}"                  .
+            " set `secret` = '{$Pwd}'"         .
+            " where `uuid` = {$Uuid}"          .
+              " and `name` = '{$Name}' ;"      ;
+    }                                          ;
+  } else                                       {
+    $QQ = "insert into {$Table}"               .
+          " (`uuid`,`name`,`secret`)"          .
+          " values"                            .
+          " ({$Uuid},'{$Name}','{$Pwd}') ;"    ;
+  }                                            ;
+  //////////////////////////////////////////////
+  return $this -> Query ( $QQ )                ;
+}
+
 }
 
 ?>

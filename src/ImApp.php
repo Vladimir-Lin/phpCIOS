@@ -2,13 +2,12 @@
 
 namespace CIOS ;
 
-class ImApp extends Columns
+class ImApp
 {
-//////////////////////////////////////////////////////////////////////////////
-  public $Uuid    = "0" ;
-  public $Type    =  1  ;
-  public $Account       ;
-//////////////////////////////////////////////////////////////////////////////
+
+public $Uuid    = "0" ;
+public $Type    =  1  ;
+public $Account       ;
 
 function __construct()
 {
@@ -133,7 +132,7 @@ public function Newbie ( $DB , $ImTable , $UuidTable )
 
 public function Subordination ( $DB , $Table , $U , $Type = "People" )
 {
-  $RI  = new RelationItem     (                  ) ;
+  $RI  = new Relation         (                  ) ;
   $RI -> set                  ( "first" , $U     ) ;
   $RI -> setT1                ( $Type            ) ;
   $RI -> setT2                ( "InstantMessage" ) ;
@@ -145,7 +144,7 @@ public function Subordination ( $DB , $Table , $U , $Type = "People" )
 
 public function GetOwners ( $DB , $Table , $Type = "People" )
 {
-  $RI  = new RelationItem (                          ) ;
+  $RI  = new Relation     (                          ) ;
   $RI -> set              ( "second" , $this -> Uuid ) ;
   $RI -> setT1            ( $Type                    ) ;
   $RI -> setT2            ( "InstantMessage"         ) ;
@@ -174,216 +173,6 @@ public function FindByName ( $DB , $TABLE , $NAME )
   return $TMP                                          ;
 }
 
-public function EchoOptions($HS)
-{
-  global $ImAppNames                      ;
-  $K = array_keys ( $ImAppNames )         ;
-  if ( count ( $K ) <= 0 ) return         ;
-  foreach ( $K as $k )                    {
-    $HE = new HtmlTag ( )                 ;
-    $HE -> setTag ( "option" )            ;
-    if ( $k == $this -> Type )            {
-      $HE -> AddMember ( "selected" )     ;
-    }                                     ;
-    $HE -> AddPair ( "value" , $k       ) ;
-    $HE -> AddText ( $ImAppNames [ $k ] ) ;
-    $HS -> AddTag  ( $HE                ) ;
-  }
 }
 
-public function EchoSelection($ClassName,$ItemName)
-{
-  $HS    = new HtmlTag (                      ) ;
-  $HS   -> setSplitter ( "\n"                 ) ;
-  $HS   -> setTag      ( "select"             ) ;
-  $HS   -> SafePair    ( "class" , $ClassName ) ;
-  $HS   -> SafePair    ( "id"    , $ItemName  ) ;
-  $HS   -> SafePair    ( "name"  , $ItemName  ) ;
-  $this -> EchoOptions ( $HS                  ) ;
-  return $HS                                    ;
-}
-
-public function EchoUuidInput($ItemName)
-{
-  $HS  = new HtmlTag    (                         ) ;
-  $HS -> setHiddenInput (                         ) ;
-  $HS -> SafePair       ( "id"    , $ItemName     ) ;
-  $HS -> SafePair       ( "name"  , $ItemName     ) ;
-  $HS -> SafePair       ( "value" , $this -> Uuid ) ;
-  return $HS                                        ;
-}
-
-public function EchoPositionInput($ItemName,$ID)
-{
-  $HT  = new HtmlTag    (                     ) ;
-  $HT -> setHiddenInput (                     ) ;
-  $HT -> SafePair       ( "id"    , $ItemName ) ;
-  $HT -> SafePair       ( "name"  , $ItemName ) ;
-  $HT -> AddPair        ( "value" , $ID       ) ;
-  ///////////////////////////////////////////////
-  return $HT                                    ;
-}
-
-public function EchoAccountInput($ClassName,$ItemName,$Width,$Holder="")
-{
-  $HS  = new HtmlTag (                                  ) ;
-  $HS -> setInput    (                                  ) ;
-  $HS -> AddPair     ( "type"        , "text"           ) ;
-  $HS -> AddPair     ( "size"        , $Width           ) ;
-  $HS -> SafePair    ( "class"       , $ClassName       ) ;
-  $HS -> SafePair    ( "id"          , $ItemName        ) ;
-  $HS -> SafePair    ( "name"        , $ItemName        ) ;
-  $HS -> SafePair    ( "value"       , $this -> Account ) ;
-  $HS -> SafePair    ( "placeholder" , $Holder          ) ;
-  return $HS                                              ;
-}
-
-public function EchoDIV($ID,$Width,$Holder="")
-{
-  $OC  = "portfolioImAppChanged("     . $ID . ");"        ;
-//  $OE  = "portfolioImAppEnter(event," . $ID . ");"        ;
-  /////////////////////////////////////////////////////////
-  $HD  = new HtmlTag (                                  ) ;
-  $HD -> setSplitter ( "\n"                             ) ;
-  $HD -> setTag      ( "div"                            ) ;
-  $HD -> SafePair    ( "class" , "imapp-div"            ) ;
-  /////////////////////////////////////////////////////////
-  $HT  = new HtmlTag (                                  ) ;
-  $HT -> setTag      ( "table"                          ) ;
-  $HT -> AddPair     ( "width"       , "100%"           ) ;
-  $HT -> AddPair     ( "border"      , "0"              ) ;
-  $HT -> AddPair     ( "cellspacing" , "0"              ) ;
-  $HT -> AddPair     ( "cellpadding" , "0"              ) ;
-  $HD -> AddTag      ( $HT                              ) ;
-  /////////////////////////////////////////////////////////
-  $HB  = new HtmlTag (                                  ) ;
-  $HB -> setTag      ( "tbody"                          ) ;
-  $HT -> AddTag      ( $HB                              ) ;
-  /////////////////////////////////////////////////////////
-  $HR  = new HtmlTag (                                  ) ;
-  $HR -> setTag      ( "tr"                             ) ;
-  $HR -> setSplitter ( "\n"                             ) ;
-  $HB -> AddTag      ( $HR                              ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HX -> AddPair     ( "width" , "5%"                   ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HX -> AddTag      ( $this -> EchoUuidInput             (
-                         "imapp-uuid-" . $ID          ) ) ;
-  $HX -> AddTag      ( $this -> EchoPositionInput         (
-                         "imapp-position-" . $ID          ,
-                         $ID                          ) ) ;
-  /////////////////////////////////////////////////////////
-  $HS  = $this -> EchoSelection                           (
-                       "imapp-selection"                  ,
-                       "imapp-id-"     . $ID            ) ;
-  $HS -> AddPair     ( "onchange"   , $OC               ) ;
-//  $HS -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HS                              ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HA  = $this -> EchoAccountInput                        (
-                       "NameInput"                        ,
-                       "imapp-"          . $ID            ,
-                       $Width                             ,
-                       $Holder                          ) ;
-  $HA -> AddPair     ( "onchange"   , $OC               ) ;
-//  $HA -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HA                              ) ;
-  /////////////////////////////////////////////////////////
-  return $HD                                              ;
-}
-
-public function EchoPersonalImApp($PUID,$ID,$Width,$Holder="")
-{
-  $OC  = "personalImAppChanged('{$PUID}',{$ID});"         ;
-  /////////////////////////////////////////////////////////
-  $HD  = new HtmlTag (                                  ) ;
-  $HD -> setSplitter ( "\n"                             ) ;
-  $HD -> setTag      ( "div"                            ) ;
-  $HD -> SafePair    ( "class" , "imapp-div"            ) ;
-  /////////////////////////////////////////////////////////
-  $HT  = new HtmlTag (                                  ) ;
-  $HT -> setTag      ( "table"                          ) ;
-  $HT -> AddPair     ( "width"       , "100%"           ) ;
-  $HT -> AddPair     ( "border"      , "0"              ) ;
-  $HT -> AddPair     ( "cellspacing" , "0"              ) ;
-  $HT -> AddPair     ( "cellpadding" , "0"              ) ;
-  $HD -> AddTag      ( $HT                              ) ;
-  /////////////////////////////////////////////////////////
-  $HB  = new HtmlTag (                                  ) ;
-  $HB -> setTag      ( "tbody"                          ) ;
-  $HT -> AddTag      ( $HB                              ) ;
-  /////////////////////////////////////////////////////////
-  $HR  = new HtmlTag (                                  ) ;
-  $HR -> setTag      ( "tr"                             ) ;
-  $HR -> setSplitter ( "\n"                             ) ;
-  $HB -> AddTag      ( $HR                              ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HX -> AddPair     ( "width" , "5%"                   ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HX -> AddTag      ( $this -> EchoUuidInput             (
-                         "imapp-uuid-" . $ID          ) ) ;
-  $HX -> AddTag      ( $this -> EchoPositionInput         (
-                         "imapp-position-" . $ID          ,
-                         $ID                          ) ) ;
-  /////////////////////////////////////////////////////////
-  $HS  = $this -> EchoSelection                           (
-                       "imapp-selection"                  ,
-                       "imapp-id-"     . $ID            ) ;
-  $HS -> AddPair     ( "onchange"   , $OC               ) ;
-//  $HS -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HS                              ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HA  = $this -> EchoAccountInput                        (
-                       "NameInput"                        ,
-                       "imapp-"          . $ID            ,
-                       $Width                             ,
-                       $Holder                          ) ;
-  $HA -> AddPair     ( "onchange"   , $OC               ) ;
-//  $HA -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HA                              ) ;
-  /////////////////////////////////////////////////////////
-  return $HD                                              ;
-}
-
-public function AccountURL()
-{
-  ////////////////////////////////////////////////////////
-  $SA    = $this -> Account                              ;
-  $SKYPE = "skype:{$SA}?chat"                            ;
-  ////////////////////////////////////////////////////////
-  $URL  = new HtmlTag (                                ) ;
-  $URL -> setTag      ( "a"                            ) ;
-  ////////////////////////////////////////////////////////
-  $IMG  = new HtmlTag (                                ) ;
-  $IMG -> setTag      ( "img"                          ) ;
-  $IMG -> AddPair     ( "src"    , "/images/skype.png" ) ;
-  $IMG -> AddPair     ( "width"  , "24"                ) ;
-  $IMG -> AddPair     ( "height" , "24"                ) ;
-  ////////////////////////////////////////////////////////
-  $URL -> setSplitter ( "\n"                           ) ;
-  $URL -> AddPair     ( "href"   , $SKYPE              ) ;
-  $URL -> AddTag      ( $IMG                           ) ;
-  $URL -> AddText     ( $SA                            ) ;
-  ////////////////////////////////////////////////////////
-  return $URL                                            ;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-}
-
-//////////////////////////////////////////////////////////////////////////////
 ?>

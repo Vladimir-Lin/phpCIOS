@@ -63,22 +63,24 @@ public function ZoneNameById ( $id )
 
 public function Query ( $DB , $Table )
 {
-  $this -> clear ( )                                                         ;
+  $this -> clear     (                                                     ) ;
   $QQ = "select `id`,`uuid`,`zonename` from {$Table} order by `id` asc ;"    ;
-  $qq = $DB -> Query ( $QQ )                                                 ;
-  while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                         {
-    $id = $rr [ "id"       ]                                                 ;
-    $UU = $rr [ "uuid"     ]                                                 ;
-    $ZZ = $rr [ "zonename" ]                                                 ;
-    $this -> TzIds [ $UU ] = $ZZ                                             ;
-    $this -> IdTzs [ $ZZ ] = $UU                                             ;
-    $this -> TzSds [ $id ] = $ZZ                                             ;
-    $this -> SdTzs [ $ZZ ] = $id                                             ;
-    $this -> SdUds [ $id ] = $UU                                             ;
-    $this -> UdSds [ $UU ] = $id                                             ;
-    array_push ( $this -> TZs   , $ZZ )                                      ;
-    array_push ( $this -> Uuids , $UU )                                      ;
-    array_push ( $this -> IDs   , $id )                                      ;
+  $qq = $DB -> Query ( $QQ                                                 ) ;
+  if                 ( $DB -> hasResult ( $qq )                            ) {
+    while            ( $rr = $qq -> fetch_array ( MYSQLI_BOTH )            ) {
+      $id = $rr [ "id"       ]                                               ;
+      $UU = $rr [ "uuid"     ]                                               ;
+      $ZZ = $rr [ "zonename" ]                                               ;
+      $this -> TzIds [ $UU ] = $ZZ                                           ;
+      $this -> IdTzs [ $ZZ ] = $UU                                           ;
+      $this -> TzSds [ $id ] = $ZZ                                           ;
+      $this -> SdTzs [ $ZZ ] = $id                                           ;
+      $this -> SdUds [ $id ] = $UU                                           ;
+      $this -> UdSds [ $UU ] = $id                                           ;
+      array_push ( $this -> TZs   , $ZZ )                                    ;
+      array_push ( $this -> Uuids , $UU )                                    ;
+      array_push ( $this -> IDs   , $id )                                    ;
+    }                                                                        ;
   }                                                                          ;
 }
 
@@ -95,23 +97,35 @@ public function ZoneNames ( $DB , $Table , $LANGs )
   }                                                                ;
 }
 
+public function GetZoneName ( $DB , $Table , $U )
+{
+  $ZN = ""                                                      ;
+  $QQ = "select `zonename` from {$Table} where `uuid` = {$U} ;" ;
+  $qq = $DB -> Query ( $QQ                                    ) ;
+  if                 ( $DB -> hasResult ( $qq )               ) {
+    $rr = $qq -> fetch_array ( MYSQLI_BOTH )                    ;
+    $ZN = $rr [ 0 ]                                             ;
+  }                                                             ;
+  return $ZN                                                    ;
+}
+
 public function GetTimeZone ( $DB , $Table , $U , $Default , $Type = "People" )
 {
-  $CT  = 0                                     ;
-  $RI  = new Relation         (              ) ;
-  $RI -> set                  ( "first" , $U ) ;
-  $RI -> setT1                ( $Type        ) ;
-  $RI -> setT2                ( "TimeZone"   ) ;
-  $RI -> setRelation          ( "Originate"  ) ;
-  $UU  = $RI -> Subordination ( $DB , $Table ) ;
-  unset                       ( $RI          ) ;
-  if ( count ( $UU ) > 0 )                     {
-    $UX = $UU [ 0 ]                            ;
-    $CT = "{$UX}"                              ;
-  } else                                       {
-    $CT = "{$Default}"                         ;
-  }                                            ;
-  return $CT                                   ;
+  $CT   = 0                                          ;
+  $RI   = new Relation         (                   ) ;
+  $RI  -> set                  ( "first" , $U      ) ;
+  $RI  -> setT1                ( $Type             ) ;
+  $RI  -> setT2                ( "TimeZone"        ) ;
+  $RI  -> setRelation          ( "Originate"       ) ;
+  $UU   = $RI -> Subordination ( $DB , $Table      ) ;
+  unset                        ( $RI               ) ;
+  if                           ( count ( $UU ) > 0 ) {
+    $UX = $UU [ 0 ]                                  ;
+    $CT = "{$UX}"                                    ;
+  } else                                             {
+    $CT = "{$Default}"                               ;
+  }                                                  ;
+  return $CT                                         ;
 }
 
 public function addSelector($NameMaps,$CurrentTimeZone,$TzMenu,$TzClass="")

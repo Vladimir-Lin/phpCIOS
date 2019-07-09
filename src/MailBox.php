@@ -4,7 +4,6 @@ namespace CIOS ;
 
 class MailBox extends Columns
 {
-//////////////////////////////////////////////////////////////////////////////
 
 public $Position    ;
 public $Uuid        ;
@@ -14,15 +13,15 @@ public $Hostname    ;
 public $Appellation ;
 public $Updated     ;
 
-//////////////////////////////////////////////////////////////////////////////
-
 function __construct()
 {
-  $this -> clear ( )  ;
+  parent::__construct ( ) ;
+  $this -> clear      ( ) ;
 }
 
 function __destruct()
 {
+  parent::__destruct ( ) ;
 }
 
 public function clear()
@@ -68,23 +67,17 @@ public function Verify()
   if ( ! $this -> isValidHostname ( $this -> Hostname ) ) {
     return false                                          ;
   }                                                       ;
-  /////////////////////////////////////////////////////////
   if ( false === strpos ( " "  , $this -> Account     ) ) {
     // no space in the email account name
   } else return false                                     ;
-  /////////////////////////////////////////////////////////
   if ( false === strpos ( "\\" , $this -> Appellation ) ) {
   } else return false                                     ;
-  /////////////////////////////////////////////////////////
   if ( false === strpos ( "'"  , $this -> Appellation ) ) {
   } else return false                                     ;
-  /////////////////////////////////////////////////////////
   if ( false === strpos ( "`"  , $this -> Appellation ) ) {
   } else return false                                     ;
-  /////////////////////////////////////////////////////////
   if ( false === strpos ( "\"" , $this -> Appellation ) ) {
   } else return false                                     ;
-  /////////////////////////////////////////////////////////
   $n = strtolower ( $this -> Name ( )    )                ;
   $a = strtolower ( $this -> Appellation )                ;
   return ( $n == $a )                                     ;
@@ -100,7 +93,7 @@ public function isEqual($email)
   return ( $email == $this -> Name ( ) ) ;
 }
 
-public function Assign ($email)
+public function assign ($email)
 {
   $this -> Position    = $email -> Position    ;
   $this -> Uuid        = $email -> Uuid        ;
@@ -111,12 +104,64 @@ public function Assign ($email)
   $this -> Updated     = $email -> Updated     ;
 }
 
+public function tableItems()
+{
+  $S = array (                 ) ;
+  array_push ( $S , "id"       ) ;
+  array_push ( $S , "uuid"     ) ;
+  array_push ( $S , "hostid"   ) ;
+  array_push ( $S , "account"  ) ;
+  array_push ( $S , "hostname" ) ;
+  array_push ( $S , "email"    ) ;
+  array_push ( $S , "ltime"    ) ;
+  return $S                      ;
+}
+
+public function set($item,$V)
+{
+  $a = strtolower ( $item )                         ;
+  if ( "id"       == $a ) $this -> Position    = $V ;
+  if ( "uuid"     == $a ) $this -> Uuid        = $V ;
+  if ( "hostid"   == $a ) $this -> HostId      = $V ;
+  if ( "account"  == $a ) $this -> Account     = $V ;
+  if ( "hostname" == $a ) $this -> Hostname    = $V ;
+  if ( "email"    == $a ) $this -> Appellation = $V ;
+  if ( "ltime"    == $a ) $this -> Updated     = $V ;
+}
+
+public function ItemPair($item)
+{
+  $a = strtolower ( $item )                            ;
+  if ( "id"       == $a )                              {
+    return "`{$a}` = " . (string) $this -> Position    ;
+  }                                                    ;
+  if ( "uuid"     == $a )                              {
+    return "`{$a}` = " . (string) $this -> Uuid        ;
+  }                                                    ;
+  if ( "hostid"   == $a )                              {
+    return "`{$a}` = " . (string) $this -> HostId      ;
+  }                                                    ;
+  if ( "account"  == $a )                              {
+    return "`{$a}` = " . (string) $this -> Account     ;
+  }                                                    ;
+  if ( "hostname" == $a )                              {
+    return "`{$a}` = " . (string) $this -> Hostname    ;
+  }                                                    ;
+  if ( "email"    == $a )                              {
+    return "`{$a}` = " . (string) $this -> Appellation ;
+  }                                                    ;
+  if ( "ltime"    == $a )                              {
+    return "`{$a}` = " . (string) $this -> Updated     ;
+  }                                                    ;
+  return ""                                            ;
+}
+
 public function setAccount ($account)
 {
-  if ( strlen ( account ) <= 0 ) return false ;
-  $this -> Account = trim ( $account )        ;
-  $this -> Updated = true                     ;
-  return true                                 ;
+  if ( strlen ( $account ) <= 0 ) return false ;
+  $this -> Account = trim ( $account )         ;
+  $this -> Updated = true                      ;
+  return true                                  ;
 }
 
 public function setHostname ($hostname)
@@ -220,7 +265,6 @@ public function Append ( $DB , $EmailTable , $UuidTable )
   $this -> Uuid = (string) $U                                             ;
   $ET           = $DataTypes [ "EMail" ]                                  ;
   if ( ! $DB -> AddUuid ( $UuidTable , $U , $ET ) ) return false          ;
-  /////////////////////////////////////////////////////////////////////////
   return $this -> Insert ( $DB , $EmailTable )                            ;
 }
 
@@ -243,7 +287,7 @@ public function Newbie ( $DB , $EmailTable , $UuidTable )
 
 public function Subordination ( $DB , $Table , $U , $Type = "People" )
 {
-  $RI  = new RelationItem     (                 ) ;
+  $RI  = new Relation         (                 ) ;
   $RI -> set                  ( "first" , $U    ) ;
   $RI -> setT1                ( $Type           ) ;
   $RI -> setT2                ( "EMail"         ) ;
@@ -255,7 +299,7 @@ public function Subordination ( $DB , $Table , $U , $Type = "People" )
 
 public function GetOwners ( $DB , $Table , $Type = "People" )
 {
-  $RI  = new RelationItem (                          ) ;
+  $RI  = new Relation     (                          ) ;
   $RI -> set              ( "second" , $this -> Uuid ) ;
   $RI -> setT1            ( $Type                    ) ;
   $RI -> setT2            ( "EMail"                  ) ;
@@ -284,142 +328,6 @@ public function FindByName ( $DB , $TABLE , $NAME )
   return $TMP                                          ;
 }
 
-public function EchoUuidInput($ItemName)
-{
-  $HT  = new HtmlTag    (                          ) ;
-  $HT -> setHiddenInput (                          ) ;
-  $HT -> SafePair       ( "id"    , $ItemName      ) ;
-  $HT -> SafePair       ( "name"  , $ItemName      ) ;
-  $HT -> AddPair        ( "value" , $this -> Uuid  ) ;
-  ////////////////////////////////////////////////////
-  return $HT                                         ;
 }
 
-public function EchoPositionInput($ItemName,$ID)
-{
-  $HT  = new HtmlTag    (                     ) ;
-  $HT -> setHiddenInput (                     ) ;
-  $HT -> SafePair       ( "id"    , $ItemName ) ;
-  $HT -> SafePair       ( "name"  , $ItemName ) ;
-  $HT -> AddPair        ( "value" , $ID       ) ;
-  ///////////////////////////////////////////////
-  return $HT                                    ;
-}
-
-public function EchoAccountInput($ClassName,$ItemName,$Width,$Holder="")
-{
-  $HT  = new HtmlTag (                                      ) ;
-  $HT -> setInput    (                                      ) ;
-  $HT -> AddPair     ( "type"        , "email"              ) ;
-  $HT -> AddPair     ( "size"        , $Width               ) ;
-  $HT -> AddPair     ( "value"       , $this -> Appellation ) ;
-  $HT -> SafePair    ( "class"       , $ClassName           ) ;
-  $HT -> SafePair    ( "id"          , $ItemName            ) ;
-  $HT -> SafePair    ( "name"        , $ItemName            ) ;
-  $HT -> SafePair    ( "placeholder" , $Holder              ) ;
-  /////////////////////////////////////////////////////////////
-  return $HT                                                  ;
-}
-
-public function EchoDIV($ID,$Width,$Holder="")
-{
-  $OC  = "portfolioEmailChanged({$ID});"                  ;
-//  $OE  = "portfolioEmailEnter(event," . $ID . ");"        ;
-  /////////////////////////////////////////////////////////
-  $HD  = new HtmlTag (                                  ) ;
-  $HD -> setSplitter ( "\n"                             ) ;
-  $HD -> setTag      ( "div"                            ) ;
-  $HD -> SafePair    ( "class" , "email-div"            ) ;
-  /////////////////////////////////////////////////////////
-  $HT  = new HtmlTag (                                  ) ;
-  $HT -> setTag      ( "table"                          ) ;
-  $HT -> AddPair     ( "width"       , "100%"           ) ;
-  $HT -> AddPair     ( "border"      , "0"              ) ;
-  $HT -> AddPair     ( "cellspacing" , "0"              ) ;
-  $HT -> AddPair     ( "cellpadding" , "0"              ) ;
-  $HD -> AddTag      ( $HT                              ) ;
-  /////////////////////////////////////////////////////////
-  $HB  = new HtmlTag (                                  ) ;
-  $HB -> setTag      ( "tbody"                          ) ;
-  $HT -> AddTag      ( $HB                              ) ;
-  /////////////////////////////////////////////////////////
-  $HR  = new HtmlTag (                                  ) ;
-  $HR -> setTag      ( "tr"                             ) ;
-  $HR -> setSplitter ( "\n"                             ) ;
-  $HB -> AddTag      ( $HR                              ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HX -> AddTag      ( $this -> EchoUuidInput             (
-                         "email-uuid-"     . $ID      ) ) ;
-  $HX -> AddTag      ( $this -> EchoPositionInput         (
-                         "email-position-" . $ID          ,
-                         $ID                          ) ) ;
-  /////////////////////////////////////////////////////////
-  $HA  =$this -> EchoAccountInput                         (
-                         "NameInput"                      ,
-                         "email-"          . $ID          ,
-                         $Width                           ,
-                         $Holder                        ) ;
-  $HA -> AddPair     ( "onchange"   , $OC               ) ;
-//  $HA -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HA                              ) ;
-  /////////////////////////////////////////////////////////
-  return $HD                                              ;
-}
-
-public function EchoPersonalEMail($PUID,$ID,$Width,$Holder="")
-{
-  $OC  = "personalEmailChanged('{$PUID}',{$ID});"         ;
-  /////////////////////////////////////////////////////////
-  $HD  = new HtmlTag (                                  ) ;
-  $HD -> setSplitter ( "\n"                             ) ;
-  $HD -> setTag      ( "div"                            ) ;
-  $HD -> SafePair    ( "class" , "email-div"            ) ;
-  /////////////////////////////////////////////////////////
-  $HT  = new HtmlTag (                                  ) ;
-  $HT -> setTag      ( "table"                          ) ;
-  $HT -> AddPair     ( "width"       , "100%"           ) ;
-  $HT -> AddPair     ( "border"      , "0"              ) ;
-  $HT -> AddPair     ( "cellspacing" , "0"              ) ;
-  $HT -> AddPair     ( "cellpadding" , "0"              ) ;
-  $HD -> AddTag      ( $HT                              ) ;
-  /////////////////////////////////////////////////////////
-  $HB  = new HtmlTag (                                  ) ;
-  $HB -> setTag      ( "tbody"                          ) ;
-  $HT -> AddTag      ( $HB                              ) ;
-  /////////////////////////////////////////////////////////
-  $HR  = new HtmlTag (                                  ) ;
-  $HR -> setTag      ( "tr"                             ) ;
-  $HR -> setSplitter ( "\n"                             ) ;
-  $HB -> AddTag      ( $HR                              ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HX -> AddTag      ( $this -> EchoUuidInput             (
-                         "email-uuid-"     . $ID      ) ) ;
-  $HX -> AddTag      ( $this -> EchoPositionInput         (
-                         "email-position-" . $ID          ,
-                         $ID                          ) ) ;
-  /////////////////////////////////////////////////////////
-  $HA  =$this -> EchoAccountInput                         (
-                         "NameInput"                      ,
-                         "email-"          . $ID          ,
-                         $Width                           ,
-                         $Holder                        ) ;
-  $HA -> AddPair     ( "onchange"   , $OC               ) ;
-//  $HA -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HA                              ) ;
-  /////////////////////////////////////////////////////////
-  return $HD                                              ;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-}
-
-//////////////////////////////////////////////////////////////////////////////
 ?>

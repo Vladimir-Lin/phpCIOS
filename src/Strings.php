@@ -90,6 +90,18 @@ public static function Replacement ( $NAME )
   return $NAME                                  ;
 }
 
+public static function LoginWords ( $NAME )
+{
+  $NAME = str_replace ( "\r" , "" , $NAME ) ;
+  $NAME = str_replace ( "\n" , "" , $NAME ) ;
+  $NAME = str_replace ( "\t" , "" , $NAME ) ;
+  $NAME = str_replace ( "\"" , "" , $NAME ) ;
+  $NAME = str_replace ( "\\" , "" , $NAME ) ;
+  $NAME = str_replace ( "'"  , "" , $NAME ) ;
+  $NAME = str_replace ( "`"  , "" , $NAME ) ;
+  return trim         ( $NAME             ) ;
+}
+
 }
 
 ?>
