@@ -423,7 +423,7 @@ public function Recovery()
   $this -> Courses   = explode ( " , " , $CCS )                   ;
 }
 
-public function Home ( $ROLE = $this -> Role )
+public function HomeDir ( $ROLE )
 {
   switch ( $ROLE )                                                           {
     case  1                                                                  : // 訪客
@@ -469,6 +469,11 @@ public function Home ( $ROLE = $this -> Role )
     return "employees"                                                       ;
   }                                                                          ;
   return "visitors"                                                          ;
+}
+
+public function Home (  )
+{
+  return $this -> HomeDir ( $this -> RoleId ( ) ) ;
 }
 
 public function Obtains ( $DB )
