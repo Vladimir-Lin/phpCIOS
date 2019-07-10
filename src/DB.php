@@ -269,6 +269,125 @@ public function UnlockTables()
   $this -> Query ( $QQ )     ;
 }
 
+public function Naming ( $Table , $U , $Locality , $Usage = "Default" )
+{
+  $NI  = new Name     (                        ) ;
+  $NI -> set          ( "Uuid"     , $U        ) ;
+  $NI -> set          ( "Locality" , $Locality ) ;
+  $NI -> setRelevance ( $Usage                 ) ;
+  return $NI -> Fetch ( $this      , $Table    ) ;
+}
+
+public function GetTutor($Table,$U)
+{
+  if ( gmp_cmp ( $U , "0" ) <= 0 ) return "" ;
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Stage"        ) ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Default"      ) ;
+  }                                          ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1002             ,
+                            "Default"      ) ;
+  }                                          ;
+  return $NN                                 ;
+}
+
+public function GetManager($Table,$U)
+{
+  if ( gmp_cmp ( $U , "0" ) <= 0 ) return "" ;
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Stage"        ) ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Default"      ) ;
+  }                                          ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1002             ,
+                            "Default"      ) ;
+  }                                          ;
+  return $NN                                 ;
+}
+
+public function GetInsider($Table,$U)
+{
+  if ( gmp_cmp ( $U , "0" ) <= 0 ) return "" ;
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1002             ,
+                            "Default"      ) ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Default"      ) ;
+  }                                          ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Stage"        ) ;
+  }                                          ;
+  return $NN                                 ;
+}
+
+public function GetStudent($Table,$U)
+{
+  if ( gmp_cmp ( $U , "0" ) <= 0 ) return "" ;
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1002             ,
+                            "Default"      ) ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Pen"          ) ;
+  }                                          ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Default"      ) ;
+  }                                          ;
+  return $NN                                 ;
+}
+
+public function GetTrainee($Table,$U)
+{
+  if ( gmp_cmp ( $U , "0" ) <= 0 ) return "" ;
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Pen"          ) ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1001             ,
+                            "Default"      ) ;
+  }                                          ;
+  if ( strlen ( $NN ) <= 0 )                 {
+    $NN = $this -> Naming ( $Table           ,
+                            $U               ,
+                            1002             ,
+                            "Default"      ) ;
+  }                                          ;
+  return $NN                                 ;
+}
+
 public function GetPassword($Table,$Uuid,$Name)
 {
   $QQ  = "select `secret` from {$Table}"          .

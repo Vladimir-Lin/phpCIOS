@@ -106,7 +106,7 @@ public function GetLanguage ( $DB , $TABLE = "`erp`.`relations`" )
   $RA = $this -> GetObjects     ( $DB , $TABLE , "Language" , "Using" ) ;
   if                            ( count ( $RA ) > 0                   ) {
     $LL = $RA [ 0 ]                                                     ;
-    $this -> Language = gmp_mod ( $LL , 100000                        ) ;
+    $this -> Language = $LL % 100000                                    ;
   }                                                                     ;
   unset                         ( $RA                                 ) ;
   if ( $this -> Language <= 1000 ) $this -> Language = 1001             ;
@@ -134,7 +134,7 @@ public function GetTimeZone ( $DB , $TABLE = "`erp`.`relations`" )
 public function GetZoneName ( $DB , $TABLE )
 {
   $TZS        = new TimeZones       (                              ) ;
-  $this -> TZ = $TZS -> GetZoneName ( $DB , $TABLE , $this -> Uuid ) ;
+  $this -> TZ = $TZS -> GetZoneName ( $DB , $TABLE , $this -> TzId ) ;
   return $this -> TZ                                                 ;
 }
 

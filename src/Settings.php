@@ -142,7 +142,7 @@ public function ObtainsId ( $DB , $TABLE , $ID )
         " where `id` = {$ID} ;"                 ;
   $qq  = $DB -> Query ( $QQ )                   ;
   if ( $DB -> hasResult ( $qq ) )               {
-    $rr = $qq -> fetch_array  ( MYSQLI_BOTH ) ) ;
+    $rr = $qq -> fetch_array  ( MYSQLI_BOTH )   ;
     $this -> Obtain ( $rr )                     ;
   }                                             ;
   return false                                  ;

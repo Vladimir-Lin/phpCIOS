@@ -2,7 +2,7 @@
 
 namespace CIOS ;
 
-$CiosLanguageKey = "CIOS-Language" ;
+define ( "CiosLanguageKey", "CIOS-Language" ) ;
 
 class Browser
 {
@@ -36,16 +36,14 @@ public static function Language ( )
 
 public static function SetLanguage ( $LANG )
 {
-  global $CiosLanguageKey                ;
-  $_SESSION [ $CiosLanguageKey ] = $LANG ;
+  $_SESSION [ CiosLanguageKey ] = $LANG ;
 }
 
 public static function GetLanguage ( )
 {
-  global $CiosLanguageKey                           ;
   ///////////////////////////////////////////////////
-  if   ( isset ( $_SESSION [ $CiosLanguageKey ] ) ) {
-    $LANG = $_SESSION [ $CiosLanguageKey ]          ;
+  if   ( isset ( $_SESSION [ CiosLanguageKey ] ) )  {
+    $LANG = $_SESSION [ CiosLanguageKey ]           ;
     if ( strlen ( $LANG ) > 0                     ) {
       return $LANG                                  ;
     }                                               ;
