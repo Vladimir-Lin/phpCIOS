@@ -2,7 +2,7 @@
 
 namespace CIOS ;
 
-define ( "CiosLanguageKey", "CIOS-Language" ) ;
+define ( "CiosLanguageKey" , "CIOS-Language" ) ;
 
 class Browser
 {

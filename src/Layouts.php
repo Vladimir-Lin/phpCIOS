@@ -89,6 +89,16 @@ public function addLine ( $TAG )
   return $HD                          ;
 }
 
+public function addProgress ( $BAR , $PROGRESS )
+{
+  $HR   = $this -> addTr  (                     ) ;
+  $HD   = $HR   -> addTd  (                     ) ;
+  $HD  -> AddPair         ( "id"    , $BAR      ) ;
+  $DIV  = $HD   -> addDiv ( ""      , $PROGRESS ) ;
+  $DIV -> AddPair         ( "width" , "0%"      ) ;
+  return $HD                                      ;
+}
+
 public function appendTable($BORDER=0,$SPACING=0,$PADDING=0,$TNAME="")
 {
   $HD    = $this  -> appendLine     (                               ) ;
