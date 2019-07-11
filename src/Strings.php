@@ -54,6 +54,19 @@ public function at ( $index )
   return $this -> Listings [ $index ] ;
 }
 
+public static function ReplaceTranslations ( $SOURCE , $REPLACES )
+{
+  $Translations = $GLOBALS [ "Translations" ]   ;
+  $SRCS = $SOURCE                               ;
+  $KEYS = array_keys      ( $REPLACES         ) ;
+  foreach                 ( $KEYS as $K       ) {
+    $VAL  = $REPLACES     [ $K                ] ;
+    $MSG  = $Translations [ $VAL              ] ;
+    $SRCS = str_replace   ( $K , $MSG , $SRCS ) ;
+  }                                             ;
+  return $SRCS                                  ;
+}
+
 public static function ReplaceByKeys($SOURCE,$REPLACES)
 {
   $SRCS = $SOURCE                             ;
