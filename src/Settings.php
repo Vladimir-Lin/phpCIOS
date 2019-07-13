@@ -199,7 +199,7 @@ public function assureValue($DB,$TABLE,$VALUE)
           " (`username`,`scope`,`keyword`,`value`)"       .
           " values (?,?,?,?) ;"                           ;
     $qq   = $DB -> Prepare     ( $QQ                    ) ;
-    $qq  -> bind_param         ( 'sss'                    ,
+    $qq  -> bind_param         ( 'ssss'                   ,
                                  $this -> Username        ,
                                  $this -> Scope           ,
                                  $this -> Keyword         ,
