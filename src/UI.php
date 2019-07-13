@@ -72,8 +72,10 @@ public static function SettingsEditorDB ( $DBX , $CONFs                    ) {
   $TBODY   = $TABLE -> ConfigureTable   ( 1 , 1 , 1                        ) ;
   ////////////////////////////////////////////////////////////////////////////
   $HR      = $TBODY -> addTr            (                                  ) ;
-  $HD      = $HR    -> addTd            (                                  ) ;
-  $HD     -> Compact                    (                                  ) ;
+  if                                    ( $EDIT                            ) {
+    $HD    = $HR    -> addTd            (                                  ) ;
+    $HD   -> Compact                    (                                  ) ;
+  }                                                                          ;
   $HD      = $HR    -> addTd            ( "Id"                             ) ;
   $HD     -> Compact                    (                                  ) ;
   $HD      = $HR    -> addTd            ( "Username"                       ) ;
@@ -136,7 +138,9 @@ public static function SettingsEditorDB ( $DBX , $CONFs                    ) {
       $VALUE   = $rr [ "value"    ]                                          ;
       ////////////////////////////////////////////////////////////////////////
       $HR      = $TBODY -> addTr        (                                  ) ;
-      $HD      = $HR    -> addTd        (                                  ) ;
+      if                                ( $EDIT                            ) {
+        $HD    = $HR    -> addTd        (                                  ) ;
+      }                                                                      ;
       if                                ( $DELETE                          ) {
         $JSC   = "DeleteSettingItem('{$EDITOR}',{$IDXX})"                    ;
         $BTN   = $HD    -> addButton    (                                  ) ;
