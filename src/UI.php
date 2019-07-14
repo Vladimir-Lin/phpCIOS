@@ -238,6 +238,58 @@ public static function SettingsCheckBox ( $CONFs                           ) {
   return $HTML                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public static function isYouTube       ( $URL                              ) {
+  $YOUTUBE = "https://www.youtube.com/watch?v="                              ;
+  if ( strpos ( $URL , $YOUTUBE ) !== false ) return true                    ;
+  return false                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public static function YouTubeID       ( $URL                              ) {
+  $YOUTUBE = "https://www.youtube.com/watch?v="                              ;
+  $UID     = str_replace               ( $YOUTUBE , "" , $URL              ) ;
+  $LEN     = strlen                    ( $UID                              ) ;
+  if ( $LEN != 11 ) return ""                                                ;
+  return $UID                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public static function iFrameYouTube   ( $UID , $EXTRAS = ""               ) {
+  $URL     = "https://www.youtube.com/embed/{$UID}{$EXTRAS}"                 ;
+  $ALLOW   = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" ;
+  $IFRAME  = new Html                  (                                   ) ;
+  $IFRAME -> setTag                    ( "iframe"                          ) ;
+  $IFRAME -> AddPair                   ( "src"         , $URL              ) ;
+  $IFRAME -> AddPair                   ( "frameborder" , "0"               ) ;
+  $IFRAME -> AddPair                   ( "allow"       , $ALLOW            ) ;
+  $IFRAME -> AddMember                 ( "allowfullscreen"                 ) ;
+  return $IFRAME                                                             ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public static function isLoom          ( $URL                              ) {
+  $LOOM    = "https://www.loom.com/share/"                                   ;
+  if ( strpos ( $URL , $LOOM ) !== false ) return true                       ;
+  return false                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public static function LoomID          ( $URL                              ) {
+  $LOOM    = "https://www.loom.com/share/"                                   ;
+  $UID     = str_replace               ( $LOOM , "" , $URL                 ) ;
+  $LEN     = strlen                    ( $UID                              ) ;
+  if ( $LEN != 32 ) return ""                                                ;
+  return $UID                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public static function iFrameLoom      ( $LID , $EXTRAS = ""               ) {
+  $URL     = "https://www.loom.com/embed/{$LID}{$EXTRAS}"                    ;
+  $ALLOW   = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" ;
+  $IFRAME  = new Html                  (                                   ) ;
+  $IFRAME -> setTag                    ( "iframe"                          ) ;
+  $IFRAME -> AddPair                   ( "src"         , $URL              ) ;
+  $IFRAME -> AddPair                   ( "frameborder" , "0"               ) ;
+  $IFRAME -> AddPair                   ( "allow"       , $ALLOW            ) ;
+  $IFRAME -> AddMember                 ( "allowfullscreen"                 ) ;
+  return $IFRAME                                                             ;
+}
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>
