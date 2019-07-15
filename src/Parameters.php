@@ -61,12 +61,12 @@ public function hasSession($KEY)
   return isset ( $_SESSION [ $KEY ] ) ;
 }
 
-public function Contains($UU,$ID)
+public static function Contains($UU,$ID)
 {
   return in_array ( $ID , $UU ) ;
 }
 
-public function Remove($UU,$ID)
+public static function Remove($UU,$ID)
 {
   $INDEX = array_search ( $ID , $UU        ) ;
   if                    ( $INDEX !== false ) {
@@ -75,7 +75,7 @@ public function Remove($UU,$ID)
   return $UU                                 ;
 }
 
-public function JoinArray($AA,$BB)
+public static function JoinArray($AA,$BB)
 {
   if ( count ( $BB ) <= 0 ) return $AA ;
   foreach ( $BB as $bb )               {
@@ -86,7 +86,7 @@ public function JoinArray($AA,$BB)
   return $AA                           ;
 }
 
-public function Exclude($AA,$BB)
+public static function Exclude($AA,$BB)
 {
   if ( count ( $BB ) <= 0 ) return $AA ;
   $CC = array ( )                      ;
@@ -98,7 +98,7 @@ public function Exclude($AA,$BB)
   return $CC                           ;
 }
 
-public function TakeUuid($UUIDs,$START,$TOTAL)
+public static function TakeUuid($UUIDs,$START,$TOTAL)
 {
   $UU = array ( )                       ;
   $IX = $START                          ;

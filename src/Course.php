@@ -4,7 +4,6 @@ namespace CIOS ;
 
 class Course extends Columns
 {
-//////////////////////////////////////////////////////////////////////////////
 
 public $Id          ;
 public $Uuid        ;
@@ -18,8 +17,6 @@ public $Update      ;
 public $Chinese     ;
 public $English     ;
 public $Native      ;
-
-//////////////////////////////////////////////////////////////////////////////
 
 function __construct()
 {
@@ -43,6 +40,22 @@ public function Clear()
   $this -> CourseItems = array ( ) ;
 }
 
+public function assign($Item)
+{
+  $this -> Id          = $Item -> Id          ;
+  $this -> Uuid        = $Item -> Uuid        ;
+  $this -> Used        = $Item -> Used        ;
+  $this -> Identifier  = $Item -> Identifier  ;
+  $this -> Prefer      = $Item -> Prefer      ;
+  $this -> CourseItems = $Item -> CourseItems ;
+  $this -> Complete    = $Item -> Complete    ;
+  $this -> Lessons     = $Item -> Lessons     ;
+  $this -> Update      = $Item -> Update      ;
+  $this -> Chinese     = $Item -> Chinese     ;
+  $this -> English     = $Item -> English     ;
+  $this -> Native      = $Item -> Native      ;
+}
+
 public function tableItems()
 {
   $S = array (                   ) ;
@@ -55,26 +68,6 @@ public function tableItems()
   array_push ( $S , "complete"   ) ;
   array_push ( $S , "ltime"      ) ;
   return $S                        ;
-}
-
-public function JoinItems ( $X , $S = "," )
-{
-  $U = array ( )               ;
-  foreach ( $X as $V )         {
-    $W = "`" . $V . "`"        ;
-    array_push ( $U , $W )     ;
-  }                            ;
-  $L = implode ( $S , $U )     ;
-  unset ( $U )                 ;
-  return $L                    ;
-}
-
-public function Items( $S = "," )
-{
-  $X = $this -> tableItems (         ) ;
-  $L = $this -> JoinItems  ( $X , $S ) ;
-  unset                    ( $X      ) ;
-  return $L                            ;
 }
 
 public function set($item,$V)
@@ -102,6 +95,36 @@ public function get($item)
   if ( "lessons"    == $a ) return $this -> Lessons    ;
   if ( "ltime"      == $a ) return $this -> Update     ;
   return false                                         ;
+}
+
+public function ItemPair($item)
+{
+  $a = strtolower ( $item )                           ;
+  if ( "id"         == $a )                           {
+    return "`{$a}` = " . (string) $this -> Id         ;
+  }                                                   ;
+  if ( "uuid"       == $a )                           {
+    return "`{$a}` = " . (string) $this -> Uuid       ;
+  }                                                   ;
+  if ( "used"       == $a )                           {
+    return "`{$a}` = " . (string) $this -> Used       ;
+  }                                                   ;
+  if ( "identifier" == $a )                           {
+    return "`{$a}` = " . (string) $this -> Identifier ;
+  }                                                   ;
+  if ( "prefer"     == $a )                           {
+    return "`{$a}` = " . (string) $this -> Prefer     ;
+  }                                                   ;
+  if ( "complete"   == $a )                           {
+    return "`{$a}` = " . (string) $this -> Complete   ;
+  }                                                   ;
+  if ( "lessons"    == $a )                           {
+    return "`{$a}` = " . (string) $this -> Lessons    ;
+  }                                                   ;
+  if ( "ltime"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Update     ;
+  }                                                   ;
+  return ""                                           ;
 }
 
 public function obtain($R)
@@ -146,35 +169,31 @@ public function removeItem($ITEM)
 
 public function GetChinese($DB,$TABLE)
 {
-  $this -> Chinese = $DB -> GetName ( $TABLE , $this -> Uuid , 1002 ) ;
+  $this -> Chinese = $DB -> Naming ( $TABLE , $this -> Uuid , 1002 ) ;
 }
 
 public function GetEnglish($DB,$TABLE)
 {
-  $this -> English = $DB -> GetName ( $TABLE , $this -> Uuid , 1001 ) ;
+  $this -> English = $DB -> Naming ( $TABLE , $this -> Uuid , 1001 ) ;
 }
 
 public function GetNative($DB,$TABLE,$Language)
 {
-  $this -> Native = $DB -> GetName ( $TABLE , $this -> Uuid , $Language ) ;
-}
-
-public function SelectItems($TABLE)
-{
-  return "select " . $this -> Items ( ) . " from " . $TABLE .
-         " where `uuid` = " . (string) $this -> Uuid . " ;" ;
+  $this -> Native = $DB -> Naming ( $TABLE , $this -> Uuid , $Language ) ;
 }
 
 public function ObtainsByUuid($DB,$TABLE)
 {
-  $QQ = $this -> SelectItems ( $TABLE )       ;
-  $qq = $DB   -> Query       ( $QQ    )       ;
-  if ( $DB -> hasResult ( $qq ) )             {
-    $rr = $qq -> fetch_array  ( MYSQLI_BOTH ) ;
-    $this -> obtain           ( $rr         ) ;
-    return true                               ;
-  }                                           ;
-  return false                                ;
+  $ITX = $this -> Items          (                           ) ;
+  $UIX = $this -> Uuid                                         ;
+  $QQ  = "select {$ITX} from {$TABLE} where `uuid` = {$UIX} ;" ;
+  $qq  = $DB   -> Query          ( $QQ                       ) ;
+  if                             ( $DB -> hasResult ( $qq )  ) {
+    $rr    = $qq -> fetch_array  ( MYSQLI_BOTH               ) ;
+    $this -> obtain              ( $rr                       ) ;
+    return true                                                ;
+  }                                                            ;
+  return false                                                 ;
 }
 
 public function GetCourses($DB,$TABLE,$ORDER="asc")
@@ -204,13 +223,13 @@ public function GetLessons($DB,$TABLE,$ORDER="asc")
 
 public function ObtainLessons($DB,$TABLE)
 {
-  $QQ = "select count(*) from " . $TABLE                  .
-        " where `course` = " . ( (string) $this -> Uuid ) .
-        " and `used` = 1 ;"                               ;
-  $qq              = $DB -> query       ( $QQ         )   ;
-  $rr              = $qq -> fetch_array ( MYSQLI_BOTH )   ;
-  $this -> Lessons = $rr [ 0 ]                            ;
-  return true                                             ;
+  $QQ = "select count(*) from {$TABLE}"                 .
+        " where `course` = {$this->Uuid}"               .
+        " and `used` = 1 ;"                             ;
+  $qq              = $DB -> query       ( $QQ         ) ;
+  $rr              = $qq -> fetch_array ( MYSQLI_BOTH ) ;
+  $this -> Lessons = $rr [ 0 ]                          ;
+  return true                                           ;
 }
 
 public function Obtains($DB,$TABLE,$LESSONS,$NAMES)
@@ -732,13 +751,13 @@ public function addHeaderLabel($HR,$ITEM="")
 
 public function usageIcon()
 {
-  global $CourseImagePath                                               ;
-  $IMG  = new HtmlTag (                                               ) ;
-  $IMG -> setTag      ( "img"                                         ) ;
-  $IMG -> AddPair     ( "width"  , "24"                               ) ;
-  $IMG -> AddPair     ( "height" , "24"                               ) ;
-  $IMG -> AddPair     ( "src"    , $CourseImagePath [ $this -> Used ] ) ;
-  return $IMG                                                           ;
+  global $CourseImagePath                                            ;
+  $IMG  = new Html (                                               ) ;
+  $IMG -> setTag   ( "img"                                         ) ;
+  $IMG -> AddPair  ( "width"  , "24"                               ) ;
+  $IMG -> AddPair  ( "height" , "24"                               ) ;
+  $IMG -> AddPair  ( "src"    , $CourseImagePath [ $this -> Used ] ) ;
+  return $IMG                                                        ;
 }
 
 public function CourseRow($DB,$HB)
@@ -779,11 +798,11 @@ public function CourseRows($DB,$HB,$COURSES)
   }                                        ;
 }
 
-public function IconID($DB)
+public function IconID ( $DB )
 {
   $DID = "3800000000000000005"                              ;
   ///////////////////////////////////////////////////////////
-  $RI  = new RelationItem     (                           ) ;
+  $RI  = new Relation         (                           ) ;
   $RI -> set                  ( "first" , $this -> Uuid   ) ;
   $RI -> setT1                ( "Course"                  ) ;
   $RI -> setT2                ( "Picture"                 ) ;
@@ -792,17 +811,6 @@ public function IconID($DB)
   if ( count ( $UX ) > 0 ) $DID = $UX [ 0 ]                 ;
   ///////////////////////////////////////////////////////////
   return $DID                                               ;
-}
-
-public function IconPath($ICONPATH,$DID,$WIDTH=128,$HEIGHT=128)
-{
-  $SRC = "{$ICONPATH}?ID={$DID}"            ;
-  $HI  = new HtmlTag (                    ) ;
-  $HI -> setTag      ( "img"              ) ;
-  $HI -> AddPair     ( "width"  , $WIDTH  ) ;
-  $HI -> AddPair     ( "height" , $HEIGHT ) ;
-  $HI -> AddPair     ( "src"    , $SRC    ) ;
-  return $HI                                ;
 }
 
 public function IconTable($DB,$ICONPATH)

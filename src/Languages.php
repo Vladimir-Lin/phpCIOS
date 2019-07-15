@@ -4,13 +4,11 @@ namespace CIOS ;
 
 class Languages
 {
-/////////////////////////////////////////////////////////
 
 public $Codes ;
 public $Uuids ;
 public $Names ;
 
-/////////////////////////////////////////////////////////
 function __construct()
 {
   $this -> Clear ( ) ;
@@ -29,14 +27,14 @@ public function Clear()
 
 public function Obtains($DB,$LOCALITY)
 {
-  $QQ = "select `uuid`,`code` from " . $LOCALITY . " order by `code` asc ;" ;
-  $qq = $DB -> Query ( $QQ )                                                ;
-  if ( $DB -> hasResult ( $qq ) )                                           {
-    while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                      {
-      array_push ( $this -> Codes , $rr [ "code" ] )                        ;
-      array_push ( $this -> Uuids , $rr [ "uuid" ] )                        ;
-    }                                                                       ;
-  }                                                                         ;
+  $QQ = "select `uuid`,`code` from {$LOCALITY} order by `code` asc ;"        ;
+  $qq = $DB -> Query ( $QQ )                                                 ;
+  if ( $DB -> hasResult ( $qq ) )                                            {
+    while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                       {
+      array_push ( $this -> Codes , $rr [ "code" ] )                         ;
+      array_push ( $this -> Uuids , $rr [ "uuid" ] )                         ;
+    }                                                                        ;
+  }                                                                          ;
 }
 
 public function DynamicList($FIRST,$Localities)

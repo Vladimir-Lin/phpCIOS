@@ -96,7 +96,7 @@ public function SelectItems($Table,$items,$Options = "",$Limits = "")
   $ITEMS = $this -> Items      (                             ) ;
   $QUERY = $this -> QueryItems ( $items , $Options , $Limits ) ;
   $QQ    = "select {$ITEMS} from {$Table} {$QUERY} ;"          ;
-  return $QQ ;
+  return $QQ                                                   ;
 }
 
 public function SelectColumns($Table,$Options = "order by `priority` asc",$Limits = "")

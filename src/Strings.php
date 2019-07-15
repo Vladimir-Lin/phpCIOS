@@ -84,6 +84,20 @@ public static function ReplaceFileByKeys($FILENAME,$REPLACES)
   return self::ReplaceByKeys ( $CMHR , $REPLACES ) ;
 }
 
+public static function ReportJSON ( $JSON )
+{
+  $PAIRS = array      (                       ) ;
+  $KEYs  = array_keys ( $JSON                 ) ;
+  foreach             ( $KEYs as $K           ) {
+    $V   = "\"{$K}\""                           ;
+    $W   = $JSON [ $K ]                         ;
+    $Z   = "\"{$W}\""                           ;
+    array_push        ( $PAIRS , "{$V}: {$Z}" ) ;
+  }                                             ;
+  $TEXT  = implode    ( ",\n" , $PAIRS        ) ;
+  return "{\n" . $TEXT . "\n}"                  ;
+}
+
 public static function isEnglish ( $S )
 {
   $S = trim ( $S )                   ;
@@ -92,6 +106,16 @@ public static function isEnglish ( $S )
   $L = strlen    ( $S           )    ;
   if ( $L == $M ) return 1           ;
   return 2                           ;
+}
+
+public static function JsonNaming ( $NAME )
+{
+  $NAME = str_replace ( "\r" , ""     , $NAME ) ;
+  $NAME = str_replace ( "\n" , "\\n"  , $NAME ) ;
+  $NAME = str_replace ( "\t" , " "    , $NAME ) ;
+  $NAME = str_replace ( "\"" , "\\\"" , $NAME ) ;
+  $NAME = str_replace ( "\\" , "\\\\" , $NAME ) ;
+  return $NAME                                  ;
 }
 
 public static function Replacement ( $NAME )
