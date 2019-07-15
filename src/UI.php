@@ -290,7 +290,7 @@ public static function iFrameLoom      ( $LID , $EXTRAS = ""               ) {
   return $IFRAME                                                             ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function IconPath ( $ICONPATH , $DID , $WIDTH = 128 , $HEIGHT = 128 ) {
+public static function IconPath    ( $ICONPATH,$DID,$WIDTH=128,$HEIGHT=128 ) {
   $SRC = "{$ICONPATH}?ID={$DID}&Width={$WIDTH}&Height={$HEIGHT}"             ;
   $HI  = new Html (                    )                                     ;
   $HI -> setTag   ( "img"              )                                     ;
