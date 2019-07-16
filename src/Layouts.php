@@ -123,6 +123,14 @@ public function AppendScript($FILENAME)
   $JSV -> AddText                  ( $SRC      ) ;
 }
 
+public function DisconnectSQL ( )
+{
+  global $Translations                                      ;
+  $HXTR  = $this -> addTr (                               ) ;
+  $HXTD  = $HXTR -> addTd ( $Translations [ "SQL::Lost" ] ) ;
+  $this -> Report         (                               ) ;
+}
+
 }
 
 ?>

@@ -97,7 +97,7 @@ public function GetNative($DB,$TABLE,$Localities,$Usage = "Default")
 
 public function EchoSelections($CURRENT)
 {
-  $HS  = new HtmlTag (          )            ;
+  $HS  = new Html    (          )            ;
   $HS -> setTag      ( "select" )            ;
   $HS -> setSplitter ( "\n"     )            ;
   ////////////////////////////////////////////

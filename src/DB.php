@@ -72,6 +72,16 @@ public function hasResult ( $qq )
   return true                                ;
 }
 
+public function FetchOne ( $QQ )
+{
+  $qq = $this -> Query ( $QQ )                   ;
+  if ( $this -> hasResult ( $qq ) )              {
+    $rr    = $qq -> fetch_array  ( MYSQLI_BOTH ) ;
+    return $rr [ 0 ]                             ;
+  }                                              ;
+  return ""                                      ;
+}
+
 public function OrderBy($Item,$Sort)
 {
   if ( strlen ( $Sort ) <= 0 )        {
@@ -386,6 +396,16 @@ public function GetTrainee($Table,$U)
                             "Default"      ) ;
   }                                          ;
   return $NN                                 ;
+}
+
+public function GetNameByLocalities($Table,$U,$Localities,$Usage = "Default")
+{
+  $NN = ""                                              ;
+  foreach ( $Localities as $L )                         {
+    $NN = $this -> Naming ( $Table , $U , $L , $Usage ) ;
+    if ( strlen ( $NN ) > 0 ) return $NN                ;
+  }                                                     ;
+  return $NN                                            ;
 }
 
 public function GetPassword($Table,$Uuid,$Name)

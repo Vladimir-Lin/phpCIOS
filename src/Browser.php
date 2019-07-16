@@ -98,6 +98,15 @@ public static function GetPathInfos ( )
 
 public static function SitePath ( )
 {
+  $HTTPS     = "http"                  ;
+  if   ( isset ( $_SERVER['HTTPS'] ) ) {
+    $H       = $_SERVER['HTTPS']       ;
+    if ( $H == "on"                  ) {
+      $HTTPS = "https"                 ;
+    }                                  ;
+  }                                    ;
+  $HOSX      = $_SERVER['HTTP_HOST']   ;
+  return "{$HTTPS}://{$HOSX}"          ;
 }
 
 }

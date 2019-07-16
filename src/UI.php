@@ -300,7 +300,17 @@ public static function IconPath    ( $ICONPATH,$DID,$WIDTH=128,$HEIGHT=128 ) {
   return $HI                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-
+public static function SettingValue ( $DB , $KEY )                           {
+  $SETAB  = $GLOBALS [ "TableMapping" ] [ "Settings" ]                       ;
+  $SS     = new Settings          (                                        ) ;
+  $SS    -> setIndex              ( "Debugger" , "Students" , $KEY         ) ;
+  $Beta   = $SS    -> obtainValue ( $DB , $SETAB                           ) ;
+  if                              ( strlen ( $Beta ) > 0                   ) {
+    $Beta = intval                ( $Beta , 10                             ) ;
+  }                                                                          ;
+  return $Beta                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>
