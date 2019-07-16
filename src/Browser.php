@@ -72,6 +72,34 @@ public static function Locale ( )
   return self::LocaleNow ( self::GetLanguage ( ) ) ;
 }
 
+public static function GetPathInfos ( )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  if ( ! isset ( $_SERVER['PATH_INFO'] ) ) return array ( )                  ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PIFS  = explode ( "/" , $_SERVER['PATH_INFO']                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ID    = 0                                                                 ;
+  $LISTs = array   (                                                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  foreach          ( $PIFS as $p                                           ) {
+    if             ( $ID == 0                                              ) {
+      if           ( strlen ( $p ) > 0                                     ) {
+        array_push ( $LISTs , $p                                           ) ;
+      }                                                                      ;
+    } else                                                                   {
+      array_push   ( $LISTs , $p                                           ) ;
+    }                                                                        ;
+    $ID  = $ID + 1                                                           ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $LISTs                                                              ;
+}
+
+public static function SitePath ( )
+{
+}
+
 }
 
 ?>
