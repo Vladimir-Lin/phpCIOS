@@ -361,15 +361,15 @@ public static function ListNote ( $PREFER                                    ,
   return $HZX                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-function NotesEditor          ( $DB                                          ,
-                                $PFX                                         ,
-                                $UUID                                        ,
-                                $JAVA                                        ,
-                                $TABLE                                       ,
-                                $NAME                                        ,
-                                $PRIME                                       ,
-                                $PHT                                         ,
-                                $INPCLASS = "NameInput"                    ) {
+public static function NotesEditor ( $DB                                     ,
+                                     $PFX                                    ,
+                                     $UUID                                   ,
+                                     $JAVA                                   ,
+                                     $TABLE                                  ,
+                                     $NAME                                   ,
+                                     $PRIME                                  ,
+                                     $PHT                                    ,
+                                     $INPCLASS = "NameInput"               ) {
   ////////////////////////////////////////////////////////////////////////////
   $PPP = "{$PRIME}-{$UUID}"                                                  ;
   ////////////////////////////////////////////////////////////////////////////
@@ -402,11 +402,11 @@ function NotesEditor          ( $DB                                          ,
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-function MaterialTable        ( $DB                                          ,
-                                $TABLE                                       ,
-                                $KEY                                         ,
-                                $UUID                                        ,
-                                $INPCLASS = "NameInput"                    ) {
+public static function MaterialTable ( $DB                                   ,
+                                       $TABLE                                ,
+                                       $KEY                                  ,
+                                       $UUID                                 ,
+                                       $INPCLASS = "NameInput"             ) {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   ////////////////////////////////////////////////////////////////////////////
@@ -426,11 +426,11 @@ function MaterialTable        ( $DB                                          ,
   return $PFX                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-function QuizletTable         ( $DB                                          ,
-                                $TABLE                                       ,
-                                $KEY                                         ,
-                                $UUID                                        ,
-                                $INPCLASS = "NameInput"                    ) {
+public static function QuizletTable ( $DB                                    ,
+                                      $TABLE                                 ,
+                                      $KEY                                   ,
+                                      $UUID                                  ,
+                                      $INPCLASS = "NameInput"              ) {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   ////////////////////////////////////////////////////////////////////////////
