@@ -332,6 +332,124 @@ public static function CreateJsonMenu ( $JSC )                               {
   return $HBX                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public static function ListNote ( $PREFER                                    ,
+                                  $TEXT                                      ,
+                                  $PRIME                                     ,
+                                  $PHT                                       ,
+                                  $INPCLASS = "NameInput"                  ) {
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $IDX = ""                                                                  ;
+  if ( $PREFER < 0 )                                                         {
+    $IDX = "{$PRIME}-X"                                                      ;
+  } else                                                                     {
+    $IDX = "{$PRIME}-{$PREFER}"                                              ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HZX  = new Html  (                                                      ) ;
+  $HZX -> setInput  (                                                      ) ;
+  $HZX -> AddPair   ( "size"  , "120"                                      ) ;
+  $HZX -> AddPair   ( "id"    , $IDX                                       ) ;
+  $HZX -> SafePair  ( "class" , $INPCLASS                                  ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                ( strlen ( $TEXT ) > 0                                 ) {
+    $HZX -> AddPair ( "value"       , $TEXT                                ) ;
+  } else                                                                     {
+    $HZX -> AddPair ( "placeholder" , $PHT                                 ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HZX                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
+function NotesEditor          ( $DB                                          ,
+                                $PFX                                         ,
+                                $UUID                                        ,
+                                $JAVA                                        ,
+                                $TABLE                                       ,
+                                $NAME                                        ,
+                                $PRIME                                       ,
+                                $PHT                                         ,
+                                $INPCLASS = "NameInput"                    ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PPP = "{$PRIME}-{$UUID}"                                                  ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NI  = new Note             (                                            ) ;
+  $NI -> setOwner             ( $UUID , $NAME                              ) ;
+  $IDs = $NI -> ObtainMaps    ( $DB   , $TABLE                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                          ( count ( $IDs ) > 0                         ) {
+    $PREFERs = array_keys     (         $IDs                               ) ;
+    foreach                   ( $PREFERs as $id                            ) {
+      $OCF   = str_replace    ( "$(PREFER)" , $id , $JAVA                  ) ;
+      $MLN   = self::ListNote ( $id                                          ,
+                                $IDs [ $id ]                                 ,
+                                $PPP                                         ,
+                                $PHT                                         ,
+                                $INPCLASS                                  ) ;
+      $MLN  -> AddPair        ( "onchange"    , $OCF                       ) ;
+      $PFX  -> AddTag         ( $MLN                                       ) ;
+    }                                                                        ;
+    unset                     ( $PREFERs                                   ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $OCF       = str_replace    ( "$(PREFER)" , -1 , $JAVA                   ) ;
+  $MLN       = self::ListNote ( -1 , "" , $PPP , $PHT , $INPCLASS          ) ;
+  $MLN      -> AddPair        ( "onchange"    , $OCF                       ) ;
+  $PFX      -> AddTag         ( $MLN                                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  unset                       ( $IDs                                       ) ;
+  unset                       ( $NI                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+function MaterialTable        ( $DB                                          ,
+                                $TABLE                                       ,
+                                $KEY                                         ,
+                                $UUID                                        ,
+                                $INPCLASS = "NameInput"                    ) {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PHT  = $Translations [ "Chapter::NewMaterial" ]                           ;
+  $JAVA = "MaterialsChanged(this.value,$(PREFER),'{$UUID}','{$KEY}','{$INPCLASS}') ;" ;
+  $PFX  = new Html  (                                                      ) ;
+  $PFX -> setType   ( 4                                                    ) ;
+  self::NotesEditor ( $DB                                                    ,
+                      $PFX                                                   ,
+                      $UUID                                                  ,
+                      $JAVA                                                  ,
+                      $TABLE                                                 ,
+                      "URL"                                                  ,
+                      "LessonMaterials"                                      ,
+                      $PHT                                                   ,
+                      $INPCLASS                                            ) ;
+  return $PFX                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
+function QuizletTable         ( $DB                                          ,
+                                $TABLE                                       ,
+                                $KEY                                         ,
+                                $UUID                                        ,
+                                $INPCLASS = "NameInput"                    ) {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PHT  = $Translations [ "Chapter::NewQuizlet" ]                            ;
+  $JAVA = "QuizletsChanged(this.value,$(PREFER),'{$UUID}','{$KEY}','{$INPCLASS}') ;" ;
+  $PFX  = new Html  (                                                      ) ;
+  $PFX -> setType   ( 4                                                    ) ;
+  self::NotesEditor ( $DB                                                    ,
+                      $PFX                                                   ,
+                      $UUID                                                  ,
+                      $JAVA                                                  ,
+                      $TABLE                                                 ,
+                      "Quizlet"                                              ,
+                      "LessonQuizlet"                                        ,
+                      $PHT                                                   ,
+                      $INPCLASS                                            ) ;
+  return $PFX                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>
