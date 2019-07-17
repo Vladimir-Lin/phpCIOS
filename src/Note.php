@@ -99,6 +99,30 @@ public function get($item)
 
 //////////////////////////////////////////////////////////////////////////////
 
+public function ItemPair($item)
+{
+  $a = strtolower ( $item )                            ;
+  if ( "id"        == $a )                             {
+    return "`{$a}` = " . (string) $this -> Id          ;
+  }                                                    ;
+  if ( "uuid"      == $a )                             {
+    return "`{$a}` = " . (string) $this -> Uuid        ;
+  }                                                    ;
+  if ( "name"      == $a )                             {
+    return "`{$a}` = '" . (string) $this -> Name . "'" ;
+  }                                                    ;
+  if ( "prefer"  == $a )                               {
+    return "`{$a}` = " . (string) $this -> prefer      ;
+  }                                                    ;
+  if ( "note" == $a )                                  {
+    return "`{$a}` = '" . (string) $this -> Note . "'" ;
+  }                                                    ;
+  if ( "ltime"     == $a )                             {
+    return "`{$a}` = " . (string) $this -> Update      ;
+  }                                                    ;
+  return ""                                            ;
+}
+
 public function Pair($item)
 {
   return "`" . $item . "` = " . $this -> get ( $item ) ;

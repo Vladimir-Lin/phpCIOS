@@ -110,16 +110,18 @@ public static function isEnglish ( $S )
 
 public static function JsonNaming ( $NAME )
 {
+  $NAME = str_replace ( "\b" , ""     , $NAME ) ;
   $NAME = str_replace ( "\r" , ""     , $NAME ) ;
-  $NAME = str_replace ( "\n" , "\\n"  , $NAME ) ;
   $NAME = str_replace ( "\t" , " "    , $NAME ) ;
-  $NAME = str_replace ( "\"" , "\\\"" , $NAME ) ;
   $NAME = str_replace ( "\\" , "\\\\" , $NAME ) ;
+  $NAME = str_replace ( "\"" , "\\\"" , $NAME ) ;
+  $NAME = str_replace ( "\n" , "\\n"  , $NAME ) ;
   return $NAME                                  ;
 }
 
 public static function Replacement ( $NAME )
 {
+  $NAME = str_replace ( "\b" , ""     , $NAME ) ;
   $NAME = str_replace ( "\r" , ""     , $NAME ) ;
   $NAME = str_replace ( "\n" , ""     , $NAME ) ;
   $NAME = str_replace ( "\t" , " "    , $NAME ) ;
@@ -129,6 +131,7 @@ public static function Replacement ( $NAME )
 
 public static function LoginWords ( $NAME )
 {
+  $NAME = str_replace ( "\b" , "" , $NAME ) ;
   $NAME = str_replace ( "\r" , "" , $NAME ) ;
   $NAME = str_replace ( "\n" , "" , $NAME ) ;
   $NAME = str_replace ( "\t" , "" , $NAME ) ;
