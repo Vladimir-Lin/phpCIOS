@@ -268,6 +268,17 @@ public function AddRole ( $R )
   array_push ( $this -> Roles , $R ) ;
 }
 
+public function toRoleString ( )
+{
+  if ( count ( $this -> Roles ) <= 0 ) return ""     ;
+  $RL = array               (                      ) ;
+  foreach                   ( $this -> Roles as $R ) {
+    $S = $this -> ShortRole (                   $R ) ;
+    array_push              ( $RL   , $S           ) ;
+  }                                                  ;
+  return implode            ( " , " , $RL          ) ;
+}
+
 public function DecideRole ( )
 {
   ////////////////////////////////////////////////////////////////////////////
