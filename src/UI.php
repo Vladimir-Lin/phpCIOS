@@ -450,6 +450,49 @@ public static function QuizletTable ( $DB                                    ,
   return $PFX                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public static function PageInfo ( $MAPS )                                    {
+  ////////////////////////////////////////////////////////////////////////////
+  $QSVT            = ""                                                      ;
+  if ( isset ( $_SERVER['QUERY_STRING'] )                                  ) {
+    $QSVT          = $_SERVER['QUERY_STRING']                                ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PIFS            = ""                                                      ;
+  if ( isset ( $_SERVER['PATH_INFO'] )                                     ) {
+    $PIFS          = $_SERVER['PATH_INFO']                                   ;
+    $KKK           = "PathInfo = ''"                                         ;
+    $VVV           = "PathInfo = '{$PIFS}'"                                  ;
+    $MAPS [ $KKK ] = $VVV                                                    ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RURL            = $GLOBALS [ "RootURL" ]                                  ;
+  $KJ              = "RequestURL = ''"                                       ;
+  $VJ              = "RequestURL = '{$RURL}'"                                ;
+  $MAPS [ $KJ ]    = $VJ                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PURL            = str_replace ( $PIFS , "" , $RURL )                      ;
+  if ( strlen ( $QSVT ) > 0                                                ) {
+    $PURL          = str_replace ( "?{$QSVT}" , "" , $PURL )                 ;
+  }                                                                          ;
+  $KJ              = "PageURL = ''"                                          ;
+  $VJ              = "PageURL = '{$PURL}'"                                   ;
+  $MAPS [ $KJ ]    = $VJ                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $SITE            = Browser::SitePath ( )                                   ;
+  $KJ              = "SitePath = ''"                                         ;
+  $VJ              = "SitePath = '{$SITE}'"                                  ;
+  $MAPS [ $KJ ]    = $VJ                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( isset ( $_SERVER['PHP_SELF'] )                                      ) {
+    $PHPSELF       = $_SERVER['PHP_SELF']                                    ;
+    $KKK           = "PageSelf = ''"                                         ;
+    $VVV           = "PageSelf = '{$PHPSELF}'"                               ;
+    $MAPS [ $KKK ] = $VVV                                                    ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $MAPS                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>
