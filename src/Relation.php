@@ -103,6 +103,7 @@ public $Types         = array (
   "Token"             => 124  ,
   "BankAccount"       => 125  ,
   "Class"             => 126  ,
+  "Fragment"          => 127  ,
 )                             ;
 
 function __construct()
