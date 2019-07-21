@@ -450,6 +450,30 @@ public static function QuizletTable ( $DB                                    ,
   return $PFX                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public static function FilmsTable ( $DB                                      ,
+                                    $TABLE                                   ,
+                                    $KEY                                     ,
+                                    $UUID                                    ,
+                                    $INPCLASS = "NameInput"                ) {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PHT  = $Translations [ "Chapter::NewFilm" ]                               ;
+  $JAVA = "FilmUrlChanged(this.value,$(PREFER),'{$UUID}','{$KEY}','{$INPCLASS}') ;" ;
+  $PFX  = new Html  (                                                      ) ;
+  $PFX -> setType   ( 4                                                    ) ;
+  self::NotesEditor ( $DB                                                    ,
+                      $PFX                                                   ,
+                      $UUID                                                  ,
+                      $JAVA                                                  ,
+                      $TABLE                                                 ,
+                      "Film"                                                 ,
+                      "LessonFilm"                                           ,
+                      $PHT                                                   ,
+                      $INPCLASS                                            ) ;
+  return $PFX                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public static function PageInfo ( $MAPS )                                    {
   ////////////////////////////////////////////////////////////////////////////
   $QSVT            = ""                                                      ;
