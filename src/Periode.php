@@ -37,6 +37,19 @@ function Clear()
   $this -> Update =  0 ;
 }
 
+public function assign($Item)
+{
+  $this -> Id        = $Item -> Id        ;
+  $this -> Uuid      = $Item -> Uuid      ;
+  $this -> Type      = $Item -> Type      ;
+  $this -> Used      = $Item -> Used      ;
+  $this -> Start     = $Item -> Start     ;
+  $this -> End       = $Item -> End       ;
+  $this -> States    = $Item -> States    ;
+  $this -> Update    = $Item -> Update    ;
+  $this -> TermCount = $Item -> TermCount ;
+}
+
 public function tableItems()
 {
   $S = array (               ) ;
@@ -123,6 +136,36 @@ public function Pairs($Items)
   $Q = implode ( " , " , $P )                   ;
   unset        ( $P         )                   ;
   return $Q                                     ;
+}
+
+public function ItemPair($item)
+{
+  $a = strtolower ( $item )                          ;
+  if ( "id"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Id        ;
+  }                                                  ;
+  if ( "uuid"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Uuid      ;
+  }                                                  ;
+  if ( "type"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Type      ;
+  }                                                  ;
+  if ( "used"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Used      ;
+  }                                                  ;
+  if ( "start"     == $a )                           {
+    return "`{$a}` = " . (string) $this -> Start     ;
+  }                                                  ;
+  if ( "end"       == $a )                           {
+    return "`{$a}` = " . (string) $this -> End       ;
+  }                                                  ;
+  if ( "states"    == $a )                           {
+    return "`{$a}` = " . (string) $this -> States    ;
+  }                                                  ;
+  if ( "ltime"     == $a )                           {
+    return "`{$a}` = " . (string) $this -> Update    ;
+  }                                                  ;
+  return ""                                          ;
 }
 
 public function setType($TYPE)
