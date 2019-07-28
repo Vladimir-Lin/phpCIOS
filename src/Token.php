@@ -2,7 +2,7 @@
 
 namespace CIOS ;
 
-class TokenItem extends Columns
+class Token extends Columns
 {
 
 public $Id          ;
@@ -53,7 +53,24 @@ public function Clear()
   $this -> SkipQuotas  =  0 ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
+public function assign($Item)
+{
+  $this -> Id          = $Item -> Id          ;
+  $this -> Uuid        = $Item -> Uuid        ;
+  $this -> Owner       = $Item -> Owner       ;
+  $this -> Tokens      = $Item -> Tokens      ;
+  $this -> Action      = $Item -> Action      ;
+  $this -> Reason      = $Item -> Reason      ;
+  $this -> rType       = $Item -> rType       ;
+  $this -> Name        = $Item -> Name        ;
+  $this -> Item        = $Item -> Item        ;
+  $this -> Description = $Item -> Description ;
+  $this -> States      = $Item -> States      ;
+  $this -> Creation    = $Item -> Creation    ;
+  $this -> Modify      = $Item -> Modify      ;
+  $this -> Update      = $Item -> Update      ;
+  $this -> SkipQuotas  = $Item -> SkipQuotas  ;
+}
 
 public function tableItems()
 {
@@ -74,31 +91,53 @@ public function tableItems()
   return $S                         ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
-public function JoinItems($X,$S)
+public function ItemPair ( $item )
 {
-  $U = array ( )               ;
-  foreach ( $X as $V )         {
-    $W = "`" . $V . "`"        ;
-    array_push ( $U , $W )     ;
-  }                            ;
-  $L = implode ( $S , $U )     ;
-  unset ( $U )                 ;
-  return $L                    ;
+  $a = strtolower ( $item )                            ;
+  if ( "id"        == $a )                             {
+    return "`{$a}` = " . (string) $this -> Id          ;
+  }                                                    ;
+  if ( "uuid"      == $a )                             {
+    return "`{$a}` = " . (string) $this -> Uuid        ;
+  }                                                    ;
+  if ( "owner"     == $a )                             {
+    return "`{$a}` = " . (string) $this -> Owner       ;
+  }                                                    ;
+  if ( "tokens"    == $a )                             {
+    return "`{$a}` = " . (string) $this -> Tokens      ;
+  }                                                    ;
+  if ( "action"    == $a )                             {
+    return "`{$a}` = " . (string) $this -> Action      ;
+  }                                                    ;
+  if ( "reason"    == $a )                             {
+    return "`{$a}` = " . (string) $this -> Reason      ;
+  }                                                    ;
+  if ( "rtype"     == $a )                             {
+    return "`{$a}` = " . (string) $this -> rType       ;
+  }                                                    ;
+  if ( "item"      == $a )                             {
+    return "`{$a}` = " . (string) $this -> Item        ;
+  }                                                    ;
+  if ( "description" == $a )                           {
+    return "`{$a}` = " . (string) $this -> Description ;
+  }                                                    ;
+  if ( "states"    == $a )                             {
+    return "`{$a}` = " . (string) $this -> States      ;
+  }                                                    ;
+  if ( "creation"  == $a )                             {
+    return "`{$a}` = " . (string) $this -> Creation    ;
+  }                                                    ;
+  if ( "modify"    == $a )                             {
+    return "`{$a}` = " . (string) $this -> Modify      ;
+  }                                                    ;
+  if ( "ltime"     == $a )                             {
+    return "`{$a}` = " . (string) $this -> Update      ;
+  }                                                    ;
+  if ( "skipquotas" == $a )                            {
+    return "`{$a}` = " . (string) $this -> SkipQuotas  ;
+  }                                                    ;
+  return ""                                            ;
 }
-
-//////////////////////////////////////////////////////////////////////////////
-
-public function Items( $S = "," )
-{
-  $X = $this -> tableItems (         ) ;
-  $L = $this -> JoinItems  ( $X , $S ) ;
-  unset                    ( $X      ) ;
-  return $L                            ;
-}
-
-//////////////////////////////////////////////////////////////////////////////
 
 public function valueItems()
 {
@@ -420,14 +459,23 @@ public function CalculateTokens($DB,$TOKENS,$UU)
   return $TOTAL                                     ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
+public function ClassPoints($POINTS)
+{
+  $PT = intval ( $POINTS  , 10 ) ;
+  $SG = ( $PT < 0 )              ;
+  if ( $SG ) $PT = - $PT         ;
+  $PD = intval ( $PT / 10 , 10 ) ;
+  $PR = intval ( $PT % 10 , 10 ) ;
+  $PP = "{$PD}.{$PR}"            ;
+  if ( $SG ) $PP = "-{$PP}"      ;
+  return $PP                     ;
+}
 
 public function StudentSummary($DB,$PUID)
 {
   ////////////////////////////////////////////////////////////////////////////
-  global $DataTypes                                                          ;
-  ////////////////////////////////////////////////////////////////////////////
   $HH      = new Parameters ( )                                              ;
+  $RI      = new Relation   ( )                                              ;
   $NOW     = new StarDate   ( )                                              ;
   $SUMMARY = array          ( )                                              ;
   $PTS     = 0                                                               ;
@@ -442,7 +490,7 @@ public function StudentSummary($DB,$PUID)
   $this -> Owner  = $PUID                                                    ;
   $this -> Action = 1                                                        ;
   $this -> States = 1                                                        ;
-  $this -> rType  = $DataTypes [ "Trade" ]                                   ;
+  $this -> rType  = $RI -> Types [ "Trade" ]                                 ;
   ////////////////////////////////////////////////////////////////////////////
   $UU    = $this -> ObtainsTrades   ( $DB , "`erp`.`tokens`"               ) ;
   $TOTAL = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
@@ -452,7 +500,7 @@ public function StudentSummary($DB,$PUID)
   $this -> Owner  = $PUID                                                    ;
   $this -> Action = 3                                                        ;
   $this -> States = 1                                                        ;
-  $this -> rType  = $DataTypes [ "People" ]                                  ;
+  $this -> rType  = $RI -> Types [ "People" ]                                ;
   ////////////////////////////////////////////////////////////////////////////
   $UU    = $this -> ObtainsTrades   ( $DB , "`erp`.`tokens`"               ) ;
   $PIT   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
@@ -463,7 +511,7 @@ public function StudentSummary($DB,$PUID)
   $this -> Owner  = $PUID                                                    ;
   $this -> Action = 2                                                        ;
   $this -> States = 3                                                        ;
-  $this -> rType  = $DataTypes [ "People" ]                                  ;
+  $this -> rType  = $RI -> Types [ "People" ]                                ;
   ////////////////////////////////////////////////////////////////////////////
   $UU    = $this -> ObtainsTrades   ( $DB , "`erp`.`tokens`"               ) ;
   $PIZ   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
@@ -474,18 +522,18 @@ public function StudentSummary($DB,$PUID)
   $this -> Owner  = $PUID                                                    ;
   $this -> Action = 3                                                        ;
   $this -> States = 1                                                        ;
-  $this -> rType  = $DataTypes [ "Organization" ]                            ;
+  $this -> rType  = $RI -> Types [ "Organization" ]                          ;
   ////////////////////////////////////////////////////////////////////////////
   $UU    = $this -> ObtainsTrades   ( $DB , "`erp`.`tokens`"               ) ;
   $OIT   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
   $TOTAL = $TOTAL + $OIT                                                     ;
   ////////////////////////////////////////////////////////////////////////////
-  $PTS   = $HH   -> ClassPoints     ( $TOTAL                               ) ;
+  $PTS   = $this -> ClassPoints     ( $TOTAL                               ) ;
   ////////////////////////////////////////////////////////////////////////////
   $this -> Owner  = $PUID                                                    ;
   $this -> Action = 2                                                        ;
   $this -> States = 1                                                        ;
-  $this -> rType  = $DataTypes [ "Class" ]                                   ;
+  $this -> rType  = $RI -> Types [ "Class" ]                                 ;
   ////////////////////////////////////////////////////////////////////////////
   $UU    = $this -> ObtainsConsumed ( $DB , "`erp`.`tokens`" , $SDT        ) ;
   $USED  = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
@@ -495,7 +543,7 @@ public function StudentSummary($DB,$PUID)
   $this -> Owner  = $PUID                                                    ;
   $this -> Action = 2                                                        ;
   $this -> States = 1                                                        ;
-  $this -> rType  = $DataTypes [ "People" ]                                  ;
+  $this -> rType  = $RI -> Types [ "People" ]                                ;
   ////////////////////////////////////////////////////////////////////////////
   $UU    = $this -> ObtainsConsumed ( $DB , "`erp`.`tokens`" , $SDT        ) ;
   $OUD   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
@@ -504,16 +552,16 @@ public function StudentSummary($DB,$PUID)
   $this -> Owner  = $PUID                                                    ;
   $this -> Action = 2                                                        ;
   $this -> States = 1                                                        ;
-  $this -> rType  = $DataTypes [ "Organization" ]                            ;
+  $this -> rType  = $RI -> Types [ "Organization" ]                          ;
   ////////////////////////////////////////////////////////////////////////////
   $UU    = $this -> ObtainsConsumed ( $DB , "`erp`.`tokens`" , $SDT        ) ;
   $OUD   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
   $USED  = $USED + $OUD                                                      ;
   ////////////////////////////////////////////////////////////////////////////
-  $UTS   = $HH   -> ClassPoints     ( $USED                                ) ;
+  $UTS   = $this -> ClassPoints     ( $USED                                ) ;
   ////////////////////////////////////////////////////////////////////////////
   $REMAIN = $TOTAL + $USED                                                   ;
-  $RTS    = $HH   -> ClassPoints    ( $REMAIN                              ) ;
+  $RTS    = $this -> ClassPoints    ( $REMAIN                              ) ;
   ////////////////////////////////////////////////////////////////////////////
   $SUMMARY [ "All"     ] = $TOTAL                                            ;
   $SUMMARY [ "Used"    ] = $USED                                             ;
