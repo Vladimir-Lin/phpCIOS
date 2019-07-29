@@ -13,10 +13,10 @@ public $Language  = 1002                  ;
 public $Level     = 0                     ;
 public $Seniority = 0                     ;
 public $Item      = 1                     ;
-public $Courses   = array ( 1 )           ;
+public $Courses   = [ 1 ]                 ;
 public $Owners                            ;
 public $Name                              ;
-public $Roles                             ;
+public $Roles     = [ ]                   ;
 public $Attributes                        ;
 
 function __construct( $OBJ = 0 )
