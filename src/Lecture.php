@@ -51,6 +51,25 @@ public function Clear()
   $this -> Sections     = array ( ) ;
 }
 
+public function assign($Item)
+{
+  $this -> Id           = $Item -> Id           ;
+  $this -> Uuid         = $Item -> Uuid         ;
+  $this -> Trainee      = $Item -> Trainee      ;
+  $this -> Tutor        = $Item -> Tutor        ;
+  $this -> Manager      = $Item -> Manager      ;
+  $this -> Payer        = $Item -> Payer        ;
+  $this -> Receptionist = $Item -> Receptionist ;
+  $this -> Item         = $Item -> Item         ;
+  $this -> States       = $Item -> States       ;
+  $this -> Register     = $Item -> Register     ;
+  $this -> OpenDay      = $Item -> OpenDay      ;
+  $this -> CloseDay     = $Item -> CloseDay     ;
+  $this -> Log          = $Item -> Log          ;
+  $this -> Update       = $Item -> Update       ;
+  $this -> Sections     = $Item -> Sections     ;
+}
+
 public function tableItems()
 {
   $S = array (                     ) ;
@@ -69,26 +88,6 @@ public function tableItems()
   array_push ( $S , "log"          ) ;
   array_push ( $S , "ltime"        ) ;
   return $S                          ;
-}
-
-public function JoinItems ( $X , $S = "," )
-{
-  $U = array ( )               ;
-  foreach ( $X as $V )         {
-    $W = "`" . $V . "`"        ;
-    array_push ( $U , $W )     ;
-  }                            ;
-  $L = implode ( $S , $U )     ;
-  unset ( $U )                 ;
-  return $L                    ;
-}
-
-public function Items( $S = "," )
-{
-  $X = $this -> tableItems (         ) ;
-  $L = $this -> JoinItems  ( $X , $S ) ;
-  unset                    ( $X      ) ;
-  return $L                            ;
 }
 
 public function valueItems()
@@ -163,10 +162,60 @@ public function Pairs($Items)
   return $Q                                     ;
 }
 
+public function ItemPair($item)
+{
+  $a = strtolower ( $item )                             ;
+  if ( "id"           == $a )                           {
+    return "`{$a}` = " . (string) $this -> Id           ;
+  }                                                     ;
+  if ( "uuid"         == $a )                           {
+    return "`{$a}` = " . (string) $this -> Uuid         ;
+  }                                                     ;
+  if ( "trainee"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Trainee      ;
+  }                                                     ;
+  if ( "tutor"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Tutor        ;
+  }                                                     ;
+  if ( "manager"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Manager      ;
+  }                                                     ;
+  if ( "payer"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Payer        ;
+  }                                                     ;
+  if ( "receptionist" == $a )                           {
+    return "`{$a}` = " . (string) $this -> Receptionist ;
+  }                                                     ;
+  if ( "item"         == $a )                           {
+    return "`{$a}` = " . (string) $this -> Item         ;
+  }                                                     ;
+  if ( "states"       == $a )                           {
+    return "`{$a}` = " . (string) $this -> States       ;
+  }                                                     ;
+  if ( "register"     == $a )                           {
+    return "`{$a}` = " . (string) $this -> Register     ;
+  }                                                     ;
+  if ( "openday"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> OpenDay      ;
+  }                                                     ;
+  if ( "closeday"     == $a )                           {
+    return "`{$a}` = " . (string) $this -> CloseDay     ;
+  }                                                     ;
+  if ( "log"          == $a )                           {
+    return "`{$a}` = " . (string) $this -> Log          ;
+  }                                                     ;
+  if ( "ltime"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Update       ;
+  }                                                     ;
+  if ( "sections"     == $a )                           {
+    return "`{$a}` = " . (string) $this -> Sections     ;
+  }                                                     ;
+  return ""                                             ;
+}
+
 public function toString()
 {
-  $HH  = new Parameters ( ) ;
-  return $HH -> LectureString ( $this -> Uuid ) ;
+  return sprintf ( "lec2%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
 }
 
 public function TimeItem($item,$TZ)

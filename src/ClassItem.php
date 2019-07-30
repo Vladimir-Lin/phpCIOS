@@ -2,7 +2,7 @@
 
 namespace CIOS ;
 
-class Class extends Columns
+class ClassItem extends Columns
 {
 
 public $Id           ;
@@ -51,6 +51,26 @@ public function Clear()
   $this -> Start        =  0 ;
   $this -> End          =  0 ;
   $this -> Update       =  0 ;
+}
+
+public function assign($Item)
+{
+  $this -> Id           = $Item -> Id           ;
+  $this -> Uuid         = $Item -> Uuid         ;
+  $this -> Type         = $Item -> Type         ;
+  $this -> Used         = $Item -> Used         ;
+  $this -> States       = $Item -> States       ;
+  $this -> Trainee      = $Item -> Trainee      ;
+  $this -> Tutor        = $Item -> Tutor        ;
+  $this -> Manager      = $Item -> Manager      ;
+  $this -> Receptionist = $Item -> Receptionist ;
+  $this -> Item         = $Item -> Item         ;
+  $this -> Lecture      = $Item -> Lecture      ;
+  $this -> Description  = $Item -> Description  ;
+  $this -> Period       = $Item -> Period       ;
+  $this -> Start        = $Item -> Start        ;
+  $this -> End          = $Item -> End          ;
+  $this -> Update       = $Item -> Update       ;
 }
 
 public function tableItems()
@@ -155,6 +175,61 @@ public function get($item)
   if ( "end"          == $a ) return (string) $this -> End          ;
   if ( "ltime"        == $a ) return (string) $this -> Update       ;
   return ""                                                         ;
+}
+
+
+public function ItemPair($item)
+{
+  $a = strtolower ( $item )                             ;
+  if ( "id"           == $a )                           {
+    return "`{$a}` = " . (string) $this -> Id           ;
+  }                                                     ;
+  if ( "uuid"         == $a )                           {
+    return "`{$a}` = " . (string) $this -> Uuid         ;
+  }                                                     ;
+  if ( "type"         == $a )                           {
+    return "`{$a}` = " . (string) $this -> Type         ;
+  }                                                     ;
+  if ( "used"         == $a )                           {
+    return "`{$a}` = " . (string) $this -> Used         ;
+  }                                                     ;
+  if ( "states"       == $a )                           {
+    return "`{$a}` = " . (string) $this -> States       ;
+  }                                                     ;
+  if ( "trainee"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Trainee      ;
+  }                                                     ;
+  if ( "tutor"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Tutor        ;
+  }                                                     ;
+  if ( "manager"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Manager      ;
+  }                                                     ;
+  if ( "receptionist" == $a )                           {
+    return "`{$a}` = " . (string) $this -> Receptionist ;
+  }                                                     ;
+  if ( "item"         == $a )                           {
+    return "`{$a}` = " . (string) $this -> Item         ;
+  }                                                     ;
+  if ( "lecture"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Lecture      ;
+  }                                                     ;
+  if ( "description"  == $a )                           {
+    return "`{$a}` = " . (string) $this -> Description  ;
+  }                                                     ;
+  if ( "period"       == $a )                           {
+    return "`{$a}` = " . (string) $this -> Period       ;
+  }                                                     ;
+  if ( "start"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Start        ;
+  }                                                     ;
+  if ( "end"          == $a )                           {
+    return "`{$a}` = " . (string) $this -> End          ;
+  }                                                     ;
+  if ( "ltime"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Update       ;
+  }                                                     ;
+  return ""                                             ;
 }
 
 public function fromLecture($Lecture)
@@ -305,10 +380,7 @@ public function toPeriod()
 
 public function toString()
 {
-  $HH = new Parameters     (               ) ;
-  $ID = $HH -> ClassString ( $this -> Uuid ) ;
-  unset                    ( $HH           ) ;
-  return $ID                                 ;
+  return sprintf ( "cls3%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
 }
 
 public function fromString($CLASSID)
@@ -586,7 +658,7 @@ public function CalendarRenderScript()
 public function SkypeID($DB,$TABLE,$CUID)
 {
   $IMP = "0"                                       ;
-  $RI  = new RelationItem     (                  ) ;
+  $RI  = new Relation         (                  ) ;
   $RI -> set                  ( "first" , $CUID  ) ;
   $RI -> setT1                ( "People"         ) ;
   $RI -> setT2                ( "InstantMessage" ) ;

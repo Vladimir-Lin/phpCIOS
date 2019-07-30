@@ -24,13 +24,9 @@ function __construct()
   $this -> Clear ( ) ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
 function __destruct()
 {
 }
-
-//////////////////////////////////////////////////////////////////////////////
 
 public function Clear()
 {
@@ -49,7 +45,22 @@ public function Clear()
   $this -> Update      =  0    ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
+public function assign($Item)
+{
+  $this -> Id          = $Item -> Id          ;
+  $this -> Uuid        = $Item -> Uuid        ;
+  $this -> Payer       = $Item -> Payer       ;
+  $this -> PayerBank   = $Item -> PayerBank   ;
+  $this -> Payee       = $Item -> Payee       ;
+  $this -> PayeeBank   = $Item -> PayeeBank   ;
+  $this -> Currency    = $Item -> Currency    ;
+  $this -> Amount      = $Item -> Amount      ;
+  $this -> States      = $Item -> States      ;
+  $this -> Item        = $Item -> Item        ;
+  $this -> Description = $Item -> Description ;
+  $this -> Record      = $Item -> Record      ;
+  $this -> Update      = $Item -> Update      ;
+}
 
 public function tableItems()
 {
@@ -70,32 +81,6 @@ public function tableItems()
   return $S                         ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
-public function JoinItems($X,$S)
-{
-  $U = array ( )               ;
-  foreach ( $X as $V )         {
-    $W = "`" . $V . "`"        ;
-    array_push ( $U , $W )     ;
-  }                            ;
-  $L = implode ( $S , $U )     ;
-  unset ( $U )                 ;
-  return $L                    ;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-
-public function Items( $S = "," )
-{
-  $X = $this -> tableItems (         ) ;
-  $L = $this -> JoinItems  ( $X , $S ) ;
-  unset                    ( $X      ) ;
-  return $L                            ;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-
 public function valueItems()
 {
   $S = array (                    ) ;
@@ -111,8 +96,6 @@ public function valueItems()
   array_push ( $S , "record"      ) ;
   return $S                         ;
 }
-
-//////////////////////////////////////////////////////////////////////////////
 
 public function set($item,$V)
 {
@@ -176,7 +159,50 @@ public function Pairs($Items)
   return $Q                                     ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
+public function ItemPair($item)
+{
+  $a = strtolower ( $item )                            ;
+  if ( "id"          == $a )                           {
+    return "`{$a}` = " . (string) $this -> Id          ;
+  }                                                    ;
+  if ( "uuid"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Uuid        ;
+  }                                                    ;
+  if ( "payer"       == $a )                           {
+    return "`{$a}` = " . (string) $this -> Payer       ;
+  }                                                    ;
+  if ( "payerbank"   == $a )                           {
+    return "`{$a}` = " . (string) $this -> PayerBank   ;
+  }                                                    ;
+  if ( "payee"       == $a )                           {
+    return "`{$a}` = " . (string) $this -> Payee       ;
+  }                                                    ;
+  if ( "payeebank"   == $a )                           {
+    return "`{$a}` = " . (string) $this -> PayeeBank   ;
+  }                                                    ;
+  if ( "currency"    == $a )                           {
+    return "`{$a}` = " . (string) $this -> Currency    ;
+  }                                                    ;
+  if ( "amount"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Amount      ;
+  }                                                    ;
+  if ( "states"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> States      ;
+  }                                                    ;
+  if ( "item"        == $a )                           {
+    return "`{$a}` = " . (string) $this -> Item        ;
+  }                                                    ;
+  if ( "description" == $a )                           {
+    return "`{$a}` = " . (string) $this -> Description ;
+  }                                                    ;
+  if ( "record"      == $a )                           {
+    return "`{$a}` = " . (string) $this -> Record      ;
+  }                                                    ;
+  if ( "ltime"       == $a )                           {
+    return "`{$a}` = " . (string) $this -> Update      ;
+  }                                                    ;
+  return ""                                            ;
+}
 
 public function isToken()
 {
@@ -202,12 +228,9 @@ public function isClass()
 
 //////////////////////////////////////////////////////////////////////////////
 
-public function IdString()
+public function toString()
 {
-  $HH = new Parameters     (               ) ;
-  $ID = $HH -> TradeString ( $this -> Uuid ) ;
-  unset                    ( $HH           ) ;
-  return $ID                                 ;
+  return sprintf ( "trs5%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
 }
 
 public function setId($ID)
@@ -623,7 +646,7 @@ public function TradeDivBlock($TZ,$PAY,$TKN,$SKIPS=0)
   ////////////////////////////////////////////////////////////////////////////
   $TJC   = "TradeDetails('{$this -> Uuid}');"                                ;
   $HR   -> AddTag           ( $this -> ItemTd ( "Trade::ID" , 10 )         ) ;
-  $HD    = $HR    -> addTd  ( $this -> IdString ( )                        ) ;
+  $HD    = $HR    -> addTd  ( $this -> toString ( )                        ) ;
   $HD   -> AddPair          ( "colspan"    , "25"                          ) ;
   $HD   -> AddPair          ( "ondblclick" , $TJC                          ) ;
   ////////////////////////////////////////////////////////////////////////////

@@ -98,6 +98,16 @@ public static function Exclude($AA,$BB)
   return $CC                           ;
 }
 
+public static function MergeArray ( $AA , $BB )
+{
+  if             ( count ( $BB ) > 0 ) {
+    foreach      ( $BB as $S         ) {
+      array_push ( $AA , $S          ) ;
+    }                                  ;
+  }                                    ;
+  return $AA                           ;
+}
+
 public static function TakeUuid($UUIDs,$START,$TOTAL)
 {
   $UU = array ( )                       ;
