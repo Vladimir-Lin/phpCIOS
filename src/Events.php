@@ -186,18 +186,23 @@ public static function StudentClassEvent                                     (
   ////////////////////////////////////////////////////////////////////////////
   $CLSID  = $CLASS -> toString (                                           ) ;
   $CTMSG  = $CLASS -> ClassTypeString (                                    ) ;
-  $LTYPE  = $CourseListings [ $LANG ]                                        ;
+  $LTYPE  = $CourseListings [ $LANG     ]                                    ;
   ////////////////////////////////////////////////////////////////////////////
   $EXTRA  = ""                                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Student" ]                             ;
+  $SST    = $CLASS -> StudentString ( )                                      ;
+  $SSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Tutor" ]                               ;
+  $SST    = $CLASS -> TutorString   ( )                                      ;
+  $TSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
   if ( $CLASS -> isAbsent ( "trainee" ) )                                    {
-    $XXV = $Translations [ "Classes::Student" ]                              ;
-    $SST = $CLASS -> StudentString ( )                                       ;
-    $EXTRA  = "{$XXV}{$SST}"                                                 ;
+    $EXTRA  = $SSMSG                                                         ;
   } else
   if ( $CLASS -> isAbsent ( "tutor"   ) )                                    {
-    $XXV = $Translations [ "Classes::Tutor" ]                                ;
-    $SST = $CLASS -> TutorString   ( )                                       ;
-    $EXTRA  = "{$XXV}{$SST}"                                                 ;
+    $EXTRA  = $TSMSG                                                         ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $TX     = $DB    -> GetTutor ( $NAMTAB , $CLASS -> Tutor                 ) ;
@@ -208,6 +213,8 @@ public static function StudentClassEvent                                     (
   $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
   ////////////////////////////////////////////////////////////////////////////
   $STX    = $PE -> TimeFormat  ( "H:i:s" , "start" , $TZ                   ) ;
+  $STV    = $PE -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s"        ) ;
+  $ETV    = $PE -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s"        ) ;
   ////////////////////////////////////////////////////////////////////////////
   $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Tutor           ) ;
   $SKYPE  = ""                                                               ;
@@ -239,7 +246,29 @@ public static function StudentClassEvent                                     (
   $E     -> AddPair            ( "type"     , 126                          ) ;
   $E     -> AddPair            ( "language" , $LANG                        ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddDqPair          ( "tooltip"  , $CTMSG                       ) ;
+  $CXID   = $Translations   [ "ClassID"         ]                            ;
+  $CXID   = "{$CXID}{$CLSID}"                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  $STMSG  = $Translations   [ "StartTime"       ]                            ;
+  $STMSG  = "{$STMSG}{$STV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ETMSG  = $Translations   [ "EndTime"         ]                            ;
+  $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CRMSG  = $Translations   [ "Classes::Course" ]                            ;
+  $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CSMSG  = $Translations   [ "Classes::State"  ]                            ;
+  $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TOOLTIPS = "{$CXID}\n"                                                    .
+              "{$TN}\n"                                                      .
+              "{$CRMSG}\n"                                                   .
+              "{$CSMSG}\n"                                                   .
+              "{$SSMSG}\n"                                                   .
+              "{$TSMSG}\n"                                                   .
+              "{$STMSG}\n"                                                   .
+              "{$ETMSG}"                                                     ;
   ////////////////////////////////////////////////////////////////////////////
   if                           ( $CLASS -> Type == 5                       ) {
     $E     -> Classes          ( [ "StudentClassStop"    ]                 ) ;
@@ -272,13 +301,16 @@ public static function StudentClassEvent                                     (
         } else                                                               {
           $E -> Classes        ( [ "StudentClassComplete" ]                ) ;
           $E -> TextColor      ( "#00008B"                                 ) ;
+          if                   ( $CLASS -> Type == 1                       ) {
+            $CNUMSG   = $Translations [ "Classes::NotUpdated" ]              ;
+            $TOOLTIPS = "{$TOOLTIPS}\n{$CNUMSG}"                             ;
+          }                                                                  ;
         }                                                                    ;
       break                                                                  ;
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-
-
+  $E     -> AddDqPair          ( "tooltip"  , $TOOLTIPS                    ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $E                                                                  ;
 }
@@ -287,15 +319,29 @@ public static function LectureEventItem ( $DB , $TZ , $LECTURE )
 {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
+  global $CourseNames                                                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLST = $GLOBALS [ "TableMapping" ] [ "Classes" ]                          ;
+  $LUID = $LECTURE -> Uuid                                                   ;
+  $QQ   = "select count(*) from {$CLST} where `lecture` = {$LUID} ;"         ;
+  $CLES = $DB -> FetchOne                 ( $QQ                            ) ;
+  $LTSG = $Translations [ "Lectures::Total" ]                                ;
   ////////////////////////////////////////////////////////////////////////////
   $CIDS = $LECTURE -> toString            (                                ) ;
+  $CNIT = $CourseNames  [ $LECTURE -> Item     ]                             ;
   $TIDS = $Translations [ "Lectures::Register" ]                             ;
-  $TIDS = "{$TIDS}{$CIDS}"                                                   ;
+  $TIDS = "{$CNIT} {$LTSG}{$CLES}\n{$TIDS}{$CIDS}"                           ;
   ////////////////////////////////////////////////////////////////////////////
   $PRX  = new Periode                     (                                ) ;
   $PRX -> Start = $LECTURE -> Register                                       ;
   $PRX -> setInterval                     ( 1800                           ) ;
   $STX  = $PRX -> TimeFormat              ( "H:i:s" , "start" , $TZ        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PRZ  = new Periode                     (                                ) ;
+  $PRZ -> Start = $LECTURE -> OpenDay                                        ;
+  $PRZ -> End   = $LECTURE -> CloseDay                                       ;
+  $STV  = $PRZ -> toLongString         ( $TZ , "start" , "Y/m/d" , "H:i:s" ) ;
+  $ETV  = $PRZ -> toLongString         ( $TZ , "end"   , "Y/m/d" , "H:i:s" ) ;
   ////////////////////////////////////////////////////////////////////////////
   $E    = new Events                      (                                ) ;
   ////////////////////////////////////////////////////////////////////////////
@@ -312,6 +358,7 @@ public static function LectureEventItem ( $DB , $TZ , $LECTURE )
   $E   -> AddDqPair                       ( "clock"   , $STX               ) ;
   $E   -> AddPair                         ( "type"    , 122                ) ;
   ////////////////////////////////////////////////////////////////////////////
+  $TIDS = "{$TIDS}\n{$STV}\n{$ETV}"                                          ;
   $E   -> AddDqPair                       ( "tooltip" , $TIDS              ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $E                                                                  ;
@@ -352,36 +399,53 @@ public static function TradeEventItem ( $DB , $TZ , $TRADE )
   global $CourseNames                                                        ;
   global $ProductItems                                                       ;
   ////////////////////////////////////////////////////////////////////////////
-  $CIDS = $TRADE -> toString              (                                ) ;
+  $TKNTAB = "`erp`.`tokens`"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TQMSG  = $Translations [ "Tokens::Quantity:" ]                            ;
+  $TV     = ""                                                               ;
+  if                                   ( $TRADE -> isToken ( )             ) {
+    $TKNS   = new Token                (                                   ) ;
+    $TKNS  -> Uuid = $TRADE -> Description                                   ;
+    if ( $TKNS -> ObtainsByUuid ( $DB , $TKNTAB )                          ) {
+      $TV = $TKNS -> TokenValue        (                                   ) ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CIDS = $TRADE -> toString           (                                   ) ;
   $AMNT = $TRADE -> Amount                                                   ;
   $CURY = $TRADE -> Currency                                                 ;
   $PINM = $ProductItems [ $TRADE -> Item  ]                                  ;
   $TAMS = $Translations [ "Trade::Amount" ]                                  ;
   $TAIT = $Translations [ "Trade::Item"   ]                                  ;
   $TAID = $Translations [ "Trade::ID"     ]                                  ;
-  $TIDS = "{$TAMS}{$AMNT} {$CURY}\n{$TAIT}{$PINM}\n{$TAID}{$CIDS}"           ;
+  $TIDS = "{$TAMS}{$AMNT} {$CURY}\n{$TAIT}{$PINM}"                           ;
   ////////////////////////////////////////////////////////////////////////////
-  $PRX  = new Periode                     (                                ) ;
+  $PRX  = new Periode                  (                                   ) ;
   $PRX -> Start = $TRADE -> Record                                           ;
-  $PRX -> setInterval                     ( 1800                           ) ;
-  $STX  = $PRX -> TimeFormat              ( "H:i:s" , "start" , $TZ        ) ;
+  $PRX -> setInterval                  ( 1800                              ) ;
+  $STX  = $PRX -> TimeFormat           ( "H:i:s" , "start" , $TZ           ) ;
+  $TLS  = $PRX -> toLongString         ( $TZ , "start" , "Y/m/d" , "H:i:s" ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E    = new Events                      (                                ) ;
+  $E    = new Events                   (                                   ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E   -> Title                           ( $TIDS                          ) ;
-  $E   -> Id                              ( $TRADE -> Uuid                 ) ;
-//  $E   -> TimeFields                      ( $TZ , $PRX                     ) ;
-  $E   -> TimeField                       ( $TZ , "start" , $PRX           ) ;
-  $E   -> Editable                        ( false                          ) ;
-  $E   -> AllDay                          ( false                          ) ;
-  $E   -> Classes                         ( [ "StudentTradeItem" ]         ) ;
-  $E   -> TextColor                       ( "#7733AA"                      ) ;
+  $E   -> Title                        ( $TIDS                             ) ;
+  $E   -> Id                           ( $TRADE -> Uuid                    ) ;
+//  $E   -> TimeFields                   ( $TZ , $PRX                        ) ;
+  $E   -> TimeField                    ( $TZ , "start" , $PRX              ) ;
+  $E   -> Editable                     ( false                             ) ;
+  $E   -> AllDay                       ( false                             ) ;
+  $E   -> Classes                      ( [ "StudentTradeItem" ]            ) ;
+  $E   -> TextColor                    ( "#7733AA"                         ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E   -> AddDqPair                       ( "trade"   , $CIDS              ) ;
-  $E   -> AddDqPair                       ( "clock"   , $STX               ) ;
-  $E   -> AddPair                         ( "type"    , 123                ) ;
+  $E   -> AddDqPair                    ( "trade"   , $CIDS                 ) ;
+  $E   -> AddDqPair                    ( "clock"   , $STX                  ) ;
+  $E   -> AddPair                      ( "type"    , 123                   ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E   -> AddDqPair                       ( "tooltip" , $TIDS              ) ;
+  $TIXS = "{$TLS}\n{$TAMS}{$AMNT} {$CURY}\n{$TAIT}{$PINM}\n{$TAID}{$CIDS}"   ;
+  if                                   ( strlen ( $TV ) > 0                ) {
+    $TIXS = "{$TIXS}\n{$TQMSG}{$TV}"                                         ;
+  }                                                                          ;
+  $E   -> AddDqPair                    ( "tooltip" , $TIXS                 ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $E                                                                  ;
 }
