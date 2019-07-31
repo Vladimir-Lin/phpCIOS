@@ -376,17 +376,19 @@ public static function ObtainsLectures ( $DB , $TABLE , $LECTURES )
   return $CLA                                                                ;
 }
 
-public static function LectureRegisterEvents ( $DB , $TABLE , $TZ , $PUID )
+public static function LectureRegisterEvents ( $DB , $TABLE , $TZ , $PERIOD , $PUID )
 {
-  $EVENTS = array                   (                                      ) ;
-  $LIC    = new Lecture             (                                      ) ;
+  $EVENTS = array                    (                                     ) ;
+  $LIC    = new Lecture              (                                     ) ;
   $LIC   -> Trainee = $PUID                                                  ;
-  $UU     = $LIC -> ObtainsLectures ( $DB , $TABLE , "trainee"             ) ;
-  if                                ( count ( $UU ) > 0                    ) {
-    $CLA  = self::ObtainsLectures   ( $DB , $TABLE , $UU                   ) ;
-    foreach                         ( $CLA as $L                           ) {
-      $E  = self::LectureEventItem  ( $DB , $TZ , $L                       ) ;
-      array_push                    ( $EVENTS   , $E -> Content ( )        ) ;
+  $UU     = $LIC -> ObtainsLectures  ( $DB , $TABLE , "trainee"            ) ;
+  if                                 ( count ( $UU ) > 0                   ) {
+    $CLA  = self::ObtainsLectures    ( $DB , $TABLE , $UU                  ) ;
+    foreach                          ( $CLA as $L                          ) {
+      if ( $PERIOD -> Between ( $L -> Register ) == 0                      ) {
+        $E  = self::LectureEventItem ( $DB , $TZ , $L                      ) ;
+        array_push                   ( $EVENTS   , $E -> Content ( )       ) ;
+      }                                                                      ;
     }                                                                        ;
   }                                                                          ;
   return $EVENTS                                                             ;
@@ -462,7 +464,7 @@ public static function ObtainsTrades ( $DB , $TABLE , $TRADES )
   return $CLA                                                                ;
 }
 
-public static function TradeBlockEvents ( $DB , $TABLE , $TZ , $PUID )
+public static function TradeBlockEvents ( $DB , $TABLE , $TZ , $PERIOD , $PUID )
 {
   $EVENTS = array                       (                                  ) ;
   $TIC    = new Trade                   (                                  ) ;
@@ -471,8 +473,10 @@ public static function TradeBlockEvents ( $DB , $TABLE , $TZ , $PUID )
   if                                    ( count ( $UU ) > 0                ) {
     $CLA  = self::ObtainsTrades         ( $DB , $TABLE , $UU               ) ;
     foreach                             ( $CLA as $T                       ) {
-      $E  = self::TradeEventItem        ( $DB , $TZ , $T                   ) ;
-      array_push                        ( $EVENTS   , $E -> Content ( )    ) ;
+      if ( $PERIOD -> Between ( $T -> Record ) == 0                        ) {
+        $E  = self::TradeEventItem      ( $DB , $TZ , $T                   ) ;
+        array_push                      ( $EVENTS   , $E -> Content ( )    ) ;
+      }                                                                      ;
     }                                                                        ;
   }                                                                          ;
   return $EVENTS                                                             ;
