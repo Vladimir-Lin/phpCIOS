@@ -157,6 +157,20 @@ public static function GetTraineeOff ( $DB , $TABLE , $PEOPLE , $PERIOD , $ITEM 
   return $DB -> ObtainUuids ( $QQ )                                          ;
 }
 
+public static function GetTutorClasses ( $DB , $TABLE , $PEOPLE , $PERIOD )
+{
+  $PUID  = $PEOPLE -> Uuid                                                   ;
+  $START = $PERIOD -> Start                                                  ;
+  $ENDST = $PERIOD -> End                                                    ;
+  $QQ    = "select `uuid` from {$TABLE}"                                     .
+           " where ( `used` = 1 )"                                           .
+             " and ( `tutor` = {$PUID} )"                                    .
+             " and ( `start` >= {$START} )"                                  .
+               " and ( `end` <= {$ENDST} )"                                  .
+             " order by `start` asc ;"                                       ;
+  return $DB -> ObtainUuids ( $QQ )                                          ;
+}
+
 public static function ObtainsClasses ( $DB , $TABLE , $CLASSES )
 {
   $CLA    = array         (                                                ) ;
@@ -245,6 +259,151 @@ public static function StudentClassEvent                                     (
   $E     -> AddPair            ( "status"   , $CLASS -> Type               ) ;
   $E     -> AddPair            ( "type"     , 126                          ) ;
   $E     -> AddPair            ( "language" , $LANG                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CXID   = $Translations   [ "ClassID"         ]                            ;
+  $CXID   = "{$CXID}{$CLSID}"                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  $STMSG  = $Translations   [ "StartTime"       ]                            ;
+  $STMSG  = "{$STMSG}{$STV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ETMSG  = $Translations   [ "EndTime"         ]                            ;
+  $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CRMSG  = $Translations   [ "Classes::Course" ]                            ;
+  $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CSMSG  = $Translations   [ "Classes::State"  ]                            ;
+  $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TOOLTIPS = "{$CXID}\n"                                                    .
+              "{$TN}\n"                                                      .
+              "{$CRMSG}\n"                                                   .
+              "{$CSMSG}\n"                                                   .
+              "{$SSMSG}\n"                                                   .
+              "{$TSMSG}\n"                                                   .
+              "{$STMSG}\n"                                                   .
+              "{$ETMSG}"                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                           ( $CLASS -> Type == 5                       ) {
+    $E     -> Classes          ( [ "StudentClassStop"    ]                 ) ;
+    $E     -> TextColor        ( "#216521"                                 ) ;
+  } else                                                                     {
+    $BTID   = $PE -> Between   ( $NOW -> Stardate                          ) ;
+    switch                     ( $BTID                                     ) {
+      case  1                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassRemove" ]                  ) ;
+          $E -> TextColor      ( "#212165"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassArrange" ]                 ) ;
+          $E -> TextColor      ( "#652121"                                 ) ;
+        }                                                                    ;
+      break                                                                  ;
+      case  0                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
+          $E -> TextColor      ( "#008B00"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassLecture" ]                 ) ;
+          $E -> TextColor      ( "#333333"                                 ) ;
+        }                                                                    ;
+      break                                                                  ;
+      case -1                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
+          $E -> TextColor      ( "#8B0000"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassComplete" ]                ) ;
+          $E -> TextColor      ( "#00008B"                                 ) ;
+          if                   ( $CLASS -> Type == 1                       ) {
+            $CNUMSG   = $Translations [ "Classes::NotUpdated" ]              ;
+            $TOOLTIPS = "{$TOOLTIPS}\n{$CNUMSG}"                             ;
+          }                                                                  ;
+        }                                                                    ;
+      break                                                                  ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddDqPair          ( "tooltip"  , $TOOLTIPS                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $E                                                                  ;
+}
+
+public static function TutorClassEvent                                       (
+                         $DB                                                 ,
+                         $CLASS                                              ,
+                         $NOW                                                ,
+                         $TZ                                                 ,
+                         $NAMTAB                                             ,
+                         $PRDTAB                                             ,
+                         $IMSTAB                                             ,
+                         $RELTAB                                             )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  global $CourseListings                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSID  = $CLASS -> toString (                                           ) ;
+  $CTMSG  = $CLASS -> ClassTypeString (                                    ) ;
+  $LTYPE  = $CourseListings [ $CLASS -> Item ]                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $EXTRA  = ""                                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Student" ]                             ;
+  $SST    = $CLASS -> StudentString ( )                                      ;
+  $SSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Tutor" ]                               ;
+  $SST    = $CLASS -> TutorString   ( )                                      ;
+  $TSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( $CLASS -> isAbsent ( "trainee" ) )                                    {
+    $EXTRA  = $SSMSG                                                         ;
+  } else
+  if ( $CLASS -> isAbsent ( "tutor"   ) )                                    {
+    $EXTRA  = $TSMSG                                                         ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TX     = $DB    -> GetTrainee ( $NAMTAB , $CLASS -> Trainee             ) ;
+  $CLT    = $Translations [ "Classes::LecturingTrainee" ]                    ;
+  $TN     = "{$CLT}{$TX}"                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PE     = $CLASS -> toPeriod (                                           ) ;
+  $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $STX    = $PE -> TimeFormat   ( "H:i:s" , "start" , $TZ                  ) ;
+  $STV    = $PE -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s"        ) ;
+  $ETV    = $PE -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s"        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Trainee         ) ;
+  $SKYPE  = ""                                                               ;
+  if                           ( gmp_cmp ( $IMP , "0" ) > 0                ) {
+    $IMA  = new ImApp          (                                           ) ;
+    $IMA -> Uuid = $IMP                                                      ;
+    if                         ( $IMA -> ObtainsByUuid ( $DB , $IMSTAB )   ) {
+      $SKYPE = $IMA -> Account                                               ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E      = new Events         (                                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> Title              ( $TN                                       ) ;
+  $E     -> Id                 ( $CLASS -> Uuid                            ) ;
+  $E     -> TimeFields         ( $TZ , $PE                                 ) ;
+  $E     -> Editable           ( false                                     ) ;
+  $E     -> AllDay             ( false                                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddDqPair          ( "name"     , $TX                          ) ;
+  $E     -> AddDqPair          ( "trainee"  , $CLASS -> Trainee            ) ;
+  $E     -> AddDqPair          ( "skype"    , $SKYPE                       ) ;
+  $E     -> AddDqPair          ( "classid"  , $CLSID                       ) ;
+  $E     -> AddDqPair          ( "clock"    , $STX                         ) ;
+  $E     -> AddDqPair          ( "lecture"  , $LTYPE                       ) ;
+  $E     -> AddDqPair          ( "extra"    , $EXTRA                       ) ;
+  $E     -> AddDqPair          ( "special"  , $CTMSG                       ) ;
+  $E     -> AddPair            ( "status"   , $CLASS -> Type               ) ;
+  $E     -> AddPair            ( "type"     , 126                          ) ;
+  $E     -> AddPair            ( "language" , $CLASS -> Item               ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CXID   = $Translations   [ "ClassID"         ]                            ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
@@ -488,11 +647,14 @@ public static function GetPublicEventsByType ( $DB , $TABLE , $PERIOD , $TYPE )
   $START = $PERIOD -> Start                                                  ;
   $ENDST = $PERIOD -> End                                                    ;
   ////////////////////////////////////////////////////////////////////////////
+  $C1    = "( ( `start` >= {$START} ) and ( `end` <= {$ENDST} ) )"           ;
+  $C2    = "( ( `start` >= {$START} ) and ( `start` <= {$ENDST} ) )"         ;
+  $C3    = "( ( `end` >= {$START} ) and ( `end` <= {$ENDST} ) )"             ;
+  ////////////////////////////////////////////////////////////////////////////
   $QQ    = "select `uuid` from {$TABLE}"                                     .
            " where ( `used` = 1 )"                                           .
              " and ( `type` = {$TYPE} )"                                     .
-           " and ( `start` >= {$START} )"                                    .
-             " and ( `end` <= {$ENDST} )"                                    .
+           " and ( {$C1} or {$C2} or {$C3} )"                                .
            " order by `start` asc ;"                                         ;
   ////////////////////////////////////////////////////////////////////////////
   return $DB -> ObtainUuids ( $QQ )                                          ;
@@ -510,15 +672,75 @@ public static function ObtainsPeriods ( $DB , $TABLE , $VACATIONS )
   return $PERIODs                                 ;
 }
 
+public static function PaymentTermItem ( $DB , $PEOPLE, $TZ , $E , $PAYDAY , $TERM )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TRMX    = new Periode               (                                   ) ;
+  $SDTX    = new StarDate              (                                   ) ;
+  $TRMX   -> Start = $TERM -> Start                                          ;
+  $TRMX   -> End   = gmp_sub           ( $TERM -> End , 1                  ) ;
+  $PRID    = $TERM -> toString         (                                   ) ;
+  $Correct = true                                                            ;
+  ////////////////////////////////////////////////////////////////////////////
+  $MSGID   = $Translations [ "Tutors::LectureTerm:" ]                        ;
+  $PIDMSG  = "{$MSGID}{$PRID}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                                   ( isset ( $GLOBALS [ "WeekDays" ] ) ) {
+    $WeekDays = $GLOBALS [ "WeekDays" ]                                      ;
+  } else $Correct = false                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TLP     = $PAYDAY -> toDateString   ( $TZ , "start" , "Y/m/d"           ) ;
+  if                                   ( $Correct                          ) {
+    $SDTX -> Stardate = $PAYDAY -> Start                                     ;
+    $SW    = $WeekDays [ $SDTX -> Weekday ( $TZ ) ]                          ;
+    $TLP   = "{$TLP} {$SW}"                                                  ;
+  }                                                                          ;
+  $MSGID   = $Translations [ "Tutors::PayDay:" ]                             ;
+  $TLP     = "{$MSGID}{$TLP}"                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TLS  = $TRMX   -> toDateString      ( $TZ , "start" , "Y/m/d"           ) ;
+  if                                   ( $Correct                          ) {
+    $SDTX -> Stardate = $PAYDAY -> Start                                     ;
+    $SW    = $WeekDays [ $SDTX -> Weekday ( $TZ ) ]                          ;
+    $TLS   = "{$TLS} {$SW}"                                                  ;
+  }                                                                          ;
+  $MSGID   = $Translations [ "Periode::StartDate:" ]                         ;
+  $TLS     = "{$MSGID}{$TLS}"                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TLE  = $TRMX   -> toDateString      ( $TZ , "end"   , "Y/m/d"           ) ;
+  if ( $Correct )                                                            {
+    $SDTX -> Stardate = $TRMX -> End                                         ;
+    $SW    = $WeekDays [ $SDTX -> Weekday ( $TZ ) ]                          ;
+    $TLE   = "{$TLE} {$SW}"                                                  ;
+  }                                                                          ;
+  $MSGID   = $Translations [ "Periode::EndDate:" ]                           ;
+  $TLE     = "{$MSGID}{$TLE}"                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TIXS    = "{$PIDMSG}\n{$TLP}\n{$TLS}\n{$TLE}"                             ;
+  ////////////////////////////////////////////////////////////////////////////
+  $MSG     = $Translations [ "Payment::TermID:" ]                            ;
+  $E      -> AddDqPair                 ( "period"  , $PRID                 ) ;
+  $E      -> AddDqPair                 ( "message" , "{$MSG}{$PRID}"       ) ;
+  $E      -> AddDqPair                 ( "tooltip" , $TIXS                 ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $E                                                                  ;
+}
+
 public static function PublicEventItem ( $DB , $NAMTAB , $PEOPLE , $PERIOD , $COLOR , $CLASSES )
 {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   ////////////////////////////////////////////////////////////////////////////
+  $RELT  = $GLOBALS [ "TableMapping" ] [ "Relation" ]                        ;
+  $PERT  = "`erp`.`periods`"                                                 ;
   $PUID  = $PERIOD -> Uuid                                                   ;
   $LANG  = $PEOPLE -> Language                                               ;
   $TZ    = $PEOPLE -> TZ                                                     ;
   $E     = new Events            (                                         ) ;
+  $RI    = new Relation          (                                         ) ;
+  $PRX   = new Periode           (                                         ) ;
   ////////////////////////////////////////////////////////////////////////////
   $TIDS  = $PERIOD -> TypeString (                                         ) ;
   $PNAM  = $DB     -> Naming     ( $NAMTAB , $PUID , $LANG , "Default"     ) ;
@@ -552,6 +774,42 @@ public static function PublicEventItem ( $DB , $NAMTAB , $PEOPLE , $PERIOD , $CO
     break                                                                    ;
     case 14                                                                  :
     break                                                                    ;
+    case 15                                                                  :
+      $RI   -> set                  ( "first" , $PERIOD -> Uuid            ) ;
+      $RI   -> setT1                ( "Period"                             ) ;
+      $RI   -> setT2                ( "Period"                             ) ;
+      $RI   -> setRelation          ( "Equivalent"                         ) ;
+      $UX    = $RI -> Subordination ( $DB     , $RELT                      ) ;
+      if                            ( count ( $UX ) > 0                    ) {
+        $PRX -> Uuid = $UX [ 0 ]                                             ;
+        $PRX -> ObtainsByUuid       ( $DB     , $PERT                      ) ;
+        $E  = self::PaymentTermItem ( $DB                                    ,
+                                      $PEOPLE                                ,
+                                      $TZ                                    ,
+                                      $E                                     ,
+                                      $PERIOD                                ,
+                                      $PRX                                 ) ;
+      }                                                                      ;
+    break                                                                    ;
+    case 16                                                                  :
+    break                                                                    ;
+    case 17                                                                  :
+      $RI   -> set                  ( "second" , $PERIOD -> Uuid           ) ;
+      $RI   -> setT1                ( "Period"                             ) ;
+      $RI   -> setT2                ( "Period"                             ) ;
+      $RI   -> setRelation          ( "Equivalent"                         ) ;
+      $UX    = $RI -> GetOwners     ( $DB     , $RELT                      ) ;
+      if                            ( count ( $UX ) > 0                    ) {
+        $PRX -> Uuid = $UX [ 0 ]                                             ;
+        $PRX -> ObtainsByUuid       ( $DB     , $PERT                      ) ;
+        $E  = self::PaymentTermItem ( $DB                                    ,
+                                      $PEOPLE                                ,
+                                      $TZ                                    ,
+                                      $E                                     ,
+                                      $PRX                                   ,
+                                      $PERIOD                              ) ;
+      }                                                                      ;
+    break                                                                    ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   return $E -> Content           (                                         ) ;
@@ -565,6 +823,26 @@ public static function VacationEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
                                  $PERIOD           ,
                                  "#FA8072"         ,
                                  [ "Vacations" ] ) ;
+}
+
+public static function PayDayEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
+{
+  return self::PublicEventItem ( $DB             ,
+                                 $NAMTAB         ,
+                                 $PEOPLE         ,
+                                 $PERIOD         ,
+                                 "#FA8072"       ,
+                                 [ "PayDays" ] ) ;
+}
+
+public static function LectureTermEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
+{
+  return self::PublicEventItem ( $DB                  ,
+                                 $NAMTAB              ,
+                                 $PEOPLE              ,
+                                 $PERIOD              ,
+                                 "#FADC72"            ,
+                                 [ "LectureTerms" ] ) ;
 }
 
 public static function SpecialDayEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )

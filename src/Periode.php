@@ -168,6 +168,11 @@ public function ItemPair($item)
   return ""                                          ;
 }
 
+public function toString ( )
+{
+  return sprintf ( "prd9%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
+}
+
 public function setType($TYPE)
 {
   $this -> Type = $TYPE ;
