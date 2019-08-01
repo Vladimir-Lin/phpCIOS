@@ -199,10 +199,18 @@ public static function StudentClassEvent                                     (
   global $CourseListings                                                     ;
   ////////////////////////////////////////////////////////////////////////////
   $CLSID  = $CLASS -> toString (                                           ) ;
+  $LUID   = $CLASS -> Lecture                                                ;
+  $LECID  = sprintf ( "lec2%08d" , gmp_mod ( $LUID , 100000000 )           ) ;
   $CTMSG  = $CLASS -> ClassTypeString (                                    ) ;
   $LTYPE  = $CourseListings [ $LANG     ]                                    ;
   ////////////////////////////////////////////////////////////////////////////
   $EXTRA  = ""                                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSMSG = $Translations [ "ClassID"   ]                                    ;
+  $CLSMSG = "{$CLSMSG}{$CLSID}"                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LECMSG = $Translations [ "LectureID" ]                                    ;
+  $LECMSG = "{$LECMSG}{$LECID}"                                              ;
   ////////////////////////////////////////////////////////////////////////////
   $XXV    = $Translations [ "Classes::Student" ]                             ;
   $SST    = $CLASS -> StudentString ( )                                      ;
@@ -256,6 +264,11 @@ public static function StudentClassEvent                                     (
   $E     -> AddDqPair          ( "lecture"  , $LTYPE                       ) ;
   $E     -> AddDqPair          ( "extra"    , $EXTRA                       ) ;
   $E     -> AddDqPair          ( "special"  , $CTMSG                       ) ;
+  $E     -> AddDqPair          ( "classmsg" , $CLSMSG                      ) ;
+  $E     -> AddDqPair          ( "luid"     , $LUID                        ) ;
+  $E     -> AddDqPair          ( "lecid"    , $LECID                       ) ;
+  $E     -> AddDqPair          ( "lecmsg"   , $LECMSG                      ) ;
+  ////////////////////////////////////////////////////////////////////////////
   $E     -> AddPair            ( "status"   , $CLASS -> Type               ) ;
   $E     -> AddPair            ( "type"     , 126                          ) ;
   $E     -> AddPair            ( "language" , $LANG                        ) ;
@@ -344,10 +357,18 @@ public static function TutorClassEvent                                       (
   global $CourseListings                                                     ;
   ////////////////////////////////////////////////////////////////////////////
   $CLSID  = $CLASS -> toString (                                           ) ;
+  $LUID   = $CLASS -> Lecture                                                ;
+  $LECID  = sprintf ( "lec2%08d" , gmp_mod ( $LUID , 100000000 )           ) ;
   $CTMSG  = $CLASS -> ClassTypeString (                                    ) ;
   $LTYPE  = $CourseListings [ $CLASS -> Item ]                               ;
   ////////////////////////////////////////////////////////////////////////////
   $EXTRA  = ""                                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSMSG = $Translations [ "ClassID"   ]                                    ;
+  $CLSMSG = "{$CLSMSG}{$CLSID}"                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LECMSG = $Translations [ "LectureID" ]                                    ;
+  $LECMSG = "{$LECMSG}{$LECID}"                                              ;
   ////////////////////////////////////////////////////////////////////////////
   $XXV    = $Translations [ "Classes::Student" ]                             ;
   $SST    = $CLASS -> StudentString ( )                                      ;
@@ -401,6 +422,11 @@ public static function TutorClassEvent                                       (
   $E     -> AddDqPair          ( "lecture"  , $LTYPE                       ) ;
   $E     -> AddDqPair          ( "extra"    , $EXTRA                       ) ;
   $E     -> AddDqPair          ( "special"  , $CTMSG                       ) ;
+  $E     -> AddDqPair          ( "classmsg" , $CLSMSG                      ) ;
+  $E     -> AddDqPair          ( "luid"     , $LUID                        ) ;
+  $E     -> AddDqPair          ( "lecid"    , $LECID                       ) ;
+  $E     -> AddDqPair          ( "lecmsg"   , $LECMSG                      ) ;
+  ////////////////////////////////////////////////////////////////////////////
   $E     -> AddPair            ( "status"   , $CLASS -> Type               ) ;
   $E     -> AddPair            ( "type"     , 126                          ) ;
   $E     -> AddPair            ( "language" , $CLASS -> Item               ) ;
