@@ -380,15 +380,28 @@ public function toPeriod()
 
 public function toString()
 {
-  return sprintf ( "cls3%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
+  $U = $this -> Uuid                                         ;
+  $H = substr    ( $U , 0 , 11                             ) ;
+  if ( $H != "36000000000" ) return ""                       ;
+  return sprintf ( "cls3%08d" , gmp_mod ( $U , 100000000 ) ) ;
 }
 
 public function fromString($CLASSID)
 {
-  $HH           = new Parameters (          ) ;
-  $this -> Uuid = $HH -> ClassID ( $CLASSID ) ;
-  unset                          ( $HH      ) ;
-  return $this -> Uuid                        ;
+  if               ( 12 != strlen ( $S )     ) {
+    $this -> Uuid = 0                          ;
+    return 0                                   ;
+  }                                            ;
+  $X = strtolower  ( $S                      ) ;
+  $C = substr      ( $X , 0 , 4              ) ;
+  if               ( $C != "cls3"            ) {
+    $this -> Uuid = 0                          ;
+    return 0                                   ;
+  }                                            ;
+  $C = substr      ( $S , 0 , 4              ) ;
+  $U = str_replace ( $C , "36000000000" , $S ) ;
+  $this -> Uuid = $U                           ;
+  return $U                                    ;
 }
 
 public function ClassTime($TZ)

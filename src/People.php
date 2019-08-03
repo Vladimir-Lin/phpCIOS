@@ -53,6 +53,8 @@ public function assign($item)
 public function toString ( )
 {
   $U = $this -> Uuid                                         ;
+  $H = substr    ( $U , 0 , 11                             ) ;
+  if ( $H != "14000000000" ) return ""                       ;
   return sprintf ( "act1%08d" , gmp_mod ( $U , 100000000 ) ) ;
 }
 

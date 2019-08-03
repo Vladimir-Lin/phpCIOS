@@ -54,18 +54,6 @@ public function tableItems()
   return $S                    ;
 }
 
-public function JoinItems ( $X , $S = "," )
-{
-  $U = array ( )               ;
-  foreach ( $X as $V )         {
-    $W = "`" . $V . "`"        ;
-    array_push ( $U , $W )     ;
-  }                            ;
-  $L = implode ( $S , $U )     ;
-  unset ( $U )                 ;
-  return $L                    ;
-}
-
 public function Items( $S = "," )
 {
   $X = $this -> tableItems (         ) ;
