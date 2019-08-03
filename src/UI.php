@@ -494,9 +494,25 @@ public static function PageInfo ( $MAPS )                                    {
   $VJ              = "RequestURL = '{$RURL}'"                                ;
   $MAPS [ $KJ ]    = $VJ                                                     ;
   ////////////////////////////////////////////////////////////////////////////
-  $PURL            = str_replace ( $PIFS , "" , $RURL )                      ;
+  $PURL            = $RURL                                                   ;
   if ( strlen ( $QSVT ) > 0                                                ) {
-    $PURL          = str_replace ( "?{$QSVT}" , "" , $PURL )                 ;
+    $QXSTR         = "?{$QSVT}"                                              ;
+    $IDX           = strrpos     ( $PURL , $QXSTR                          ) ;
+    if                           ( $IDX >= 0                               ) {
+      $LENX        = strlen      ( $PURL                                   ) ;
+      $QLEN        = strlen      ( $QXSTR                                  ) ;
+      $PA          = substr      ( $PURL , 0 , $IDX                        ) ;
+      $PB          = substr      ( $PURL , $IDX + $QLEN , $LENX - $QLEN    ) ;
+      $PURL        = "{$PA}{$PB}"                                            ;
+    }                                                                        ;
+  }                                                                          ;
+  $IDX             = strrpos     ( $RURL , $PIFS                           ) ;
+  if                             ( $IDX >= 0                               ) {
+    $LENX          = strlen      ( $PURL                                   ) ;
+    $QLEN          = strlen      ( $PIFS                                   ) ;
+    $PA            = substr      ( $PURL , 0 , $IDX                        ) ;
+    $PB            = substr      ( $PURL , $IDX + $QLEN , $LENX - $QLEN    ) ;
+    $PURL          = "{$PA}{$PB}"                                            ;
   }                                                                          ;
   $KJ              = "PageURL = ''"                                          ;
   $VJ              = "PageURL = '{$PURL}'"                                   ;
