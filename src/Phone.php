@@ -2,7 +2,7 @@
 
 namespace CIOS ;
 
-class PhoneNumber
+class Phone
 {
 //////////////////////////////////////////////////////////////////////////////
 
@@ -389,7 +389,7 @@ public function Newbie ( $DB , $PhoneTable , $UuidTable )
 
 public function Subordination ( $DB , $Table , $U , $Type = "People" )
 {
-  $RI  = new RelationItem     (                 ) ;
+  $RI  = new Relation         (                 ) ;
   $RI -> set                  ( "first" , $U    ) ;
   $RI -> setT1                ( $Type           ) ;
   $RI -> setT2                ( "Phone"         ) ;
@@ -437,7 +437,7 @@ public function EchoOptions($HS,$ITU)
 {
   if ( count ( $ITU ) <= 0 ) return   ;
   foreach ( $ITU as $itx )            {
-    $HE = new HtmlTag ( )             ;
+    $HE = new Html ( )                ;
     $HE -> setTag ( "option" )        ;
     if ( $itx == $this -> ISD )       {
       $HE -> AddMember ( "selected" ) ;
@@ -450,7 +450,7 @@ public function EchoOptions($HS,$ITU)
 
 public function EchoSelection($ClassName,$ItemName,$ITU)
 {
-  $HS    = new HtmlTag (                      ) ;
+  $HS    = new Html    (                      ) ;
   $HS   -> setSplitter ( "\n"                 ) ;
   $HS   -> setTag      ( "select"             ) ;
   $HS   -> SafePair    ( "class" , $ClassName ) ;
