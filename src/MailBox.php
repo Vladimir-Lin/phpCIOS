@@ -259,11 +259,11 @@ public function Obtains($DB,$Table)
 
 public function Append ( $DB , $EmailTable , $UuidTable )
 {
-  global $DataTypes                                                       ;
   $U = $DB -> LastUuid ( $EmailTable , "`uuid`" , "3000000000000000000" ) ;
   if ( gmp_cmp ( $U , "0" ) <= 0 ) return false                           ;
   $this -> Uuid = (string) $U                                             ;
-  $ET           = $DataTypes [ "EMail" ]                                  ;
+  $RI           = new Relation ( )                                        ;
+  $ET           = $RI -> Types [ "EMail" ]                                ;
   if ( ! $DB -> AddUuid ( $UuidTable , $U , $ET ) ) return false          ;
   return $this -> Insert ( $DB , $EmailTable )                            ;
 }

@@ -547,6 +547,44 @@ public function ObtainOwners($DB,$TABLE,$MEMBERS,$TMP)
   return $MEMBERS                                     ;
 }
 
+public function Organize ( $DB , $TABLE )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  $WH     = $this -> FirstItem    ( "order by `position` asc"              ) ;
+  $QQ     = "select `id` from {$TABLE} {$WH} ;"                              ;
+  $IX     = $DB   -> ObtainUuids  ( $QQ                                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                              ( count ( $IX ) <= 0                     ) {
+    return                                                                   ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $pos    = 0                                                                ;
+  $DB    -> LockWrite             ( $TABLE                                 ) ;
+  foreach                         ( $IX as $iv                             ) {
+    $QQ   = "update {$TABLE} set `position` = {$pos} where `id` = {$iv} ;"   ;
+    $DB  -> Query                 ( $QQ                                    ) ;
+    $pos  = $pos + 1                                                         ;
+  }                                                                          ;
+  $DB    -> UnlockTables          (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+
+public function Ordering ( $DB , $TABLE , $UUIDs )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  $pos    = 0                                                                ;
+  $DB    -> LockWrite             ( $TABLE                                 ) ;
+  foreach                         ( $UUIDs as $xu                          ) {
+    $this  -> set                 ( "second" , $xu                         ) ;
+    $WH   = $this -> ExactItem    (                                        ) ;
+    $QQ   = "update {$TABLE} set `position` = {$pos} {$WH} ;"                ;
+    $DB  -> Query                 ( $QQ                                    ) ;
+    $pos  = $pos + 1                                                         ;
+  }                                                                          ;
+  $DB    -> UnlockTables          (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+
 }
 
 ?>

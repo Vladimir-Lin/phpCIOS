@@ -123,6 +123,21 @@ public static function TakeUuid($UUIDs,$START,$TOTAL)
   return $UU                            ;
 }
 
+public static function ToDefaultUuids ( $UUIDs , $UUID )
+{
+  /////////////////////////////////////////////
+  $XI = array    (                          ) ;
+  array_push     ( $XI , $UUID              ) ;
+  /////////////////////////////////////////////
+  foreach        ( $UUIDs as $xu            ) {
+    if           ( ! in_array ( $xu , $XI ) ) {
+      array_push ( $XI , $xu                ) ;
+    }                                         ;
+  }                                           ;
+  /////////////////////////////////////////////
+  return $XI                                  ;
+}
+
 public function toLocality($LL)
 {
   return gmp_mod ( $LL , 100000 ) ;
