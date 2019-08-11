@@ -472,6 +472,19 @@ public function Content ( )
   return ""                                             ;
 }
 
+public function TextAreaLines ( $TEXT , $LEN = 80 )
+{
+  $LC   = 0                          ;
+  $TS   = explode ( "\n" , $TEXT   ) ;
+  foreach         ( $TS as $t      ) {
+    $L  = strlen  ( $t             ) ;
+    $L  = $L + $LEN - 1              ;
+    $L  = intval  ( $L / $LEN , 10 ) ;
+    $LC = $LC + $L                   ;
+  }                                  ;
+  return $LC                         ;
+}
+
 public function Report()
 {
   echo $this -> Content ( ) ;
