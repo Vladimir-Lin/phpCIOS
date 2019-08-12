@@ -83,12 +83,12 @@ public function obtain($rr)
 
 public function toWeekly()
 {
-  $HS = $this -> Hour ( )                             ;
-  $HE = $HS + 1                                       ;
-  if ( $HS < 10 ) $VS = "0{$HS}" ; else $VS = "{$HS}" ;
-  if ( $HE < 10 ) $VK = "0{$HE}" ; else $VK = "{$HE}" ;
-  $LINE = "[ '{$VS}:00' , '{$VK}:00' ]"               ;
-  return $LINE                                        ;
+  $HS = $this -> Hour ( )                                       ;
+  $HE = $HS + 1                                                 ;
+  if ( $HS < 10 ) $VS = "0{$HS}" ; else $VS = "{$HS}"           ;
+  if ( $HE < 10 ) $VK = "0{$HE}" ; else $VK = "{$HE}"           ;
+  $LINE = "{ \"start\": \"{$VS}:00\" , \"end\": \"{$VK}:00\" , \"editable\": true }" ;
+  return $LINE                                                  ;
 }
 
 }
