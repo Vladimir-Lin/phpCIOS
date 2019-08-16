@@ -109,6 +109,15 @@ public static function SitePath ( )
   return "{$HTTPS}://{$HOSX}"          ;
 }
 
+public static function GetSessionValue ( $KEY , $DEFAULT )
+{
+  if ( isset ( $_SESSION [ $KEY ] ) ) {
+    return $_SESSION [ $KEY ]         ;
+  }                                   ;
+  $_SESSION [ $KEY ] = $DEFAULT       ;
+  return $DEFAULT                     ;
+}
+
 }
 
 ?>
