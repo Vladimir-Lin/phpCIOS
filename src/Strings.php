@@ -119,6 +119,13 @@ public static function JsonNaming ( $NAME )
   return $NAME                                  ;
 }
 
+public static function HtmlReplacement ( $HTML )
+{
+  $HTML = str_replace ( "\n" , ""     , $HTML ) ;
+  $HTML = str_replace ( "\"" , "\\\"" , $HTML ) ;
+  return $HTML                                  ;
+}
+
 public static function Replacement ( $NAME )
 {
   $NAME = str_replace ( "\b" , ""     , $NAME ) ;
@@ -140,6 +147,16 @@ public static function LoginWords ( $NAME )
   $NAME = str_replace ( "'"  , "" , $NAME ) ;
   $NAME = str_replace ( "`"  , "" , $NAME ) ;
   return trim         ( $NAME             ) ;
+}
+
+public static function PurgeEmail ( $EMAIL )
+{
+  $EMAIL = str_replace ( "\b" , "" , $EMAIL ) ;
+  $EMAIL = str_replace ( "\r" , "" , $EMAIL ) ;
+  $EMAIL = str_replace ( "\n" , "" , $EMAIL ) ;
+  $EMAIL = str_replace ( "\t" , "" , $EMAIL ) ;
+  $EMAIL = str_replace ( "\"" , "" , $EMAIL ) ;
+  return $EMAIL                               ;
 }
 
 }
