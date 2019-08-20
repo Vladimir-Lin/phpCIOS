@@ -255,11 +255,7 @@ public function YearsOld($TZ)
   return $DIF -> y                    ;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-}
-//////////////////////////////////////////////////////////////////////////////
-
-function StarDateToString($DT,$Tz,$FMT)
+public static function StarDateToString($DT,$Tz,$FMT)
 {
   $SD  = new StarDate      (      ) ;
   $SD -> Stardate = $DT             ;
@@ -272,13 +268,13 @@ function StarDateToString($DT,$Tz,$FMT)
   return $SS                        ;
 }
 
-function StarDateString($DT,$FMT)
+public static function StarDateString($DT,$FMT)
 {
-  $Tz = TimeZones::GetTZ  (                  ) ;
-  return StarDateToString ( $DT , $Tz , $FMT ) ;
+  $Tz = TimeZones::GetTZ        (                  ) ;
+  return self::StarDateToString ( $DT , $Tz , $FMT ) ;
 }
 
-function UntilToday($DATE,$TZ,$YEARSTR,$MONTHSTR)
+public static function UntilToday($DATE,$TZ,$YEARSTR,$MONTHSTR)
 {
   //////////////////////////////////////////////////////
   if ( strlen ( $DATE ) <= 0 ) return ""               ;
@@ -315,5 +311,7 @@ function UntilToday($DATE,$TZ,$YEARSTR,$MONTHSTR)
   //////////////////////////////////////////////////////
   return $MSG                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
 ?>
