@@ -575,7 +575,7 @@ public function MakeSure ( $DB , $TABLE , $CANDIDATES , $TMP )
 public function ObtainByRole($DB,$TABLE,$CANDIDATE,$ACTING)
 {
   $UU = array                   (                    ) ;
-  $RI = new RelationItem        (                    ) ;
+  $RI = new Relation            (                    ) ;
   //////////////////////////////////////////////////////
   $RI -> setT1                  ( "People"           ) ;
   $RI -> setT2                  ( "Role"             ) ;
@@ -654,11 +654,11 @@ public function SkipQuotas($DB,$ITEMX)
 
 public function SearchByKey($DB,$CANDIDATEs,$KEY)
 {
-  $RI  = new RelationItem ( )                                                ;
-  $NI  = new NameItem     ( )                                                ;
+  $RI  = new Relation     ( )                                                ;
+  $NI  = new Name         ( )                                                ;
   $MB  = new MailBox      ( )                                                ;
   $IM  = new ImApp        ( )                                                ;
-  $PN  = new PhoneNumber  ( )                                                ;
+  $PN  = new Phone        ( )                                                ;
   ////////////////////////////////////////////////////////////////////////////
   $NXs = array            ( )                                                ;
   $ELs = array            ( )                                                ;
@@ -668,74 +668,87 @@ public function SearchByKey($DB,$CANDIDATEs,$KEY)
   ////////////////////////////////////////////////////////////////////////////
   // By People Name
   ////////////////////////////////////////////////////////////////////////////
-  $TMP = $NI   -> FindByName ( $DB                                           ,
-                               "`erp`.`names`"                               ,
-                               $KEY                                        ) ;
-  $NXs = $this -> MakeSure   ( $DB                                           ,
-                               "`erp`.`people`"                              ,
-                               $NXs                                          ,
-                               $TMP                                        ) ;
+  $SPT  = "%{$KEY}%"                                                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "select `uuid` from `erp`.`people`"                                .
+          " where ( `used` > 0 )"                                            .
+          " and ( `uuid` in"                                                 .
+          " ( select `uuid` from `erp`.`names` where `name` like ? ) ) ;"    ;
+  $qq   = $DB -> Prepare    ( $QQ        )                                   ;
+  $qq  -> bind_param        ( 's' , $SPT )                                   ;
+  $qq  -> execute           (            )                                   ;
+  $kk   = $qq -> get_result (            )                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NXs  = $DB -> FetchUuids ( $kk , $NXs )                                   ;
   ////////////////////////////////////////////////////////////////////////////
   if ( count ( $NXs ) > 0 )                                                  {
     if ( count ( $CANDIDATEs ) <= 0 ) $CANDIDATEs = $NXs ; else              {
-//      $CANDIDATEs = array_intersect ( $CANDIDATEs , $NXs )                   ;
-      $CANDIDATEs = $DB -> JoinArray ( $CANDIDATEs , $NXs )                  ;
+      $CANDIDATEs = Parameters::JoinArray ( $CANDIDATEs , $NXs )             ;
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   // By E-mail
   ////////////////////////////////////////////////////////////////////////////
-  $RI -> setT1       ( "People"                  )                           ;
-  $RI -> setT2       ( "EMail"                   )                           ;
-  $RI -> setRelation ( "Subordination"           )                           ;
-  ////////////////////////////////////////////////////////////////////////////
-  $TMP = $MB -> FindByName   ( $DB , "`erp`.`emails`" , $KEY )               ;
-  $ELs = $RI -> ObtainOwners ( $DB                                           ,
-                               "`erp`.`relations`"                           ,
-                               $ELs                                          ,
-                               $TMP                                        ) ;
+  $QQ   = "select `first` from `erp`.`relations`"                            .
+          " where ( `t1` = 103 )"                                            .
+            " and ( `t2` = 119 )"                                            .
+            " and ( `relation` = 1 )"                                        .
+            " and ( `second` in ("                                           .
+            " select `uuid` from `erp`.`emails` where `email` like ? ) ) ;"  ;
+  $qq   = $DB -> Prepare    ( $QQ        )                                   ;
+  $qq  -> bind_param        ( 's' , $SPT )                                   ;
+  $qq  -> execute           (            )                                   ;
+  $kk   = $qq -> get_result (            )                                   ;
+  $ELs  = $DB -> FetchUuids ( $kk , $ELs )                                   ;
   ////////////////////////////////////////////////////////////////////////////
   if ( count ( $ELs ) > 0 )                                                  {
     if ( count ( $CANDIDATEs ) <= 0 ) $CANDIDATEs = $ELs ; else              {
-//      $CANDIDATEs = array_intersect ( $CANDIDATEs , $ELs )                   ;
-      $CANDIDATEs = $DB -> JoinArray ( $CANDIDATEs , $ELs )                  ;
+      $CANDIDATEs = Parameters::JoinArray ( $CANDIDATEs , $ELs )             ;
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   // By Skype
   ////////////////////////////////////////////////////////////////////////////
-  $RI -> setT1       ( "People"         )                                    ;
-  $RI -> setT2       ( "InstantMessage" )                                    ;
-  $RI -> setRelation ( "Subordination"  )                                    ;
-  ////////////////////////////////////////////////////////////////////////////
-  $TMP = $IM -> FindByName   ( $DB , "`erp`.`instantmessage`" , $KEY       ) ;
-  $IMs = $RI -> ObtainOwners ( $DB                                           ,
-                               "`erp`.`relations`"                           ,
-                               $IMs                                          ,
-                               $TMP                                        ) ;
+  $QQ   = "select `first` from `erp`.`relations`"                            .
+          " where ( `t1` = 103 )"                                            .
+            " and ( `t2` = 113 )"                                            .
+            " and ( `relation` = 1 )"                                        .
+            " and ( `second` in ("                                           .
+            " select `uuid` from `erp`.`instantmessage`"                     .
+            " where ( `used` > 0 ) and ( `account` like ? ) ) ) ;"           ;
+  $qq   = $DB -> Prepare    ( $QQ        )                                   ;
+  $qq  -> bind_param        ( 's' , $SPT )                                   ;
+  $qq  -> execute           (            )                                   ;
+  $kk   = $qq -> get_result (            )                                   ;
+  $IMs  = $DB -> FetchUuids ( $kk , $IMs )                                   ;
   ////////////////////////////////////////////////////////////////////////////
   if ( count ( $IMs ) > 0 )                                                  {
     if ( count ( $CANDIDATEs ) <= 0 ) $CANDIDATEs = $IMs ; else              {
-//      $CANDIDATEs = array_intersect ( $CANDIDATEs , $IMs )                   ;
-      $CANDIDATEs = $DB -> JoinArray ( $CANDIDATEs , $IMs )                  ;
+      $CANDIDATEs = Parameters::JoinArray ( $CANDIDATEs , $IMs )             ;
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   // By Phone
   ////////////////////////////////////////////////////////////////////////////
-  $RI -> setT1       ( "People"        )                                     ;
-  $RI -> setT2       ( "Phone"         )                                     ;
-  $RI -> setRelation ( "Subordination" )                                     ;
-  $TMP = $PN -> FindByName   ( $DB , "`erp`.`phones`" , $KEY )               ;
-  $PNs = $RI -> ObtainOwners ( $DB                                           ,
-                               "`erp`.`relations`"                           ,
-                               $PNs                                          ,
-                               $TMP                                        ) ;
+  $QQ   = "select `first` from `erp`.`relations`"                            .
+          " where ( `t1` = 103 )"                                            .
+            " and ( `t2` = 114 )"                                            .
+            " and ( `relation` = 1 )"                                        .
+            " and ( `second` in ("                                           .
+            " select `uuid` from `erp`.`phones`"                             .
+            " where ( `used` > 0 )"                                          .
+            " and ( ( `number` like ? )"                                     .
+            " or ( `country` like ? )"                                       .
+            " or ( `area` like ? ) )  ) ) ;"                                 ;
+  $qq   = $DB -> Prepare    ( $QQ                        )                   ;
+  $qq  -> bind_param        ( 'sss' , $SPT , $SPT , $SPT )                   ;
+  $qq  -> execute           (                            )                   ;
+  $kk   = $qq -> get_result (                            )                   ;
+  $PNs  = $DB -> FetchUuids ( $kk , $PNs                 )                   ;
   ////////////////////////////////////////////////////////////////////////////
   if ( count ( $PNs ) > 0 )                                                  {
     if ( count ( $CANDIDATEs ) <= 0 ) $CANDIDATEs = $PNs ; else              {
-//      $CANDIDATEs = array_intersect ( $CANDIDATEs , $PNs )                   ;
-      $CANDIDATEs = $DB -> JoinArray ( $CANDIDATEs , $PNs )                  ;
+      $CANDIDATEs = Parameters::JoinArray ( $CANDIDATEs , $PNs )             ;
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////

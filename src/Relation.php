@@ -537,14 +537,14 @@ public function PrefectOrder($DB,$Table)
   unset ( $IX )                                             ;
 }
 
-public function ObtainOwners($DB,$TABLE,$MEMBERS,$TMP)
+public function ObtainOwners ( $DB , $TABLE , $MEMBERS , $TMP )
 {
-  foreach ( $TMP as $nsx )                            {
-    $this   -> set                ( "second" , $nsx ) ;
-    $CC      = $this -> GetOwners ( $DB , $TABLE    ) ;
-    $MEMBERS = $DB   -> JoinArray ( $MEMBERS , $CC  ) ;
-  }                                                   ;
-  return $MEMBERS                                     ;
+  foreach                            ( $TMP as $nsx    ) {
+    $this   -> set                   ( "second" , $nsx ) ;
+    $CC      = $this -> GetOwners    ( $DB , $TABLE    ) ;
+    $MEMBERS = Parameters::JoinArray ( $MEMBERS , $CC  ) ;
+  }                                                      ;
+  return $MEMBERS                                        ;
 }
 
 public function Organize ( $DB , $TABLE )
