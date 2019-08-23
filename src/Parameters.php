@@ -86,6 +86,21 @@ public static function JoinArray($AA,$BB)
   return $AA                           ;
 }
 
+public static function IntersectArray ( $AA , $BB )
+{
+  if ( count ( $AA ) <= 0 ) return array ( ) ;
+  if ( count ( $BB ) <= 0 ) return array ( ) ;
+  $CC = array ( )                            ;
+  foreach ( $AA as $aa )                     {
+    if ( in_array ( $aa , $BB ) )            {
+      if ( ! in_array ( $aa , $CC ) )        {
+        array_push ( $CC , $aa )             ;
+      }                                      ;
+    }                                        ;
+  }                                          ;
+  return $CC                                 ;
+}
+
 public static function Exclude($AA,$BB)
 {
   if ( count ( $BB ) <= 0 ) return $AA ;
