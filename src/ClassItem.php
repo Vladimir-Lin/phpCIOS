@@ -564,7 +564,7 @@ public function ObtainAge($DB,$TABLE,$TZ)
 
 public function ObtainCourses($DB,$RELATIONS)
 {
-  $RI      = new RelationItem     (                         ) ;
+  $RI      = new Relation         (                         ) ;
   $RI     -> set                  ( "first" , $this -> Uuid ) ;
   $RI     -> setT1                ( "Class"                 ) ;
   $RI     -> setT2                ( "Course"                ) ;
@@ -576,7 +576,7 @@ public function ObtainCourses($DB,$RELATIONS)
 
 public function ObtainLessons($DB,$RELATIONS)
 {
-  $RI      = new RelationItem     (                         ) ;
+  $RI      = new Relation         (                         ) ;
   $RI     -> set                  ( "first" , $this -> Uuid ) ;
   $RI     -> setT1                ( "Class"                 ) ;
   $RI     -> setT2                ( "Lesson"                ) ;
@@ -1529,6 +1529,44 @@ public function CoursesEditor($COURSES,$LESSONS,$ALL,$BTNCLASS="SelectionButton"
   }                                                                ;
   //////////////////////////////////////////////////////////////////
   return $MHT                                                      ;
+}
+
+public function getCourseName          ( $DB , $LANG                       ) {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RELATION   = $GLOBALS [ "TableMapping" ] [ "Relation" ]                   ;
+  $NAMTAB     = $GLOBALS [ "TableMapping" ] [ "Names"    ]                   ;
+  $LESTAB     = $GLOBALS [ "TableMapping" ] [ "Lessons"  ]                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LNAME      = ""                                                           ;
+  $CNAME      = ""                                                           ;
+  $HNAME      = ""                                                           ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LESSONS    = $this -> ObtainLessons ( $DB , $RELATION                   ) ;
+  if                                   ( count ( $LESSONS ) > 0            ) {
+    $LID      = $LESSONS [ 0 ]                                               ;
+    $LNAME    = $DB -> Naming ( $NAMTAB , $LID , $LANG , "Default"         ) ;
+    $PF       = 0                                                            ;
+    $QQ       = "select `course`,`prefer` from {$LESTAB} where `uuid` = {$LID} ;" ;
+    $qq       = $DB -> Query           ( $QQ                               ) ;
+    if                                 ( $DB -> hasResult ( $qq )          ) {
+      $rr     = $qq -> fetch_array     ( MYSQLI_BOTH                       ) ;
+      $CID    = $rr [ 0 ]                                                    ;
+      $PF     = $rr [ 1 ]                                                    ;
+      $HNAME  = $Translations [ "Chapter::Number" ]                          ;
+      $HNAME  = str_replace            ( "$(NUMBER)" , $PF , $HNAME        ) ;
+      $CNAME  = $DB -> Naming ( $NAMTAB , $CID , $LANG , "Default"         ) ;
+    }                                                                        ;
+  } else                                                                     {
+    $COURSES  = $this -> ObtainCourses ( $DB , $RELATION                   ) ;
+    if                                 ( count ( $COURSES ) > 0            ) {
+      $CID    = $COURSES [ 0 ]                                               ;
+      $CNAME  = $DB -> Naming ( $NAMTAB , $CID , $LANG , "Default"         ) ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return "{$CNAME} {$HNAME} {$LNAME}"                                        ;
 }
 
 public function EditCourses($DB,$LANG)
