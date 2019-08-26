@@ -220,6 +220,35 @@ public function Pairs($Items)
 
 //////////////////////////////////////////////////////////////////////////////
 
+public function toString ( )
+{
+  return sprintf ( "tkn6%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
+}
+
+/////////////////////////////////////////////////////////
+
+public function fromString ( $S )
+{
+  if               ( 12 != strlen ( $S )     ) {
+    $this -> Uuid = 0                          ;
+    return 0                                   ;
+  }                                            ;
+  $X = strtolower  ( $S                      ) ;
+  $C = substr      ( $X , 0 , 4              ) ;
+  if               ( $C != "tkn6"            ) {
+    $this -> Uuid = 0                          ;
+    return 0                                   ;
+  }                                            ;
+  $C = substr      ( $S , 0 , 4              ) ;
+  $U = str_replace ( $C , "34000000000" , $S ) ;
+  $this -> Uuid = $U                           ;
+  return $U                                    ;
+
+
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
 public function ValueString($X)
 {
   if ( $X < 0 ) $X = - $X                               ;
