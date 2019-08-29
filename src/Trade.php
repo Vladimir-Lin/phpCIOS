@@ -15,6 +15,7 @@ public $Currency    ;
 public $Amount      ;
 public $States      ;
 public $Item        ;
+public $Group       ;
 public $Description ;
 public $Record      ;
 public $Update      ;
@@ -40,6 +41,7 @@ public function Clear()
   $this -> Amount      =  0    ;
   $this -> States      =  0    ;
   $this -> Item        =  0    ;
+  $this -> Group       =  1    ;
   $this -> Description =  0    ;
   $this -> Record      =  0    ;
   $this -> Update      =  0    ;
@@ -57,6 +59,7 @@ public function assign($Item)
   $this -> Amount      = $Item -> Amount      ;
   $this -> States      = $Item -> States      ;
   $this -> Item        = $Item -> Item        ;
+  $this -> Group       = $Item -> Group       ;
   $this -> Description = $Item -> Description ;
   $this -> Record      = $Item -> Record      ;
   $this -> Update      = $Item -> Update      ;
@@ -75,6 +78,7 @@ public function tableItems()
   array_push ( $S , "amount"      ) ;
   array_push ( $S , "states"      ) ;
   array_push ( $S , "item"        ) ;
+  array_push ( $S , "group"       ) ;
   array_push ( $S , "description" ) ;
   array_push ( $S , "record"      ) ;
   array_push ( $S , "ltime"       ) ;
@@ -92,6 +96,7 @@ public function valueItems()
   array_push ( $S , "amount"      ) ;
   array_push ( $S , "states"      ) ;
   array_push ( $S , "item"        ) ;
+  array_push ( $S , "group"       ) ;
   array_push ( $S , "description" ) ;
   array_push ( $S , "record"      ) ;
   return $S                         ;
@@ -110,6 +115,7 @@ public function set($item,$V)
   if ( "amount"      == $a ) $this -> Amount       = $V ;
   if ( "states"      == $a ) $this -> States       = $V ;
   if ( "item"        == $a ) $this -> Item         = $V ;
+  if ( "group"       == $a ) $this -> Group        = $V ;
   if ( "description" == $a ) $this -> Description  = $V ;
   if ( "record"      == $a ) $this -> Record       = $V ;
   if ( "ltime"       == $a ) $this -> Update       = $V ;
@@ -130,6 +136,7 @@ public function get($item)
   if ( "amount"      == $a ) return (string) $this -> Amount       ;
   if ( "states"      == $a ) return (string) $this -> States       ;
   if ( "item"        == $a ) return (string) $this -> Item         ;
+  if ( "group"       == $a ) return (string) $this -> Group        ;
   if ( "description" == $a ) return (string) $this -> Description  ;
   if ( "record"      == $a ) return (string) $this -> Record       ;
   if ( "ltime"       == $a ) return (string) $this -> Update       ;
