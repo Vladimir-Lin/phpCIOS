@@ -74,10 +74,6 @@ public function setTag($T)
     $this -> Type = 2       ;
   }                         ;
   ///////////////////////////
-  if ( "i"     == $t )      {
-    $this -> Type = 2       ;
-  }                         ;
-  ///////////////////////////
   if ( "br"    == $t )      {
     $this -> Type = 2       ;
   }                         ;
