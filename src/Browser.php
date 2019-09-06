@@ -118,6 +118,38 @@ public static function GetSessionValue ( $KEY , $DEFAULT )
   return $DEFAULT                     ;
 }
 
+public static function GetSessionLists ( $KEY )
+{
+  ///////////////////////////////////////
+  if ( ! isset ( $_SESSION [ $KEY ] ) ) {
+    return array ( )                    ;
+  }                                     ;
+  ///////////////////////////////////////
+  $GSL = $_SESSION [ $KEY ]             ;
+  if ( strlen ( $GSL ) <= 0 )           {
+    return array ( )                    ;
+  }                                     ;
+  ///////////////////////////////////////
+  return explode ( " , " , $GSL )       ;
+}
+
+public static function GetSessionValues ( $KEY )
+{
+  ///////////////////////////////////////
+  $GSV = self::GetSessionLists ( $KEY ) ;
+  if ( count ( $GSV ) <= 0 )            {
+    return $GSV                         ;
+  }                                     ;
+  ///////////////////////////////////////
+  $GSX = array ( )                      ;
+  foreach ( $GSV as $G )                {
+    $V = intval ( $G   , 10 )           ;
+    array_push  ( $GSX , $V )           ;
+  }                                     ;
+  ///////////////////////////////////////
+  return $GSX                           ;
+}
+
 }
 
 ?>
