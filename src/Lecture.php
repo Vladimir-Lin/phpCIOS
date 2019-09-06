@@ -406,16 +406,16 @@ public function ObtainLessons($DB,$RELATIONS)
   return $LESSONS                                             ;
 }
 
-public function ObtainSections($DB,$TABLE)
+public function ObtainSections ( $DB , $TABLE )
 {
-  $PQ               = NewParameter ( 2 , 67 , "Periods"               ) ;
-  $PQ              -> setTable     ( $TABLE                           ) ;
-  $SECTs            = $PQ -> Data  ( $DB , $this -> Uuid , "Sections" ) ;
-  if                               ( strlen ( $SECTs ) > 0            ) {
-    $this -> Sections = explode    ( " , " , $SECTs                   ) ;
-  } else                                                                {
-    $this -> Sections = array      (                                  ) ;
-  }                                                                     ;
+  $PQ    = ParameterQuery::NewParameter ( 2 , 67 , "Periods"               ) ;
+  $PQ   -> setTable                     ( $TABLE                           ) ;
+  $SECTs = $PQ -> Data                  ( $DB , $this -> Uuid , "Sections" ) ;
+  if                                    ( strlen ( $SECTs ) > 0            ) {
+    $this -> Sections = explode         ( " , " , $SECTs                   ) ;
+  } else                                                                     {
+    $this -> Sections = array           (                                  ) ;
+  }                                                                          ;
 }
 
 public function addSection($SECTION)
