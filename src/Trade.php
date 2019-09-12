@@ -15,7 +15,7 @@ public $Currency    ;
 public $Amount      ;
 public $States      ;
 public $Item        ;
-public $Group       ;
+public $Group       ; // 用於團購 , 1 - 單一訂單 , 2 - 團購單 , 3 - 團購隸屬單
 public $Description ;
 public $Record      ;
 public $Update      ;
@@ -198,6 +198,9 @@ public function ItemPair($item)
   }                                                    ;
   if ( "item"        == $a )                           {
     return "`{$a}` = " . (string) $this -> Item        ;
+  }                                                    ;
+  if ( "group" == $a )                                 {
+    return "`{$a}` = " . (string) $this -> Group       ;
   }                                                    ;
   if ( "description" == $a )                           {
     return "`{$a}` = " . (string) $this -> Description ;
