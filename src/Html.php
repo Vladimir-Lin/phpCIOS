@@ -393,6 +393,16 @@ public function addSelection($MAPs,$ID="",$CLASSID="")
   return $HS                                ;
 }
 
+function CombineSelections            ( $LISTS , $NAMES                    ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> setTag                     ( "select"                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  foreach                             ( $LISTS as $L                       ) {
+    $HO  = $this -> addOption         ( $NAMES [ $L ]                      ) ;
+    $HO -> AddPair                    ( "value" , $L                       ) ;
+  }                                                                          ;
+}
+
 public function addButton ( $MSG = "" )
 {
   $HD    = new Html (                     ) ;
