@@ -280,12 +280,12 @@ public static function LoomID          ( $URL                              ) {
 //////////////////////////////////////////////////////////////////////////////
 public static function iFrameLoom      ( $LID , $EXTRAS = ""               ) {
   $URL     = "https://www.loom.com/embed/{$LID}{$EXTRAS}"                    ;
-  $ALLOW   = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" ;
+//  $ALLOW   = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" ;
   $IFRAME  = new Html                  (                                   ) ;
   $IFRAME -> setTag                    ( "iframe"                          ) ;
   $IFRAME -> AddPair                   ( "src"         , $URL              ) ;
   $IFRAME -> AddPair                   ( "frameborder" , "0"               ) ;
-  $IFRAME -> AddPair                   ( "allow"       , $ALLOW            ) ;
+//  $IFRAME -> AddPair                   ( "allow"       , $ALLOW            ) ;
   $IFRAME -> AddMember                 ( "allowfullscreen"                 ) ;
   return $IFRAME                                                             ;
 }
