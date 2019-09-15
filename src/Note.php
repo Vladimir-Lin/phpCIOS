@@ -168,29 +168,35 @@ public function Delete($TABLE)
 
 public function Insert($DB,$TABLE)
 {
-  $QQ  = "insert into " . $TABLE . " "              .
-         "(`uuid`,`name`,`prefer`,`note` ) values " .
-          "(" . (string) $this -> Uuid              .
-         ",'" . $this -> Name . "',"                .
-         $this -> Prefer . ",?) ;"                  ;
-  $qq  = $DB -> Prepare ( $QQ                 )     ;
-  $qq -> bind_param     ( 's' , $this -> Note )     ;
-  $rt  = $qq -> execute (                     )     ;
-  $qq -> close          (                     )     ;
-  return $rt                                        ;
+  $CUID   = $this -> Uuid                               ;
+  $NAME   = $this -> Name                               ;
+  $PREFER = $this -> Prefer                             ;
+  $NOTE   = $this -> Note                               ;
+  $QQ     = "insert into {$TABLE} "                     .
+            "(`uuid`,`name`,`prefer`,`note` ) values "  .
+            "( {$CUID} , '{$NAME}' , {$PREFER} , ? ) ;" ;
+  $qq     = $DB -> Prepare ( $QQ         )              ;
+  $qq    -> bind_param     ( 's' , $NOTE )              ;
+  $rt     = $qq -> execute (             )              ;
+  $qq    -> close          (             )              ;
+  return $rt                                            ;
 }
 
 public function UpdateNote($DB,$TABLE)
 {
-  $QQ  = "update " . $TABLE . " set `note` = ? "              .
-         "where `uuid` = "  . (string) $this -> Uuid          .
-          " and `name` = '" . $this -> Name . "'"             .
-        " and `prefer` = "  . (string) $this -> Prefer . " ;" ;
-  $qq  = $DB -> Prepare ( $QQ         )                       ;
-  $qq -> bind_param     ( 's' , $note )                       ;
-  $rt  = $qq -> execute (             )                       ;
-  $qq -> close          (             )                       ;
-  return $rt                                                  ;
+  $CUID   = $this -> Uuid                     ;
+  $NAME   = $this -> Name                     ;
+  $PREFER = $this -> Prefer                   ;
+  $NOTE   = $this -> Note                     ;
+  $QQ     = "update {$TABLE} set `note` = ? " .
+             "where `uuid` = {$CUID}"         .
+              " and `name` = '{$NAME}'"       .
+            " and `prefer` = {$PREFER} ;"     ;
+  $qq     = $DB -> Prepare ( $QQ         )    ;
+  $qq    -> bind_param     ( 's' , $NOTE )    ;
+  $rt     = $qq -> execute (             )    ;
+  $qq    -> close          (             )    ;
+  return $rt                                  ;
 }
 
 public function Obtains($DB,$TABLE,$PREFER="")
