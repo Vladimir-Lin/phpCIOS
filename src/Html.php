@@ -393,13 +393,16 @@ public function addSelection($MAPs,$ID="",$CLASSID="")
   return $HS                                ;
 }
 
-function CombineSelections            ( $LISTS , $NAMES                    ) {
+function CombineSelections            ( $LISTS , $NAMES , $CURRENT = ""    ) {
   ////////////////////////////////////////////////////////////////////////////
   $this -> setTag                     ( "select"                           ) ;
   ////////////////////////////////////////////////////////////////////////////
   foreach                             ( $LISTS as $L                       ) {
     $HO  = $this -> addOption         ( $NAMES [ $L ]                      ) ;
     $HO -> AddPair                    ( "value" , $L                       ) ;
+    if                                ( $L == $CURRENT                     ) {
+      $HO -> AddMember                ( "selected"                         ) ;
+    }                                                                        ;
   }                                                                          ;
 }
 
