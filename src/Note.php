@@ -5,12 +5,15 @@ namespace CIOS ;
 class Note extends Columns
 {
 
-public $Id     ;
-public $Uuid   ;
-public $Name   ;
-public $Prefer ;
-public $Note   ;
-public $Update ;
+public $Id      ;
+public $Uuid    ;
+public $Name    ;
+public $Prefer  ;
+public $Note    ;
+public $Title   ;
+public $Comment ;
+public $Extra   ;
+public $Update  ;
 
 function __construct()
 {
@@ -24,34 +27,43 @@ function __destruct()
 
 public function clear()
 {
-  $this -> Id     = 0  ;
-  $this -> Uuid   = 0  ;
-  $this -> Name   = "" ;
-  $this -> Prefer = 0  ;
-  $this -> Note   = "" ;
-  $this -> Update = 0  ;
+  $this -> Id      = 0  ;
+  $this -> Uuid    = 0  ;
+  $this -> Name    = "" ;
+  $this -> Prefer  = 0  ;
+  $this -> Note    = "" ;
+  $this -> Title   = "" ;
+  $this -> Comment = "" ;
+  $this -> Extra   = "" ;
+  $this -> Update  = 0  ;
 }
 
 public function assign($Item)
 {
-  $this -> Id     = $Item -> Id     ;
-  $this -> Uuid   = $Item -> Uuid   ;
-  $this -> Name   = $Item -> Name   ;
-  $this -> Prefer = $Item -> Prefer ;
-  $this -> Note   = $Item -> Note   ;
-  $this -> Update = $Item -> Update ;
+  $this -> Id      = $Item -> Id      ;
+  $this -> Uuid    = $Item -> Uuid    ;
+  $this -> Name    = $Item -> Name    ;
+  $this -> Prefer  = $Item -> Prefer  ;
+  $this -> Note    = $Item -> Note    ;
+  $this -> Title   = $Item -> Title   ;
+  $this -> Comment = $Item -> Comment ;
+  $this -> Extra   = $Item -> Extra   ;
+  $this -> Update  = $Item -> Update  ;
 }
 
 public function tableItems()
 {
-  $S = array (               ) ;
-  array_push ( $S , "id"     ) ;
-  array_push ( $S , "uuid"   ) ;
-  array_push ( $S , "name"   ) ;
-  array_push ( $S , "prefer" ) ;
-  array_push ( $S , "note"   ) ;
-  array_push ( $S , "ltime"  ) ;
-  return $S                    ;
+  $S = array (                ) ;
+  array_push ( $S , "id"      ) ;
+  array_push ( $S , "uuid"    ) ;
+  array_push ( $S , "name"    ) ;
+  array_push ( $S , "prefer"  ) ;
+  array_push ( $S , "note"    ) ;
+  array_push ( $S , "title"   ) ;
+  array_push ( $S , "comment" ) ;
+  array_push ( $S , "extra"   ) ;
+  array_push ( $S , "ltime"   ) ;
+  return $S                     ;
 }
 
 public function Items( $S = "," )
@@ -64,51 +76,66 @@ public function Items( $S = "," )
 
 public function set($item,$V)
 {
-  $a = strtolower ( $item )                  ;
-  if ( "id"     == $a ) $this -> Id     = $V ;
-  if ( "uuid"   == $a ) $this -> Uuid   = $V ;
-  if ( "name"   == $a ) $this -> Name   = $V ;
-  if ( "prefer" == $a ) $this -> Prefer = $V ;
-  if ( "note"   == $a ) $this -> Note   = $V ;
-  if ( "ltime"  == $a ) $this -> Update = $V ;
+  $a = strtolower ( $item )                    ;
+  if ( "id"      == $a ) $this -> Id      = $V ;
+  if ( "uuid"    == $a ) $this -> Uuid    = $V ;
+  if ( "name"    == $a ) $this -> Name    = $V ;
+  if ( "prefer"  == $a ) $this -> Prefer  = $V ;
+  if ( "note"    == $a ) $this -> Note    = $V ;
+  if ( "title"   == $a ) $this -> Title   = $V ;
+  if ( "comment" == $a ) $this -> Comment = $V ;
+  if ( "extra"   == $a ) $this -> Extra   = $V ;
+  if ( "ltime"   == $a ) $this -> Update  = $V ;
 }
 
 public function get($item)
 {
-  $a = strtolower ( $item )                    ;
-  if ( "id"     == $a ) return $this -> Id     ;
-  if ( "uuid"   == $a ) return $this -> Uuid   ;
-  if ( "name"   == $a ) return $this -> Name   ;
-  if ( "prefer" == $a ) return $this -> Prefer ;
-  if ( "note"   == $a ) return $this -> Note   ;
-  if ( "ltime"  == $a ) return $this -> Update ;
-  return ""                                    ;
+  $a = strtolower ( $item )                      ;
+  if ( "id"      == $a ) return $this -> Id      ;
+  if ( "uuid"    == $a ) return $this -> Uuid    ;
+  if ( "name"    == $a ) return $this -> Name    ;
+  if ( "prefer"  == $a ) return $this -> Prefer  ;
+  if ( "note"    == $a ) return $this -> Note    ;
+  if ( "title"   == $a ) return $this -> Title   ;
+  if ( "comment" == $a ) return $this -> Comment ;
+  if ( "extra"   == $a ) return $this -> Extra   ;
+  if ( "ltime"   == $a ) return $this -> Update  ;
+  return ""                                      ;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
 public function ItemPair($item)
 {
-  $a = strtolower ( $item )                            ;
-  if ( "id"        == $a )                             {
-    return "`{$a}` = " . (string) $this -> Id          ;
-  }                                                    ;
-  if ( "uuid"      == $a )                             {
-    return "`{$a}` = " . (string) $this -> Uuid        ;
-  }                                                    ;
-  if ( "name"      == $a )                             {
-    return "`{$a}` = '" . (string) $this -> Name . "'" ;
-  }                                                    ;
-  if ( "prefer"  == $a )                               {
-    return "`{$a}` = " . (string) $this -> prefer      ;
-  }                                                    ;
-  if ( "note" == $a )                                  {
-    return "`{$a}` = '" . (string) $this -> Note . "'" ;
-  }                                                    ;
-  if ( "ltime"     == $a )                             {
-    return "`{$a}` = " . (string) $this -> Update      ;
-  }                                                    ;
-  return ""                                            ;
+  $a = strtolower ( $item )                               ;
+  if ( "id"        == $a )                                {
+    return "`{$a}` = " . (string) $this -> Id             ;
+  }                                                       ;
+  if ( "uuid"      == $a )                                {
+    return "`{$a}` = " . (string) $this -> Uuid           ;
+  }                                                       ;
+  if ( "name"      == $a )                                {
+    return "`{$a}` = '" . (string) $this -> Name . "'"    ;
+  }                                                       ;
+  if ( "prefer"  == $a )                                  {
+    return "`{$a}` = " . (string) $this -> prefer         ;
+  }                                                       ;
+  if ( "note" == $a )                                     {
+    return "`{$a}` = '" . (string) $this -> Note . "'"    ;
+  }                                                       ;
+  if ( "title" == $a )                                    {
+    return "`{$a}` = '" . (string) $this -> Title . "'"   ;
+  }                                                       ;
+  if ( "comment" == $a )                                  {
+    return "`{$a}` = '" . (string) $this -> Comment . "'" ;
+  }                                                       ;
+  if ( "extra" == $a )                                    {
+    return "`{$a}` = '" . (string) $this -> Extra . "'"   ;
+  }                                                       ;
+  if ( "ltime"     == $a )                                {
+    return "`{$a}` = " . (string) $this -> Update         ;
+  }                                                       ;
+  return ""                                               ;
 }
 
 public function Pair($item)
