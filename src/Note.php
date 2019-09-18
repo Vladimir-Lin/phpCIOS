@@ -226,6 +226,22 @@ public function UpdateNote($DB,$TABLE)
   return $rt                                  ;
 }
 
+public function UpdateColumn($DB,$TABLE,$COLUMN,$VALUE)
+{
+  $CUID   = $this -> Uuid                          ;
+  $NAME   = $this -> Name                          ;
+  $PREFER = $this -> Prefer                        ;
+  $QQ     = "update {$TABLE} set `{$COLUMN}` = ? " .
+             "where `uuid` = {$CUID}"              .
+              " and `name` = '{$NAME}'"            .
+            " and `prefer` = {$PREFER} ;"          ;
+  $qq     = $DB -> Prepare ( $QQ          )        ;
+  $qq    -> bind_param     ( 's' , $VALUE )        ;
+  $rt     = $qq -> execute (              )        ;
+  $qq    -> close          (              )        ;
+  return $rt                                       ;
+}
+
 public function Obtains($DB,$TABLE,$PREFER="")
 {
   $this -> Note = ""                                   ;
@@ -236,6 +252,25 @@ public function Obtains($DB,$TABLE,$PREFER="")
     $this -> Note = $rr [ 0 ]                          ;
   }                                                    ;
   return $this -> Note                                 ;
+}
+
+public function ObtainsAll($DB,$TABLE,$PREFER="")
+{
+  $this -> Note      = ""                                                ;
+  $this -> Title     = ""                                                ;
+  $this -> Comment   = ""                                                ;
+  $this -> Extra     = ""                                                ;
+  $WH    = $this -> WhereClause ( $PREFER )                              ;
+  $QQ    = "select `note`,`title`,`comment`,`extra` from {$TABLE} {$WH}" ;
+  $qq    = $DB   -> Query  ( $QQ )                                       ;
+  if ( $DB -> hasResult ( $qq ) )                                        {
+    $rr              = $qq -> fetch_array ( MYSQLI_BOTH )                ;
+    $this -> Note    = $rr [ 0 ]                                         ;
+    $this -> Title   = $rr [ 1 ]                                         ;
+    $this -> Comment = $rr [ 2 ]                                         ;
+    $this -> Extra   = $rr [ 3 ]                                         ;
+  }                                                                      ;
+  return $this -> Note                                                   ;
 }
 
 public function ObtainByOwner($DB,$TABLE,$UUID,$NAME,$PREFER="")
