@@ -426,6 +426,30 @@ public static function MaterialTable ( $DB                                   ,
   return $PFX                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public static function DocumentTable ( $DB                                   ,
+                                       $TABLE                                ,
+                                       $KEY                                  ,
+                                       $UUID                                 ,
+                                       $INPCLASS = "NameInput"             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PHT  = $Translations [ "Chapter::NewMaterial" ]                           ;
+  $JAVA = "DocumentsChanged(this.value,$(PREFER),'{$UUID}','{$KEY}','{$INPCLASS}') ;" ;
+  $PFX  = new Html  (                                                      ) ;
+  $PFX -> setType   ( 4                                                    ) ;
+  self::NotesEditor ( $DB                                                    ,
+                      $PFX                                                   ,
+                      $UUID                                                  ,
+                      $JAVA                                                  ,
+                      $TABLE                                                 ,
+                      "Document"                                             ,
+                      "LessonMaterials"                                      ,
+                      $PHT                                                   ,
+                      $INPCLASS                                            ) ;
+  return $PFX                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public static function QuizletTable ( $DB                                    ,
                                       $TABLE                                 ,
                                       $KEY                                   ,
