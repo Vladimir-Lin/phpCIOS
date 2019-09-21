@@ -1,22 +1,14 @@
 <?php
 
 namespace CIOS ;
+use Gnello\OpenFireRestAPI\Client as Client ;
 
-class Giphy
+class OpenFire
 {
-/////////////////////////////////////////////////////////
 
-public $Auth     ;
-public $Path     ;
-public $Start    ;
-public $Page     ;
-public $Rating   ;
-public $Language ;
-public $Item     ;
-public $JSON     ;
-public $Results  ;
-
-/////////////////////////////////////////////////////////
+public $client   ;
+public $Database ;
+public $Response ;
 
 function __construct()
 {
@@ -29,79 +21,77 @@ function __destruct()
 
 public function Clear ( )
 {
-  $this -> Auth     = "zUyU4fzuPAFvBgkUV5y8LJQhx9jfbovV"                     ; // api_key=Auth
-  $this -> Path     = "https://api.giphy.com/v1/gifs/search?"                ;
-  $this -> Page     = 50                                                     ; // limit=Page
-  $this -> Start    = 0                                                      ; // offset=Start
-  $this -> Rating   = "G"                                                    ; // rating=Rating
-  $this -> Language = "en"                                                   ; // lang=Language
-  $this -> Item     = "fixed_height"                                         ;
-//  fixed_height_still
-//  original_still
-//  fixed_width
-//  fixed_height_small_still
-//  fixed_height_downsampled
-//  preview => not working, maybe different item
-//  fixed_height_small
-//  downsized_still
-//  downsized
-//  downsized_large
-//  fixed_width_small_still
-//  preview_webp
-//  fixed_width_still
-//  fixed_width_small
-//  downsized_small => not working, maybe different item
-//  fixed_width_downsampled
-//  downsized_medium
-//  original
-//  fixed_height => nice choice
-//  looping => not working, maybe different item
-//  original_mp4 => not working, maybe different item
-//  preview_gif
-//  480w_still
-// Query => q=something_html_encoded
+  $this -> Database = "openfire" ;
 }
 
-public function Query ( $KEY )
+public function Table ( $table )
 {
-  $PAVH = $this -> Path                                                      ;
-  $AUTH = $this -> Auth                                                      ;
-  $PSTA = $this -> Start                                                     ;
-  $PSIZ = $this -> Page                                                      ;
-  $RSZK = $this -> Rating                                                    ;
-  $LANK = $this -> Language                                                  ;
-  $KS   = rawurlencode ( $KEY )                                              ;
-  $OPTS = "offset={$PSTA}&limit={$PSIZ}&rating={$RSZK}&lang={$LANK}"         ;
-  $PAXH = "{$PAVH}api_key={$AUTH}&q='{$KS}'&{OPTS}"                          ;
-  $ch   = curl_init  (                                                     ) ;
-  curl_setopt        ( $ch , CURLOPT_URL            , $PAXH                ) ;
-  curl_setopt        ( $ch , CURLOPT_RETURNTRANSFER , 1                    ) ;
-  curl_setopt        ( $ch , CURLOPT_SSL_VERIFYHOST , 0                    ) ;
-  curl_setopt        ( $ch , CURLOPT_SSL_VERIFYPEER , 0                    ) ;
-  $temp = curl_exec  ( $ch                                                 ) ;
-          curl_close ( $ch                                                 ) ;
-  $this -> Results = $temp                                                   ;
-  $this -> JSON    = json_decode ( $temp                                   ) ;
-  return $this -> JSON                                                       ;
+  $DBT = $this -> Database     ;
+  return "`{$DBT}`.`{$table}`" ;
 }
 
-public function Total ( )
+public function loginAdmin ( $account )
 {
-  return count ( $this -> JSON -> data ) ;
+  $this -> client = new Client( [ 'client' => $account , 'guzzle' => [ ] ] ) ;
 }
 
-public function get ( $i )
+public function Protocol ( )
 {
-  $item = $this -> Item                                         ;
-  return $this -> JSON -> data [ $i ] -> images -> $item -> url ;
+  $PROTOCOL   = "http"                                                       ;
+  if ( isset($_SERVER['HTTPS']) && ( $_SERVER['HTTPS'] === 'on' ) )          {
+    $PROTOCOL = "https"                                                      ;
+  }                                                                          ;
+  return $PROTOCOL                                                           ;
 }
 
-public function obtain ( $i , $part )
+public function Password ( $DB , $user )
 {
-  $item = $this -> Item                                           ;
-  return $this -> JSON -> data [ $i ] -> images -> $item -> $part ;
+  $TBL = $this -> Table  ( "ofuser" )                                        ;
+  $QQ = "select `plainPassword` from {$TBL} where `username` = '{$user}' ;"  ;
+  return $DB -> FetchOne ( $QQ      )                                        ;
+}
+
+public function Create ( $username                                           ,
+                         $password                                           ,
+                         $name  = ""                                         ,
+                         $email = ""                                         ,
+                         $group = ""                                         )
+{
+  if ( strlen ( $username ) <= 0 ) return false                              ;
+  if ( strlen ( $password ) <= 0 ) return false                              ;
+  $CUA         = array ( )                                                   ;
+  $CUA [ "username" ] = $username                                            ;
+  $CUA [ "password" ] = $password                                            ;
+  if ( strlen ( $name  ) > 0 ) $CUA [ "name"  ] = $name                      ;
+  if ( strlen ( $email ) > 0 ) $CUA [ "email" ] = $email                     ;
+  return $this -> CreateUser ( $CUA , $group )                               ;
+}
+
+public function CreateUser ( $user , $group = "" )
+{
+  $RESP = $this -> client -> getUserModel ( ) -> createUser ( $user )        ;
+  $this -> Response = $RESP                                                  ;
+  if ( $RESP -> getStatusCode ( ) != 201 )                                   {
+    return false                                                             ;
+  }                                                                          ;
+  if ( strlen ( $group ) > 0 )                                               {
+    return $this -> JoinGroup ( $user [ "username" ] , $group )              ;
+  }                                                                          ;
+  return true                                                                ;
+}
+
+public function JoinGroup ( $user , $group )
+{
+  if ( strlen ( $group ) <= 0 ) return false    ;
+  $RESP = $this -> client  -> getUserModel ( ) ->
+          addUserToGroup ( $user , $group )     ;
+  $this -> Response = $RESP                     ;
+  if ( $RESP -> getStatusCode ( ) == 201 )      {
+    return true                                 ;
+  }                                             ;
+  return false                                  ;
 }
 
 }
-//////////////////////////////////////////////////////////////////////////////
+
 ?>
