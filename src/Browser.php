@@ -72,6 +72,25 @@ public static function Locale ( )
   return self::LocaleNow ( self::GetLanguage ( ) ) ;
 }
 
+public static function CurrentRole ( )
+{
+  $ROLE = $_SESSION [ "ACTIONS_ROLE" ] ;
+  $ROLE = intval    ( $ROLE , 10     ) ;
+  return $ROLE                         ;
+}
+
+public static function isTutor ( )
+{
+  if ( self::CurrentRole ( ) == 2 ) return true ;
+  return false                                  ;
+}
+
+public static function isStudent ( )
+{
+  if ( self::CurrentRole ( ) == 3 ) return true ;
+  return false                                  ;
+}
+
 public static function GetPathInfos ( )
 {
   ////////////////////////////////////////////////////////////////////////////
