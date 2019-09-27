@@ -35,6 +35,8 @@ public function UpdateToken ( $DB , $HH , $AA )
   $DB   -> Query            ( $QQ     )                                      ;
   ////////////////////////////////////////////////////////////////////////////
   $AA [ "Answer" ] = "Yes"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $AA                                                                 ;
 }
 
 public function SendSingleUser ( $DB , $HH , $AA )
