@@ -84,6 +84,13 @@ public static function ReplaceFileByKeys($FILENAME,$REPLACES)
   return self::ReplaceByKeys ( $CMHR , $REPLACES ) ;
 }
 
+public static function ReplaceFileByMaps ( $FILENAME , $MAPS , $REPLACES )
+{
+  $SCRIPT = self::ReplaceFileByKeys      ( $FILENAME , $MAPS               ) ;
+  $SCRIPT = self::ReplaceTranslations    ( $SCRIPT   , $REPLACES           ) ;
+  return $SCRIPT                                                             ;
+}
+
 public static function ReportJSON ( $JSON )
 {
   $PAIRS = array      (                       ) ;
