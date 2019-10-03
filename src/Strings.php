@@ -78,6 +78,13 @@ public static function ReplaceByKeys($SOURCE,$REPLACES)
   return $SRCS                                ;
 }
 
+public static function ReplaceTemplateByMaps ( $TEMPLATE , $MAPS , $REPLACES )
+{
+  $SCRIPT = self::ReplaceByKeys       ( $TEMPLATE , $MAPS     ) ;
+  $SCRIPT = self::ReplaceTranslations ( $SCRIPT   , $REPLACES ) ;
+  return $SCRIPT                                                ;
+}
+
 public static function ReplaceFileByKeys($FILENAME,$REPLACES)
 {
   $CMHR = file_get_contents  ( $FILENAME         ) ;
