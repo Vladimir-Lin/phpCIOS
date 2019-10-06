@@ -557,7 +557,11 @@ public static function PageInfo ( $MAPS )                                    {
   return $MAPS                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-function GenerateCheckBoxItem   ( $TEMPL , $MSG , $CID , $CHECKED , $JAVA  ) {
+public static function GenerateCheckBoxItem   ( $TEMPL                       ,
+                                                $MSG                         ,
+                                                $CID                         ,
+                                                $CHECKED                     ,
+                                                $JAVA                      ) {
   ////////////////////////////////////////////////////////////////////////////
   $CHECK = ""                                                                ;
   if ( $CHECKED ) $CHECK = " checked"                                        ;
