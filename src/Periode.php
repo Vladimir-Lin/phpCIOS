@@ -452,6 +452,29 @@ public function ObtainsPublicEventsByEnd($DB,$TABLE,$END,$MINV=11,$MAXV=18)
   return $VACATIONS                                    ;
 }
 
+public function ObtainsPublicEventsByDuration($DB,$TABLE,$START,$END,$MINV=11,$MAXV=18)
+{
+  //////////////////////////////////////////////////////
+  $VACATIONS = array ( )                               ;
+  //////////////////////////////////////////////////////
+  $QQ   = "select `uuid` from {$TABLE}"                .
+          " where ( `used` = 1 )"                      .
+           " and ( `type` >= {$MINV} )"                .
+           " and ( `type` <= {$MAXV} )"                .
+            " and ( `end` >= {$START} )"               .
+            " and ( `end` <= {$END} )"                 .
+          " order by `start` desc ;"                   ;
+  $qq = $DB -> Query ( $QQ )                           ;
+  //////////////////////////////////////////////////////
+  if ( $DB -> hasResult ( $qq ) )                      {
+    while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) ) {
+      array_push ( $VACATIONS , $rr [ 0 ] )            ;
+    }                                                  ;
+  }                                                    ;
+  //////////////////////////////////////////////////////
+  return $VACATIONS                                    ;
+}
+
 public function ObtainsPublicEvents($DB,$TABLE,$MINV=11,$MAXV=18)
 {
   //////////////////////////////////////////////////////
