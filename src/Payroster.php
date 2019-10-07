@@ -12,6 +12,7 @@ public $Beneficiary ;
 public $Item        ;
 public $Seniority   ;
 public $Duration    ;
+public $Hours       ;
 public $Tokens      ;
 public $Bonus       ;
 public $Cumulation  ;
@@ -40,6 +41,7 @@ public function Clear ( )
   $this -> Item        =  0 ;
   $this -> Seniority   =  0 ;
   $this -> Duration    =  0 ;
+  $this -> Hours       =  0 ;
   $this -> Tokens      =  0 ;
   $this -> Bonus       =  0 ;
   $this -> Cumulation  =  0 ;
@@ -60,6 +62,7 @@ public function assign ( $Item )
   $this -> Item        = $Item -> Item        ;
   $this -> Seniority   = $Item -> Seniority   ;
   $this -> Duration    = $Item -> Duration    ;
+  $this -> Hours       = $Item -> Hours       ;
   $this -> Tokens      = $Item -> Tokens      ;
   $this -> Bonus       = $Item -> Bonus       ;
   $this -> Cumulation  = $Item -> Cumulation  ;
@@ -81,6 +84,7 @@ public function tableItems ( )
   array_push ( $S , "item"        ) ;
   array_push ( $S , "seniority"   ) ;
   array_push ( $S , "duration"    ) ;
+  array_push ( $S , "hours"       ) ;
   array_push ( $S , "tokens"      ) ;
   array_push ( $S , "bonus"       ) ;
   array_push ( $S , "cumulation"  ) ;
@@ -99,6 +103,7 @@ public function valueItems ( )
   $S = array (                   ) ;
   array_push ( $S , "seniority"  ) ;
   array_push ( $S , "duration"   ) ;
+  array_push ( $S , "hours"      ) ;
   array_push ( $S , "tokens"     ) ;
   array_push ( $S , "bonus"      ) ;
   array_push ( $S , "cumulation" ) ;
@@ -120,6 +125,7 @@ public function set ( $item , $V )
   if ( "item"        == $a ) $this -> Item        = $V ;
   if ( "seniority"   == $a ) $this -> Seniority   = $V ;
   if ( "duration"    == $a ) $this -> Duration    = $V ;
+  if ( "hours"       == $a ) $this -> Hours       = $V ;
   if ( "tokens"      == $a ) $this -> Tokens      = $V ;
   if ( "bonus"       == $a ) $this -> Bonus       = $V ;
   if ( "cumulation"  == $a ) $this -> Cumulation  = $V ;
@@ -141,6 +147,7 @@ public function get ( $item )
   if ( "Item"        == $a ) return (string) $this -> Item        ;
   if ( "Seniority"   == $a ) return (string) $this -> Seniority   ;
   if ( "Duration"    == $a ) return (string) $this -> Duration    ;
+  if ( "Hours"       == $a ) return (string) $this -> Hours       ;
   if ( "Tokens"      == $a ) return (string) $this -> Tokens      ;
   if ( "Bonus"       == $a ) return (string) $this -> Bonus       ;
   if ( "Cumulation"  == $a ) return (string) $this -> Cumulation  ;
@@ -183,6 +190,7 @@ public function obtain ( $R )
   $this -> Item        = $R [ "Item"        ] ;
   $this -> Seniority   = $R [ "Seniority"   ] ;
   $this -> Duration    = $R [ "Duration"    ] ;
+  $this -> Hours       = $R [ "Hours"       ] ;
   $this -> Tokens      = $R [ "Tokens"      ] ;
   $this -> Bonus       = $R [ "Bonus"       ] ;
   $this -> Cumulation  = $R [ "Cumulation"  ] ;
