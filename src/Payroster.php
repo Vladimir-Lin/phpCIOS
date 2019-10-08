@@ -163,7 +163,8 @@ public function get ( $item )
 
 public function Pair ( $item )
 {
-  return "`{$item}` = " . $this -> get ( $item ) ;
+  $GV = $this -> get ( $item ) ;
+  return "`{$item}` = {$GV}"   ;
 }
 
 public function Pairs ( $Items )
@@ -185,40 +186,42 @@ public function ItemPair($item)
 public function obtain ( $R )
 {
   $this -> Id          = $R [ "id"          ] ;
-  $this -> Period      = $R [ "Period"      ] ;
-  $this -> Beneficiary = $R [ "Beneficiary" ] ;
-  $this -> Item        = $R [ "Item"        ] ;
-  $this -> Seniority   = $R [ "Seniority"   ] ;
-  $this -> Duration    = $R [ "Duration"    ] ;
-  $this -> Hours       = $R [ "Hours"       ] ;
-  $this -> Tokens      = $R [ "Tokens"      ] ;
-  $this -> Bonus       = $R [ "Bonus"       ] ;
-  $this -> Cumulation  = $R [ "Cumulation"  ] ;
-  $this -> Rate        = $R [ "Rate"        ] ;
-  $this -> Wage        = $R [ "Wage"        ] ;
-  $this -> Commission  = $R [ "Commission"  ] ;
-  $this -> Penalty     = $R [ "Penalty"     ] ;
-  $this -> Salary      = $R [ "Salary"      ] ;
-  $this -> Currency    = $R [ "Currency"    ] ;
+  $this -> Period      = $R [ "period"      ] ;
+  $this -> Beneficiary = $R [ "beneficiary" ] ;
+  $this -> Item        = $R [ "item"        ] ;
+  $this -> Seniority   = $R [ "seniority"   ] ;
+  $this -> Duration    = $R [ "duration"    ] ;
+  $this -> Hours       = $R [ "hours"       ] ;
+  $this -> Tokens      = $R [ "tokens"      ] ;
+  $this -> Bonus       = $R [ "bonus"       ] ;
+  $this -> Cumulation  = $R [ "cumulation"  ] ;
+  $this -> Rate        = $R [ "rate"        ] ;
+  $this -> Wage        = $R [ "wage"        ] ;
+  $this -> Commission  = $R [ "commission"  ] ;
+  $this -> Penalty     = $R [ "penalty"     ] ;
+  $this -> Salary      = $R [ "salary"      ] ;
+  $this -> Currency    = $R [ "currency"    ] ;
   $this -> Update      = $R [ "ltime"       ] ;
 }
 
-/*
-
-public function Obtains($DB,$TABLE)
+public function Obtains ( $DB , $TABLE )
 {
-  $QQ = "select " . $this -> Items ( ) . " from " . $TABLE .
-        $DB -> WhereUuid ( $this -> Uuid , true )          ;
-  $qq = $DB -> Query ( $QQ )                               ;
-  if ( $DB -> hasResult ( $qq ) )                          {
-    $rr = $qq -> fetch_array ( MYSQLI_BOTH )               ;
-    $this     -> obtain      ( $rr         )               ;
-    return true                                            ;
-  }                                                        ;
-  return false                                             ;
+  $IT = $this -> Items ( )                   ;
+  $PP = $this -> Period                      ;
+  $BB = $this -> Beneficiary                 ;
+  $II = $this -> Item                        ;
+  $WH = "where ( `period` = {$PP} )"         .
+         " and ( `beneficiary` = {$BB} )"    .
+         " and ( `item` = {$II} )"           ;
+  $QQ = "select {$IT} from {$TABLE} {$WH} ;" ;
+  $qq = $DB -> Query ( $QQ )                 ;
+  if ( $DB -> hasResult ( $qq ) )            {
+    $rr = $qq -> fetch_array ( MYSQLI_BOTH ) ;
+    $this     -> obtain      ( $rr         ) ;
+    return true                              ;
+  }                                          ;
+  return false                               ;
 }
-
-*/
 
 }
 //////////////////////////////////////////////////////////////////////////////
