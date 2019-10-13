@@ -13,7 +13,6 @@ public $Relevance         ;
 public $Flags             ;
 public $Length            ;
 public $Name              ;
-public $Columns           ;
 
 public $Usages    = array (
   "Default"       =>   0  ,
@@ -369,7 +368,7 @@ public function ObtainsById($DB,$TABLE)
 public function ObtainsForPriority($DB,$TABLE)
 {
   $IDs = array ( )                                      ;
-  $QQ  = "select `id` from `erp`.`names`"               .
+  $QQ  = "select `id` from {$TABLE}"                    .
             " where `uuid` = {$this -> Uuid}"           .
           " and `locality` = {$this -> Locality}"       .
          " and `relevance` = {$this -> Relevance}"      .
@@ -405,7 +404,7 @@ public function FindByName($DB,$TABLE,$NAME)
 public function ObtainsIDs($DB,$TABLE)
 {
   $IDs = array ( )                                     ;
-  $QQ  = "select `id` from `erp`.`names`"              .
+  $QQ  = "select `id` from {$TABLE}"                   .
          " where `uuid` = {$this -> Uuid}"             .
          " and `relevance` = {$this -> Relevance}"     .
          " order by `priority`,`locality` asc ;"       ;
