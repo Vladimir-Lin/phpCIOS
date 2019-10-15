@@ -374,17 +374,31 @@ public function Update($DB,$TABLE)
   return $DB -> Query ( $QQ )                                       ;
 }
 
-public function ObtainsByUuid($DB,$TABLE)
+public function ObtainsByUuid ( $DB , $TABLE )
 {
-  $QQ = "select " . $this -> Items ( ) . " from " . $TABLE .
-        $DB -> WhereUuid ( $this -> Uuid , true )          ;
-  $qq = $DB -> Query ( $QQ )                               ;
-  if ( $DB -> hasResult ( $qq ) )                          {
-    $rr = $qq -> fetch_array ( MYSQLI_BOTH )               ;
-    $this     -> obtain      ( $rr         )               ;
-    return true                                            ;
-  }                                                        ;
-  return false                                             ;
+  $IT = $this -> Items   (                      ) ;
+  $WH = $DB -> WhereUuid ( $this -> Uuid , true ) ;
+  $QQ = "select {$IT} from {$TABLE} {$WH}"        ;
+  $qq = $DB -> Query ( $QQ )                      ;
+  if ( $DB -> hasResult ( $qq ) )                 {
+    $rr = $qq -> fetch_array ( MYSQLI_BOTH )      ;
+    $this     -> obtain      ( $rr         )      ;
+    return true                                   ;
+  }                                               ;
+  return false                                    ;
+}
+
+public function ObtainsDuration ( $DB , $TABLE , $NOW , $TYPE )
+{
+  $QQ = "select `uuid` from {$TABLE}"     .
+          " where ( `used` = 1 )"         .
+          " and ( `states` = 1 )"         .
+            " and ( `type` = {$TYPE} )"   .
+        " and ( ( `start` <= {$NOW} )"    .
+            " and ( `end` >= {$NOW} ) ) " .
+        " order by `start` desc"          .
+        " limit 0 , 1 ;"                  ;
+  return $DB -> FetchOne ( $QQ )          ;
 }
 
 public function ObtainsPublicEventsByStart($DB,$TABLE,$START,$MINV=11,$MAXV=18)
