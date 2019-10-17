@@ -104,6 +104,8 @@ public $Types         = array (
   "BankAccount"       => 125  ,
   "Class"             => 126  ,
   "Fragment"          => 127  ,
+  "AgeGroup"          => 128  ,
+  "Proficiency"       => 129  ,
 )                             ;
 
 function __construct()
