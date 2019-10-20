@@ -148,7 +148,7 @@ public function get($item)
 
 public function Pair($item)
 {
-  return "`" . $item . "` = " . $this -> get ( $item ) ;
+  return "`{$item}` = " . $this -> get ( $item ) ;
 }
 
 public function Pairs($Items)
