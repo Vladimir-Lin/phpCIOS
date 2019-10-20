@@ -355,7 +355,7 @@ public function ObtainsByUuid($DB,$TABLE)
   return $this -> ObtainsByQuery ( $DB , $QQ )             ;
 }
 
-public function ObtainsLectures($DB,$LECTURES,$ITEM,$ORDER="asc")
+public function ObtainsLectures ( $DB , $LECTURES , $ITEM , $ORDER = "asc" )
 {
   $VV = $this -> get ( $ITEM )           ;
   $QQ = "select `uuid` from {$LECTURES}" .
@@ -364,11 +364,11 @@ public function ObtainsLectures($DB,$LECTURES,$ITEM,$ORDER="asc")
   return $DB -> ObtainUuids ( $QQ )      ;
 }
 
-public function ObtainMembers($DB,$LECTURES,$FROM,$MEMBER,$PUID,$ORDER="desc")
+public function ObtainMembers ( $DB , $LECTURES , $FROM , $MEMBER , $PUID , $ORDER = "desc" )
 {
   $UUX = array ( )                                         ;
-  $QQ  = "select `" . $MEMBER . "` from " . $LECTURES      .
-         " where `" . $FROM   . "` = "    . (string) $PUID .
+  $QQ  = "select `{$MEMBER}` from {$LECTURES}"             .
+         " where `{$FROM}` = {$PUID}"                      .
          " order by `openday` " . $ORDER . " ;"            ;
   $qq  = $DB -> Query ( $QQ )                              ;
   if ( $DB -> hasResult ( $qq ) )                          {
