@@ -18,6 +18,8 @@ public $Item        ;
 public $Group       ; // 用於團購 , 1 - 單一訂單 , 2 - 團購單 , 3 - 團購隸屬單
 public $Description ;
 public $Record      ;
+public $Complete    ;
+public $DueDate     ;
 public $Update      ;
 
 function __construct()
@@ -44,6 +46,8 @@ public function Clear()
   $this -> Group       =  1    ;
   $this -> Description =  0    ;
   $this -> Record      =  0    ;
+  $this -> Complete    =  0    ;
+  $this -> DueDate     =  0    ;
   $this -> Update      =  0    ;
 }
 
@@ -62,6 +66,8 @@ public function assign($Item)
   $this -> Group       = $Item -> Group       ;
   $this -> Description = $Item -> Description ;
   $this -> Record      = $Item -> Record      ;
+  $this -> Complete    = $Item -> Complete    ;
+  $this -> DueDate     = $Item -> DueDate     ;
   $this -> Update      = $Item -> Update      ;
 }
 
@@ -81,6 +87,8 @@ public function tableItems()
   array_push ( $S , "group"       ) ;
   array_push ( $S , "description" ) ;
   array_push ( $S , "record"      ) ;
+  array_push ( $S , "complete"    ) ;
+  array_push ( $S , "duedate"     ) ;
   array_push ( $S , "ltime"       ) ;
   return $S                         ;
 }
@@ -99,6 +107,8 @@ public function valueItems()
   array_push ( $S , "group"       ) ;
   array_push ( $S , "description" ) ;
   array_push ( $S , "record"      ) ;
+  array_push ( $S , "complete"    ) ;
+  array_push ( $S , "duedate"     ) ;
   return $S                         ;
 }
 
@@ -118,6 +128,8 @@ public function set($item,$V)
   if ( "group"       == $a ) $this -> Group        = $V ;
   if ( "description" == $a ) $this -> Description  = $V ;
   if ( "record"      == $a ) $this -> Record       = $V ;
+  if ( "complete"    == $a ) $this -> Complete     = $V ;
+  if ( "duedate"     == $a ) $this -> DueDate      = $V ;
   if ( "ltime"       == $a ) $this -> Update       = $V ;
 }
 
@@ -139,6 +151,8 @@ public function get($item)
   if ( "group"       == $a ) return (string) $this -> Group        ;
   if ( "description" == $a ) return (string) $this -> Description  ;
   if ( "record"      == $a ) return (string) $this -> Record       ;
+  if ( "complete"    == $a ) return (string) $this -> Complete     ;
+  if ( "duedate"     == $a ) return (string) $this -> DueDate      ;
   if ( "ltime"       == $a ) return (string) $this -> Update       ;
   return ""                                                        ;
 }
@@ -207,6 +221,12 @@ public function ItemPair($item)
   }                                                    ;
   if ( "record"      == $a )                           {
     return "`{$a}` = " . (string) $this -> Record      ;
+  }                                                    ;
+  if ( "complete"    == $a )                           {
+    return "`{$a}` = " . (string) $this -> Complete    ;
+  }                                                    ;
+  if ( "duedate"     == $a )                           {
+    return "`{$a}` = " . (string) $this -> DueDate     ;
   }                                                    ;
   if ( "ltime"       == $a )                           {
     return "`{$a}` = " . (string) $this -> Update      ;
