@@ -351,6 +351,8 @@ public function obtain($R)
   $this -> Item        = $R [ "item"        ]            ;
   $this -> Description = $R [ "description" ]            ;
   $this -> Record      = $R [ "record"      ]            ;
+  $this -> Complete    = $R [ "complete"    ]            ;
+  $this -> DueDate     = $R [ "duedate"     ]            ;
   $this -> Update      = $R [ "ltime"       ]            ;
   ////////////////////////////////////////////////////////
   $this -> Item        = intval ( $this -> Item   , 10 ) ;
