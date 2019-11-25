@@ -384,7 +384,7 @@ public function ObtainMembers ( $DB , $LECTURES , $FROM , $MEMBER , $PUID , $ORD
 
 public function ObtainCourses($DB,$RELATIONS)
 {
-  $RI      = new RelationItem     (                         ) ;
+  $RI      = new Relation         (                         ) ;
   $RI     -> set                  ( "first" , $this -> Uuid ) ;
   $RI     -> setT1                ( "Lecture"               ) ;
   $RI     -> setT2                ( "Course"                ) ;
