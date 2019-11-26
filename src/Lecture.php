@@ -348,11 +348,12 @@ public function ObtainsByQuery($DB,$QQ)
   return false                               ;
 }
 
-public function ObtainsByUuid($DB,$TABLE)
+public function ObtainsByUuid ( $DB , $TABLE )
 {
-  $QQ = "select " . $this -> Items ( ) . " from " . $TABLE .
-        $DB -> WhereUuid ( $this -> Uuid , true )          ;
-  return $this -> ObtainsByQuery ( $DB , $QQ )             ;
+  $IT = $this -> Items ( )                        ;
+  $QQ = "select {$IT} from {$TABLE}"              .
+        $DB -> WhereUuid ( $this -> Uuid , true ) ;
+  return $this -> ObtainsByQuery ( $DB , $QQ )    ;
 }
 
 public function ObtainsLectures ( $DB , $LECTURES , $ITEM , $ORDER = "asc" )
@@ -396,7 +397,7 @@ public function ObtainCourses($DB,$RELATIONS)
 
 public function ObtainLessons($DB,$RELATIONS)
 {
-  $RI      = new RelationItem     (                         ) ;
+  $RI      = new Relation         (                         ) ;
   $RI     -> set                  ( "first" , $this -> Uuid ) ;
   $RI     -> setT1                ( "Lecture"               ) ;
   $RI     -> setT2                ( "Lesson"                ) ;

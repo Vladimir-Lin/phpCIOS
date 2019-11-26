@@ -16,16 +16,16 @@ public $States    ;
 public $Update    ;
 public $TermCount ;
 
-function __construct()
+function __construct ( )
 {
   $this -> Clear ( ) ;
 }
 
-function __destruct()
+function __destruct ( )
 {
 }
 
-function Clear()
+function Clear ( )
 {
   $this -> Id     = -1 ;
   $this -> Uuid   =  0 ;
