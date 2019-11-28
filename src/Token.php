@@ -328,11 +328,12 @@ public function GetUuid ( $DB , $Table , $Main )
 
 //////////////////////////////////////////////////////////////////////////////
 
-public function UpdateItems($DB,$TABLE,$ITEMS)
+public function UpdateItems ( $DB , $TABLE , $ITEMS )
 {
-  $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
-           $DB -> WhereUuid ( $this -> Uuid , true )                ;
-  return $DB -> Query ( $QQ )                                       ;
+  $PRX   = $this -> Pairs ( $ITEMS )                 ;
+  $QQ    = "update {$TABLE} set {$PRX} "             .
+           $DB -> WhereUuid ( $this -> Uuid , true ) ;
+  return $DB -> Query ( $QQ )                        ;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -378,7 +379,7 @@ public function ObtainsByReason($DB,$TABLE,$REASON)
 
 public function ObtainRelated($DB,$RELATIONS,$CLASSID)
 {
-  $RI     = new RelationItem     (                    ) ;
+  $RI     = new Relation         (                    ) ;
   $RI    -> set                  ( "first" , $CLASSID ) ;
   $RI    -> setT1                ( "Class"            ) ;
   $RI    -> setT2                ( "Token"            ) ;
