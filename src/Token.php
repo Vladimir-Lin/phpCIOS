@@ -172,7 +172,6 @@ public function set($item,$V)
   if ( "states"      == $a ) $this -> States      = $V ;
   if ( "creation"    == $a ) $this -> Creation    = $V ;
   if ( "modify"      == $a ) $this -> Modify      = $V ;
-  if ( "record"      == $a ) $this -> Record      = $V ;
   if ( "ltime"       == $a ) $this -> Update      = $V ;
 }
 
@@ -193,7 +192,6 @@ public function get($item)
   if ( "states"      == $a ) return (string) $this -> States      ;
   if ( "creation"    == $a ) return (string) $this -> Creation    ;
   if ( "modify"      == $a ) return (string) $this -> Modify      ;
-  if ( "record"      == $a ) return (string) $this -> Record      ;
   if ( "ltime"       == $a ) return (string) $this -> Update      ;
   return ""                                                       ;
 }
@@ -207,7 +205,7 @@ public function Pair($item)
 
 //////////////////////////////////////////////////////////////////////////////
 
-public function Pairs($Items)
+public function Pairs ( $Items )
 {
   $P = array ( )                                ;
   foreach ( $Items as $item )                   {
@@ -243,13 +241,11 @@ public function fromString ( $S )
   $U = str_replace ( $C , "34000000000" , $S ) ;
   $this -> Uuid = $U                           ;
   return $U                                    ;
-
-
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
-public function ValueString($X)
+public function ValueString ( $X )
 {
   if ( $X < 0 ) $X = - $X                               ;
   $T  = intval ( $X      , 10 )                         ;
@@ -338,13 +334,23 @@ public function UpdateItems ( $DB , $TABLE , $ITEMS )
 
 //////////////////////////////////////////////////////////////////////////////
 
-public function Update($DB,$TABLE)
+public function XXXXXX ( $DB , $TABLE )
 {
-  $ITEMS = $this -> valueItems ( )                                  ;
-  $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
-           $DB -> WhereUuid ( $this -> Uuid , true )                ;
-  unset ( $ITEMS )                                                  ;
-  return $DB -> Query ( $QQ )                                       ;
+  $ITEMS = $this -> valueItems (        )            ;
+  $PRX   = $this -> Pairs      ( $ITEMS )            ;
+  $QQ    = "update {$TABLE} set {$PRX} "             .
+           $DB -> WhereUuid ( $this -> Uuid , true ) ;
+  return $QQ ;
+}
+
+public function Update ( $DB , $TABLE )
+{
+  $ITEMS = $this -> valueItems (        )            ;
+  $PRX   = $this -> Pairs      ( $ITEMS )            ;
+  $QQ    = "update {$TABLE} set {$PRX} "             .
+           $DB -> WhereUuid ( $this -> Uuid , true ) ;
+  unset ( $ITEMS )                                   ;
+  return $DB -> Query ( $QQ )                        ;
 }
 
 //////////////////////////////////////////////////////////////////////////////
