@@ -52,6 +52,11 @@ public function isValid()
   return ( strlen ( $this -> Account ) > 0 )          ;
 }
 
+public function setApp ( $app )
+{
+  $this -> Type = $app ;
+}
+
 public function setAccount($account)
 {
   $this -> Account = trim ( $account ) ;
@@ -69,7 +74,7 @@ public function Update($DB,$Table)
 
 public function ObtainsByUuid($DB,$Table)
 {
-  $Q = "select `account`,`imapp` from " . $Table .
+  $Q = "select `account`,`imapp` from {$Table}"  .
        $DB -> WhereUuid ( $this -> Uuid , true ) ;
   $q = $DB -> Query ( $Q )                       ;
   if ( ! $DB -> hasResult ( $q ) ) return false  ;
@@ -80,21 +85,24 @@ public function ObtainsByUuid($DB,$Table)
   return true                                    ;
 }
 
-public function ObtainsByAccount($DB,$Table)
+public function ObtainsByAccount ( $DB , $Table )
 {
-  $this -> Uuid = "0"                                        ;
-  $Q  = "select `uuid` from " . $Table                       .
-        " where `account` = '" . $this -> Account . "' and " .
-        "`imapp` = " . $this -> Type . " and `used` = 1 ;"   ;
-  $q  = $DB -> Query ( $Q )                                  ;
-  if ( ! $DB -> hasResult ( $q ) ) return false              ;
-  $N = $q -> fetch_array ( MYSQLI_BOTH )                     ;
-  if ( ! $N ) return false                                   ;
-  $this -> Uuid = $N [ "uuid" ]                              ;
-  return true                                                ;
+  $this -> Uuid = "0"                           ;
+  $T  = $this -> Type                           ;
+  $A  = $this -> Account                        ;
+  $Q  = "select `uuid` from {$Table}"           .
+        " where `account` = '{$A}'"             .
+        " and `imapp` = {$T}"                   .
+        " and `used` = 1 ;"                     ;
+  $q  = $DB -> Query ( $Q )                     ;
+  if ( ! $DB -> hasResult ( $q ) ) return false ;
+  $N = $q -> fetch_array ( MYSQLI_BOTH )        ;
+  if ( ! $N ) return false                      ;
+  $this -> Uuid = $N [ "uuid" ]                 ;
+  return true                                   ;
 }
 
-public function Obtains($DB,$Table)
+public function Obtains ( $DB , $Table )
 {
   if ( gmp_cmp ( $this -> Uuid , "0" ) > 0 )                      {
     if ( $this -> ObtainsByUuid    ( $DB , $Table ) ) return true ;
