@@ -408,7 +408,7 @@ public function GetNameByLocalities($Table,$U,$Localities,$Usage = "Default")
   return $NN                                            ;
 }
 
-public function GetPassword($Table,$Uuid,$Name)
+public function GetPassword ( $Table , $Uuid , $Name )
 {
   $QQ  = "select `secret` from {$Table}"          .
          " where `uuid` = {$Uuid}"                .
@@ -419,6 +419,29 @@ public function GetPassword($Table,$Uuid,$Name)
   $N   = $qq -> fetch_array ( MYSQLI_BOTH )       ;
   $Pwd = $N [ "secret" ]                          ;
   return $Pwd                                     ;
+}
+
+public function GetUnlock ( $Table , $Uuid , $Name )
+{
+  $QQ  = "select `unlock` from {$Table}"          .
+         " where `uuid` = {$Uuid}"                .
+           " and `name` = '{$Name}' ;"            ;
+  $Pwd = ""                                       ;
+  $qq  = $this -> Query ( $QQ )                   ;
+  if ( ! $this -> hasResult ( $qq ) ) return $Pwd ;
+  $N   = $qq -> fetch_array ( MYSQLI_BOTH )       ;
+  $Pwd = $N [ "unlock" ]                          ;
+  return $Pwd                                     ;
+}
+
+public function AssureUnlock($Table,$Uuid,$Name,$Tagx)
+{
+  $QQ = "update {$Table}"           .
+        " set `unlock` = '{$Tagx}'" .
+        " where `uuid` = {$Uuid}"   .
+        " and `name` = '{$Name}' ;" ;
+  ///////////////////////////////////
+  return $this -> Query ( $QQ )     ;
 }
 
 public function AssurePassword($Table,$Uuid,$Name,$Pwd)
