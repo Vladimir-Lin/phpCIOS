@@ -288,6 +288,28 @@ public function Naming ( $Table , $U , $Locality , $Usage = "Default" )
   return $NI -> Fetch ( $this      , $Table    ) ;
 }
 
+public function SearchByNameAndType ( $NAME , $TYPE , $NAMETAB , $UUIDTAB )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  $NAMK  = strtolower ( $NAME )                                              ;
+  $GNAM  = "%{$NAMK}%"                                                       ;
+  $QQ    = "select `n`.`uuid` from {$NAMETAB} as `n`"                        .
+           " inner join {$UUIDTAB} as `u`"                                   .
+           " where ( `n`.`uuid` = `u`.`uuid` )"                              .
+           " and ( `u`.`type` = {$TYPE} )"                                   .
+           " and ( lower ( `n`.`name` ) like ? )"                            .
+           " group by `n`.`uuid` asc"                                        .
+           " order by `n`.`id` asc ;"                                        ;
+  $qq    = $this -> Prepare  ( $QQ         )                                 ;
+  $qq   -> bind_param        ( 's' , $GNAM )                                 ;
+  $qq   -> execute           (             )                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $kk    = $qq -> get_result (             )                                 ;
+  $UU    = array             (             )                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $this -> FetchUuids ( $kk , $UU   )                                 ;
+}
+
 public function GetTutor($Table,$U)
 {
   if ( gmp_cmp ( $U , "0" ) <= 0 ) return "" ;
