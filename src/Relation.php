@@ -398,7 +398,7 @@ public function Insert($Table)
 
 public function DeleteItems($Table,$items)
 {
-  return "delete from " . $Table . " "         .
+  return "delete from {$Table} "               .
          $this -> QueryItems ( $items ) . " ;" ;
 }
 
@@ -493,7 +493,7 @@ public function Append($DB,$Table)
   return $DB   -> Query  ( $QQ    ) ;
 }
 
-public function Join($DB,$Table)
+public function Join ( $DB , $Table )
 {
   $QQ = $this -> ExactColumn ( $Table , "id" ) ;
   $q  = $DB   -> Query       ( $QQ           ) ;
