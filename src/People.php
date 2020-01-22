@@ -454,8 +454,6 @@ public function HomeDir ( $ROLE )
     case  6                                                                  : // 教練
     return "coach"                                                           ;
     case  7                                                                  : // 經理
-    case  8                                                                  : // 協理
-    case  9                                                                  : // 部門主管
       if ( $this -> isCounselor  ( ) )                                       {
         return "counselors"                                                  ;
       } else
@@ -466,10 +464,14 @@ public function HomeDir ( $ROLE )
         return "subsidiaries"                                                ;
       }                                                                      ;
     return "managers"                                                        ;
+    case  8                                                                  : // 協理
+    return "associates"                                                      ;
+    case  9                                                                  : // 部門主管
+    return "departments"                                                     ;
     case 10                                                                  : // 會計
     return "pecuniary"                                                       ;
     case 11                                                                  : // 財務長
-    return "pecuniary"                                                       ;
+    return "cfo"                                                             ;
     case 12                                                                  : // 人力資源
     return "employees"                                                       ;
     case 13                                                                  : // 董事長
@@ -477,9 +479,9 @@ public function HomeDir ( $ROLE )
     case 14                                                                  : // 股東
     return "shareholders"                                                    ;
     case 15                                                                  : // 資管
-    return "employees"                                                       ;
+    return "mis"                                                             ;
     case 16                                                                  : // 設計者
-    return "employees"                                                       ;
+    return "designer"                                                        ;
     case 17                                                                  : // 勤務
     return "employees"                                                       ;
   }                                                                          ;
