@@ -473,7 +473,7 @@ public function HomeDir ( $ROLE )
     case 11                                                                  : // 財務長
     return "cfo"                                                             ;
     case 12                                                                  : // 人力資源
-    return "employees"                                                       ;
+    return "hr"                                                              ;
     case 13                                                                  : // 董事長
     return "chairperson"                                                     ;
     case 14                                                                  : // 股東
