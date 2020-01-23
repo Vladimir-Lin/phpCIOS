@@ -399,13 +399,13 @@ public function SessionStart ( )
         case  7                                                            :
         case  8                                                            :
         case  9                                                            :
-          if ( $this -> isManager ( ) )                                    {
-            $_SESSION [ "ACTIONS_MANAGER" ] = $this -> toString ( )        ;
-          }                                                                ;
+//          if ( $this -> isManager ( ) )                                    {
+//            $_SESSION [ "ACTIONS_MANAGER" ] = $this -> toString ( )        ;
+//          }                                                                ;
         break                                                              ;
         case 13                                                            :
         case 16                                                            :
-          $_SESSION   [ "ACTIONS_MANAGER" ] = $this -> toString ( )        ;
+//          $_SESSION   [ "ACTIONS_MANAGER" ] = $this -> toString ( )        ;
         break                                                              ;
       }                                                                    ;
     }                                                                      ;
