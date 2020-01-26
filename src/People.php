@@ -675,7 +675,7 @@ public function SearchByKey($DB,$CANDIDATEs,$KEY)
   $QQ   = "select `uuid` from `erp`.`people`"                                .
           " where ( `used` > 0 )"                                            .
           " and ( `uuid` in"                                                 .
-          " ( select `uuid` from `erp`.`names` where `name` like ? ) ) ;"    ;
+          " ( select `uuid` from `erp`.`names` where lower ( `name` ) like lower ( ? ) ) ) ;" ;
   $qq   = $DB -> Prepare    ( $QQ        )                                   ;
   $qq  -> bind_param        ( 's' , $SPT )                                   ;
   $qq  -> execute           (            )                                   ;
