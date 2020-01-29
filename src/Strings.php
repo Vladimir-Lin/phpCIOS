@@ -126,6 +126,7 @@ public static function JsonNaming ( $NAME )
 {
   $NAME = str_replace ( "\b" , ""     , $NAME ) ;
   $NAME = str_replace ( "\r" , ""     , $NAME ) ;
+  $NAME = str_replace ( "\f" , ""     , $NAME ) ;
   $NAME = str_replace ( "\t" , " "    , $NAME ) ;
   $NAME = str_replace ( "\\" , "\\\\" , $NAME ) ;
   $NAME = str_replace ( "\"" , "\\\"" , $NAME ) ;
@@ -144,6 +145,7 @@ public static function Replacement ( $NAME )
 {
   $NAME = str_replace ( "\b" , ""     , $NAME ) ;
   $NAME = str_replace ( "\r" , ""     , $NAME ) ;
+  $NAME = str_replace ( "\f" , ""     , $NAME ) ;
   $NAME = str_replace ( "\n" , ""     , $NAME ) ;
   $NAME = str_replace ( "\t" , " "    , $NAME ) ;
   $NAME = str_replace ( "\"" , "\\\"" , $NAME ) ;
@@ -154,6 +156,7 @@ public static function LoginWords ( $NAME )
 {
   $NAME = str_replace ( "\b" , "" , $NAME ) ;
   $NAME = str_replace ( "\r" , "" , $NAME ) ;
+  $NAME = str_replace ( "\f" , "" , $NAME ) ;
   $NAME = str_replace ( "\n" , "" , $NAME ) ;
   $NAME = str_replace ( "\t" , "" , $NAME ) ;
   $NAME = str_replace ( "\"" , "" , $NAME ) ;
@@ -167,6 +170,7 @@ public static function PurgeEmail ( $EMAIL )
 {
   $EMAIL = str_replace ( "\b" , "" , $EMAIL ) ;
   $EMAIL = str_replace ( "\r" , "" , $EMAIL ) ;
+  $EMAIL = str_replace ( "\f" , "" , $EMAIL ) ;
   $EMAIL = str_replace ( "\n" , "" , $EMAIL ) ;
   $EMAIL = str_replace ( "\t" , "" , $EMAIL ) ;
   $EMAIL = str_replace ( "\"" , "" , $EMAIL ) ;
