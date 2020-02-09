@@ -21,6 +21,16 @@ public static function AppendCheckMark ( $CID , $CHECKED , $JSC , $MSG )     {
   return $LVL                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public static function AppendInputLine ( $TYPE , $VALUE , $JSC , $MSG )      {
+  $DIV    = new Html          (                     )                        ;
+  $DIV   -> setDiv            ( $MSG , "" , ""      )                        ;
+  $INP    = $DIV  -> addInput (                     )                        ;
+  $INP   -> AddPair           ( "type"     , $TYPE  )                        ;
+  $INP   -> AddPair           ( "value"    , $VALUE )                        ;
+  $INP   -> SafePair          ( "onchange" , $JSC   )                        ;
+  return $DIV                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public static function SettingsEditorDB ( $DBX , $CONFs                    ) {
   ////////////////////////////////////////////////////////////////////////////
   if                                    ( isset ( $CONFs  [ "SORT"     ] ) ) {
@@ -234,6 +244,96 @@ public static function SettingsCheckBox ( $CONFs                           ) {
   $HTML    = self::SettingsCheckBoxDB  ( $DBX , $CONFs                     ) ;
   ////////////////////////////////////////////////////////////////////////////
   $DBX    -> Close                     (                                   ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HTML                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public static function SettingsInputValueDB ( $DBX , $CONFs                ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $DIVID      = $CONFs  [ "Editor"   ]                                       ;
+  if                                    ( isset ( $CONFs  [ "Content"  ] ) ) {
+    $CONTENT  = $CONFs  [ "Content"  ]                                       ;
+  } else                                                                     {
+    $CONTENT  = ""                                                           ;
+  }                                                                          ;
+  $TABLES     = $CONFs  [ "Tables"   ]                                       ;
+  $SETAB      = $TABLES [ "Settings" ]                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $SETS       = new Settings (                                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $USERNAME   = $CONFs  [ "Username" ]                                       ;
+  $SCOPE      = $CONFs  [ "Scope"    ]                                       ;
+  $KEYWORD    = $CONFs  [ "Keyword"  ]                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $SETS      -> set          ( "Username" , $USERNAME                      ) ;
+  $SETS      -> set          ( "Scope"    , $SCOPE                         ) ;
+  $SETS      -> set          ( "Keyword"  , $KEYWORD                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $VALUE      = $SETS -> obtainValue ( $DBX , $SETAB                       ) ;
+  $JSC        = "SettingsInputValue('{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.value)" ;
+  $ROOT       = self::AppendInputLine ( "number" , $VALUE , $JSC , $CONTENT ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $ROOT -> Content               (                                  ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public static function SettingsInputValue ( $CONFs                         ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $HOST    = $CONFs  [ "Host"     ]                                          ;
+  $HTML    = ""                                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $DBX     = new DB                       (                                ) ;
+  if                                      ( ! $DBX -> Connect ( $HOST )    ) {
+    return $DBX -> ConnectionError        (                                ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HTML    = self::SettingsInputValueDB  ( $DBX , $CONFs                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $DBX    -> Close                     (                                   ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HTML                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public static function SettingsInputTextDB ( $DBX , $CONFs                 ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $DIVID      = $CONFs  [ "Editor"   ]                                       ;
+  if                                    ( isset ( $CONFs  [ "Content"  ] ) ) {
+    $CONTENT  = $CONFs  [ "Content"  ]                                       ;
+  } else                                                                     {
+    $CONTENT  = ""                                                           ;
+  }                                                                          ;
+  $TABLES     = $CONFs  [ "Tables"   ]                                       ;
+  $SETAB      = $TABLES [ "Settings" ]                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $SETS       = new Settings (                                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $USERNAME   = $CONFs  [ "Username" ]                                       ;
+  $SCOPE      = $CONFs  [ "Scope"    ]                                       ;
+  $KEYWORD    = $CONFs  [ "Keyword"  ]                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $SETS      -> set          ( "Username" , $USERNAME                      ) ;
+  $SETS      -> set          ( "Scope"    , $SCOPE                         ) ;
+  $SETS      -> set          ( "Keyword"  , $KEYWORD                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $VALUE      = $SETS -> obtainValue ( $DBX , $SETAB                       ) ;
+  $JSC        = "SettingsInputValue('{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.value)" ;
+  $ROOT       = self::AppendInputLine ( "text" , $VALUE , $JSC , $CONTENT  ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $ROOT -> Content               (                                  ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public static function SettingsInputText ( $CONFs                          ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $HOST    = $CONFs  [ "Host"     ]                                          ;
+  $HTML    = ""                                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $DBX     = new DB                      (                                 ) ;
+  if                                     ( ! $DBX -> Connect ( $HOST )     ) {
+    return $DBX -> ConnectionError       (                                 ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HTML    = self::SettingsInputTextDB   ( $DBX , $CONFs                   ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $DBX    -> Close                       (                                 ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $HTML                                                               ;
 }
