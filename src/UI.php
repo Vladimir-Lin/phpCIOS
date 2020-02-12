@@ -21,13 +21,16 @@ public static function AppendCheckMark ( $CID , $CHECKED , $JSC , $MSG )     {
   return $LVL                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public static function AppendInputLine ( $TYPE , $VALUE , $JSC , $MSG )      {
-  $DIV    = new Html          (                     )                        ;
-  $DIV   -> setDiv            ( $MSG , "" , ""      )                        ;
-  $INP    = $DIV  -> addInput (                     )                        ;
-  $INP   -> AddPair           ( "type"     , $TYPE  )                        ;
-  $INP   -> AddPair           ( "value"    , $VALUE )                        ;
-  $INP   -> SafePair          ( "onchange" , $JSC   )                        ;
+public static function AppendInputLine ( $TYPE , $VALUE , $INPSIZE , $JSC , $MSG ) {
+  $DIV    = new Html          (                       )                      ;
+  $DIV   -> setDiv            ( $MSG , "" , ""        )                      ;
+  $INP    = $DIV  -> addInput (                       )                      ;
+  $INP   -> AddPair           ( "type"     , $TYPE    )                      ;
+  if                          ( $INPSIZE > 0          )                      {
+    $INP -> AddPair           ( "size"     , $INPSIZE )                      ;
+  }                                                                          ;
+  $INP   -> AddPair           ( "value"    , $VALUE   )                      ;
+  $INP   -> SafePair          ( "onchange" , $JSC     )                      ;
   return $DIV                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -265,13 +268,20 @@ public static function SettingsInputValueDB ( $DBX , $CONFs                ) {
   $SCOPE      = $CONFs  [ "Scope"    ]                                       ;
   $KEYWORD    = $CONFs  [ "Keyword"  ]                                       ;
   ////////////////////////////////////////////////////////////////////////////
+  $INPSIZE    = $CONFs  [ "Size"     ]                                       ;
+  if                         ( strlen ( $INPSIZE ) <= 0                    ) {
+    $INPSIZE  = 0                                                            ;
+  } else                                                                     {
+    $INPSIZE  = intval       ( $INPSIZE , 10                               ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
   $SETS      -> set          ( "Username" , $USERNAME                      ) ;
   $SETS      -> set          ( "Scope"    , $SCOPE                         ) ;
   $SETS      -> set          ( "Keyword"  , $KEYWORD                       ) ;
   ////////////////////////////////////////////////////////////////////////////
   $VALUE      = $SETS -> obtainValue ( $DBX , $SETAB                       ) ;
   $JSC        = "SettingsInputValue('{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.value)" ;
-  $ROOT       = self::AppendInputLine ( "number" , $VALUE , $JSC , $CONTENT ) ;
+  $ROOT       = self::AppendInputLine ( "number" , $VALUE , $INPSIZE , $JSC , $CONTENT ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $ROOT -> Content               (                                  ) ;
 }
@@ -310,13 +320,20 @@ public static function SettingsInputTextDB ( $DBX , $CONFs                 ) {
   $SCOPE      = $CONFs  [ "Scope"    ]                                       ;
   $KEYWORD    = $CONFs  [ "Keyword"  ]                                       ;
   ////////////////////////////////////////////////////////////////////////////
+  $INPSIZE    = $CONFs  [ "Size"     ]                                       ;
+  if                         ( strlen ( $INPSIZE ) <= 0                    ) {
+    $INPSIZE  = 0                                                            ;
+  } else                                                                     {
+    $INPSIZE  = intval       ( $INPSIZE , 10                               ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
   $SETS      -> set          ( "Username" , $USERNAME                      ) ;
   $SETS      -> set          ( "Scope"    , $SCOPE                         ) ;
   $SETS      -> set          ( "Keyword"  , $KEYWORD                       ) ;
   ////////////////////////////////////////////////////////////////////////////
   $VALUE      = $SETS -> obtainValue ( $DBX , $SETAB                       ) ;
   $JSC        = "SettingsInputValue('{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.value)" ;
-  $ROOT       = self::AppendInputLine ( "text" , $VALUE , $JSC , $CONTENT  ) ;
+  $ROOT       = self::AppendInputLine ( "text" , $VALUE , $INPSIZE , $JSC , $CONTENT  ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $ROOT -> Content               (                                  ) ;
 }
