@@ -45,12 +45,13 @@ public function getObject($INDEX)
 
 public function Create ( $PART = "onepiece" )
 {
-  $this -> MAIN   = new Html                (                ) ;
-  $this -> TABLE  = new Html                (                ) ;
-  $this -> MAIN  -> AddTag                  ( $this -> TABLE ) ;
-  $this -> MAIN  -> setMain                 ( $PART          ) ;
-  $TT    = $this -> TABLE -> ConfigureTable (                ) ;
-  $this -> TBODY  = $TT                                        ;
+  $this -> MAIN   = new Html                (                       ) ;
+  $this -> TABLE  = new Html                (                       ) ;
+  $this -> MAIN  -> AddTag                  ( $this -> TABLE        ) ;
+  $this -> MAIN  -> setMain                 ( $PART                 ) ;
+  $TT    = $this -> TABLE -> ConfigureTable (                       ) ;
+  $this -> TABLE -> AddPair                 ( "class" , "PageTable" ) ;
+  $this -> TBODY  = $TT                                               ;
 }
 
 public function Report()
