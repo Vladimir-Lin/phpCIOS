@@ -21,16 +21,20 @@ public static function AppendCheckMark ( $CID , $CHECKED , $JSC , $MSG )     {
   return $LVL                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public static function AppendInputLine ( $TYPE , $VALUE , $INPSIZE , $JSC , $MSG ) {
-  $DIV    = new Html          (                       )                      ;
-  $DIV   -> setDiv            ( $MSG , "" , ""        )                      ;
-  $INP    = $DIV  -> addInput (                       )                      ;
-  $INP   -> AddPair           ( "type"     , $TYPE    )                      ;
-  if                          ( $INPSIZE > 0          )                      {
-    $INP -> AddPair           ( "size"     , $INPSIZE )                      ;
+public static function AppendInputLine ( $TYPE                               ,
+                                         $VALUE                              ,
+                                         $INPSIZE                            ,
+                                         $JSC                                ,
+                                         $MSG                              ) {
+  $DIV    = new Html          (                                            ) ;
+  $DIV   -> setDiv            ( $MSG , "" , ""                             ) ;
+  $INP    = $DIV  -> addInput (                                            ) ;
+  $INP   -> AddPair           ( "type"     , $TYPE                         ) ;
+  if                          ( $INPSIZE > 0                               ) {
+    $INP -> AddPair           ( "style"    , "width: {$INPSIZE}px;"        ) ;
   }                                                                          ;
-  $INP   -> AddPair           ( "value"    , $VALUE   )                      ;
-  $INP   -> SafePair          ( "onchange" , $JSC     )                      ;
+  $INP   -> AddPair           ( "value"    , $VALUE                        ) ;
+  $INP   -> SafePair          ( "onchange" , $JSC                          ) ;
   return $DIV                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
