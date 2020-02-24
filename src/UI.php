@@ -45,11 +45,13 @@ public static function SettingsEditorDB ( $DBX , $CONFs                    ) {
   } else                                                                     {
     $SORT     = "id"                                                         ;
   }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
   $EDIT       = $CONFs  [ "Edit"     ]                                       ;
   $DELETE     = $CONFs  [ "Delete"   ]                                       ;
   $ADD        = $CONFs  [ "Add"      ]                                       ;
   $REMOVE     = $CONFs  [ "Remove"   ]                                       ;
   $CLASSID    = $CONFs  [ "Class"    ]                                       ;
+  ////////////////////////////////////////////////////////////////////////////
   if                                    ( isset ( $CONFs  [ "DIV"      ] ) ) {
     $DIVID    = $CONFs  [ "DIV"      ]                                       ;
   } else                                                                     {
@@ -68,7 +70,13 @@ public static function SettingsEditorDB ( $DBX , $CONFs                    ) {
     $CONTENT  = ""                                                           ;
   }                                                                          ;
   $TABLES     = $CONFs  [ "Tables"   ]                                       ;
+  $PICKDB     = $CONFs  [ "Pick"     ]                                       ;
   $SETAB      = $TABLES [ "Settings" ]                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PICKDB     = strtolower   ( $PICKDB                                     ) ;
+  if                         ( $PICKDB == "www"                            ) {
+    $SETAB    = $TABLES [ "WwwSettings" ]                                    ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   if ( strlen ( $SORT ) <= 0 ) $SORT = "id"                                  ;
   $CONTENT    = trim                    ( $CONTENT                         ) ;
@@ -177,7 +185,7 @@ public static function SettingsEditorDB ( $DBX , $CONFs                    ) {
       ////////////////////////////////////////////////////////////////////////
       $HD      = $HR    -> addTd        (                                  ) ;
       if                                ( $EDIT                            ) {
-        $JSC   = "UpdateSettingItem({$IDXX},this.value)"                     ;
+        $JSC   = "UpdateSettingItem('{$PICKDB}',{$IDXX},this.value)"         ;
         $INP   = $HD    -> addInput     (                                  ) ;
         $INP  -> SafePair               ( "class"    , $VALUECLASS         ) ;
         $INP  -> AddPair                ( "onchange" , $JSC                ) ;
@@ -218,7 +226,13 @@ public static function SettingsCheckBoxDB ( $DBX , $CONFs                  ) {
     $CONTENT  = ""                                                           ;
   }                                                                          ;
   $TABLES     = $CONFs  [ "Tables"   ]                                       ;
+  $PICKDB     = $CONFs  [ "Pick"     ]                                       ;
   $SETAB      = $TABLES [ "Settings" ]                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PICKDB     = strtolower   ( $PICKDB                                     ) ;
+  if                         ( $PICKDB == "www"                            ) {
+    $SETAB    = $TABLES [ "WwwSettings" ]                                    ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $SETS       = new Settings (                                             ) ;
   ////////////////////////////////////////////////////////////////////////////
@@ -232,7 +246,7 @@ public static function SettingsCheckBoxDB ( $DBX , $CONFs                  ) {
   ////////////////////////////////////////////////////////////////////////////
   $VALUE      = $SETS -> obtainValue ( $DBX , $SETAB                       ) ;
   $ENABLE     = ( ( $VALUE == 0 ) or ( $VALUE = "0" ) ) ? false : true       ;
-  $JSC        = "SettingsTriggerEnable('{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.checked)" ;
+  $JSC        = "SettingsTriggerEnable('{$PICKDB}','{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.checked)" ;
   $ROOT       = self::AppendCheckMark ( $DIVID , $ENABLE , $JSC , $CONTENT ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $ROOT -> Content               (                                  ) ;
@@ -264,7 +278,13 @@ public static function SettingsInputValueDB ( $DBX , $CONFs                ) {
     $CONTENT  = ""                                                           ;
   }                                                                          ;
   $TABLES     = $CONFs  [ "Tables"   ]                                       ;
+  $PICKDB     = $CONFs  [ "Pick"     ]                                       ;
   $SETAB      = $TABLES [ "Settings" ]                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PICKDB     = strtolower   ( $PICKDB                                     ) ;
+  if                         ( $PICKDB == "www"                            ) {
+    $SETAB    = $TABLES [ "WwwSettings" ]                                    ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $SETS       = new Settings (                                             ) ;
   ////////////////////////////////////////////////////////////////////////////
@@ -284,7 +304,7 @@ public static function SettingsInputValueDB ( $DBX , $CONFs                ) {
   $SETS      -> set          ( "Keyword"  , $KEYWORD                       ) ;
   ////////////////////////////////////////////////////////////////////////////
   $VALUE      = $SETS -> obtainValue ( $DBX , $SETAB                       ) ;
-  $JSC        = "SettingsInputValue('{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.value)" ;
+  $JSC        = "SettingsInputValue('{$PICKDB}','{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.value)" ;
   $ROOT       = self::AppendInputLine ( "number" , $VALUE , $INPSIZE , $JSC , $CONTENT ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $ROOT -> Content               (                                  ) ;
@@ -316,7 +336,13 @@ public static function SettingsInputTextDB ( $DBX , $CONFs                 ) {
     $CONTENT  = ""                                                           ;
   }                                                                          ;
   $TABLES     = $CONFs  [ "Tables"   ]                                       ;
+  $PICKDB     = $CONFs  [ "Pick"     ]                                       ;
   $SETAB      = $TABLES [ "Settings" ]                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PICKDB     = strtolower   ( $PICKDB                                     ) ;
+  if                         ( $PICKDB == "www"                            ) {
+    $SETAB    = $TABLES [ "WwwSettings" ]                                    ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $SETS       = new Settings (                                             ) ;
   ////////////////////////////////////////////////////////////////////////////
@@ -336,7 +362,7 @@ public static function SettingsInputTextDB ( $DBX , $CONFs                 ) {
   $SETS      -> set          ( "Keyword"  , $KEYWORD                       ) ;
   ////////////////////////////////////////////////////////////////////////////
   $VALUE      = $SETS -> obtainValue ( $DBX , $SETAB                       ) ;
-  $JSC        = "SettingsInputValue('{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.value)" ;
+  $JSC        = "SettingsInputValue('{$PICKDB}','{$USERNAME}','{$SCOPE}','{$KEYWORD}',this.value)" ;
   $ROOT       = self::AppendInputLine ( "text" , $VALUE , $INPSIZE , $JSC , $CONTENT  ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $ROOT -> Content               (                                  ) ;
