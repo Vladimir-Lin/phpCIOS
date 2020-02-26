@@ -106,6 +106,7 @@ public $Types         = array (
   "Fragment"          => 127  ,
   "AgeGroup"          => 128  ,
   "Proficiency"       => 129  ,
+  "Remittance"        => 130  ,
 )                             ;
 
 function __construct()
