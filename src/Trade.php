@@ -396,7 +396,8 @@ public function GetUuid ( $DB , $Table , $Main )
 {
   global $DataTypes                                          ;
   $BASE         = "3200000000000000000"                      ;
-  $TYPE         = $DataTypes [ "Trade" ]                     ;
+  $RI           = new Relation ( )                           ;
+  $TYPE         = $RI -> Types [ "Trade" ]                   ;
   $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE ) ;
   if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false   ;
   $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
