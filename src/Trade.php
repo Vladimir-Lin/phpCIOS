@@ -562,6 +562,18 @@ public function RemoveWithPeople($DB,$TABLE,$PEOPLEID)
 }
 
 //////////////////////////////////////////////////////////////////////////////
+public function GetSkipQuotas ( $DB , $TABLE )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  $SKIPS = "0"                                                               ;
+  $DESC  = $this -> Description                                              ;
+  $QQ    = "select `amount` from {$TABLE} where `reason` = {$DESC} ;"        ;
+  $SKIPS = $DB   -> FetchOne ( $QQ )                                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $SKIPS                                                              ;
+}
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function StudentJson($DB,$TZ,$NAME,$TRADEID)
 {
