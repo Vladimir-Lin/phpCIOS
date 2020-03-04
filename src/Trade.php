@@ -349,6 +349,7 @@ public function obtain($R)
   $this -> Amount      = $R [ "amount"      ]            ;
   $this -> States      = $R [ "states"      ]            ;
   $this -> Item        = $R [ "item"        ]            ;
+  $this -> Group       = $R [ "group"       ]            ;
   $this -> Description = $R [ "description" ]            ;
   $this -> Record      = $R [ "record"      ]            ;
   $this -> Complete    = $R [ "complete"    ]            ;
@@ -394,7 +395,6 @@ public function UpdateProduct($Table)
 
 public function GetUuid ( $DB , $Table , $Main )
 {
-  global $DataTypes                                          ;
   $BASE         = "3200000000000000000"                      ;
   $RI           = new Relation ( )                           ;
   $TYPE         = $RI -> Types [ "Trade" ]                   ;

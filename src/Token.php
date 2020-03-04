@@ -313,9 +313,9 @@ public function InsertInto($Table)
 
 public function GetUuid ( $DB , $Table , $Main )
 {
-  global $DataTypes                                          ;
   $BASE         = "3400000000000000000"                      ;
-  $TYPE         = $DataTypes [ "Token" ]                     ;
+  $RI           = new Relation ( )                           ;
+  $TYPE         = $RI -> Types [ "Token" ]                   ;
   $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE ) ;
   if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false   ;
   $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
@@ -333,15 +333,6 @@ public function UpdateItems ( $DB , $TABLE , $ITEMS )
 }
 
 //////////////////////////////////////////////////////////////////////////////
-
-public function XXXXXX ( $DB , $TABLE )
-{
-  $ITEMS = $this -> valueItems (        )            ;
-  $PRX   = $this -> Pairs      ( $ITEMS )            ;
-  $QQ    = "update {$TABLE} set {$PRX} "             .
-           $DB -> WhereUuid ( $this -> Uuid , true ) ;
-  return $QQ ;
-}
 
 public function Update ( $DB , $TABLE )
 {

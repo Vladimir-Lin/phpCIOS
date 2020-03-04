@@ -626,9 +626,10 @@ public function SkipQuotas($DB,$ITEMX)
   // 新增
   ////////////////////////////////////////////////////////////////////////////
   $QQ     = "select `amount` from `erp`.`skipquotas`"                        .
-            " where `owner` = {$PUID}"                                       .
-               " and `item` = {$ITEMX}"                                      .
-             " and `action` = 3 ;"                                           ;
+            " where ( `owner` = {$PUID} )"                                   .
+               " and ( `item` = {$ITEMX} )"                                  .
+             " and ( `states` = 7 )"                                         .
+             " and ( `action` = 3 ) ;"                                       ;
   $qq  = $DB -> Query ( $QQ )                                                ;
   if ( $DB -> hasResult ( $qq ) )                                            {
     while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                       {
@@ -639,9 +640,10 @@ public function SkipQuotas($DB,$ITEMX)
   // 消費
   ////////////////////////////////////////////////////////////////////////////
   $QQ     = "select `amount` from `erp`.`skipquotas`"                        .
-            " where `owner` = {$PUID}"                                       .
-               " and `item` = {$ITEMX}"                                      .
-             " and `action` = 5 ;"                                           ;
+            " where ( `owner` = {$PUID} )"                                   .
+               " and ( `item` = {$ITEMX} )"                                  .
+             " and ( `states` = 7 )"                                         .
+             " and ( `action` = 5 ) ;"                                       ;
   $qq  = $DB -> Query ( $QQ )                                                ;
   if ( $DB -> hasResult ( $qq ) )                                            {
     while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                       {
