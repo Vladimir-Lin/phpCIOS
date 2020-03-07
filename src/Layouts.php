@@ -132,6 +132,19 @@ public function DisconnectSQL ( )
   $this -> Report         (                               ) ;
 }
 
+public function CreateAndConnect ( $DB , $CONF )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  $this     -> Create            (                                         ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $Connected = $DB -> Connect    ( $CONF                                   ) ;
+  if                             ( ! $Connected                            ) {
+    $this   -> DisconnectSQL     (                                         ) ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return true                                                                ;
 }
 
+}
 ?>
