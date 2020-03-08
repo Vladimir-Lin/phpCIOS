@@ -367,23 +367,33 @@ public function ObtainsLectures ( $DB , $LECTURES , $ITEM , $ORDER = "asc" )
 
 public function ObtainMembers ( $DB , $LECTURES , $FROM , $MEMBER , $PUID , $ORDER = "desc" )
 {
-  $UUX = array ( )                                         ;
-  $QQ  = "select `{$MEMBER}` from {$LECTURES}"             .
-         " where `{$FROM}` = {$PUID}"                      .
-         " order by `openday` " . $ORDER . " ;"            ;
-  $qq  = $DB -> Query ( $QQ )                              ;
-  if ( $DB -> hasResult ( $qq ) )                          {
-    while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )     {
-      $XUU = $rr [ 0 ]                                     ;
-      if ( ! in_array ( $XUU , $UUX ) )                    {
-        array_push ( $UUX , $XUU )                         ;
-      }                                                    ;
-    }                                                      ;
-  }                                                        ;
-  return $UUX                                              ;
+  $UUX = array ( )                                     ;
+  $QQ  = "select `{$MEMBER}` from {$LECTURES}"         .
+         " where `{$FROM}` = {$PUID}"                  .
+         " order by `openday` {$ORDER} ;"              ;
+  $qq  = $DB -> Query ( $QQ )                          ;
+  if      ( $DB -> hasResult ( $qq )                 ) {
+    while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) ) {
+      $XUU = $rr [ 0 ]                                 ;
+      if  ( ! in_array ( $XUU , $UUX )               ) {
+        array_push     ( $UUX , $XUU )                 ;
+      }                                                ;
+    }                                                  ;
+  }                                                    ;
+  return $UUX                                          ;
 }
 
-public function ObtainCourses($DB,$RELATIONS)
+public function ObtainTutors ( $DB , $TABLE , $PUID , $ORDER = "desc" )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ         = "select `tutor` from {$TABLE}"                               .
+                " where ( `trainee` = {$PUID} )"                             .
+                " group by `tutor` order by `closeday` {$ORDER} ;"           ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> ObtainUuids  ( $QQ                  )                        ;
+}
+
+public function ObtainCourses     ( $DB , $RELATIONS        )
 {
   $RI      = new Relation         (                         ) ;
   $RI     -> set                  ( "first" , $this -> Uuid ) ;
