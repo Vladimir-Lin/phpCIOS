@@ -116,24 +116,31 @@ public function LoadScript($FILENAME)
   return file_get_contents ( $FILENAME ) ;
 }
 
-public function AppendScript($FILENAME)
-{
-  $SRC  = $this -> LoadScript      ( $FILENAME ) ;
-  $JSV  = $this -> MAIN -> addHtml (           ) ;
-  $JSV -> setTag                   ( "script"  ) ;
-  $JSV -> AddText                  ( $SRC      ) ;
+//////////////////////////////////////////////////////////////////////////////
+
+public function AppendScript       ( $FILENAME                             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $SRC  = $this -> LoadScript      ( $FILENAME                             ) ;
+  $JSV  = $this -> MAIN -> addHtml (                                       ) ;
+  $JSV -> setTag                   ( "script"                              ) ;
+  $JSV -> AddText                  ( $SRC                                  ) ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 
-public function DisconnectSQL ( )
-{
-  global $Translations                                      ;
-  $HXTR  = $this -> addTr (                               ) ;
-  $HXTD  = $HXTR -> addTd ( $Translations [ "SQL::Lost" ] ) ;
-  $this -> Report         (                               ) ;
+//////////////////////////////////////////////////////////////////////////////
+
+public function DisconnectSQL (                                            ) {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  $HXTR  = $this -> addTr     (                                            ) ;
+  $HXTD  = $HXTR -> addTd     ( $Translations [ "SQL::Lost" ]              ) ;
+  $this -> Report             (                                            ) ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 
-public function CreateAndConnect ( $DB , $CONF )
-{
+//////////////////////////////////////////////////////////////////////////////
+
+public function CreateAndConnect ( $DB , $CONF                             ) {
   ////////////////////////////////////////////////////////////////////////////
   $this     -> Create            (                                         ) ;
   ////////////////////////////////////////////////////////////////////////////
@@ -145,6 +152,8 @@ public function CreateAndConnect ( $DB , $CONF )
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 }
 ?>

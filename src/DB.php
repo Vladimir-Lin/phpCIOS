@@ -7,22 +7,28 @@ class DB
 
 public $SQL ;
 
-public function Connect ( $Host )
-{
-  $Port        = $Host [ "Port" ]                   ;
-  if ( strlen ( $Port ) <= 0 )                      {
-    $Port      = "3306"                             ;
-  }                                                 ;
-  $this -> SQL = new \mysqli ( $Host [ "Hostname" ] ,
-                               $Host [ "Username" ] ,
-                               $Host [ "Password" ] ,
-                               $Host [ "Database" ] ,
-                               $Port              ) ;
-  if ( $this -> SQL -> connect_errno > 0          ) {
-    return false                                    ;
-  }                                                 ;
-  return true                                       ;
+//////////////////////////////////////////////////////////////////////////////
+
+public function Connect      ( $Host                                       ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $Port        = $Host [ "Port" ]                                            ;
+  if ( strlen ( $Port ) <= 0 )                                               {
+    $Port      = "3306"                                                      ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> SQL = new \mysqli ( $Host [ "Hostname" ]                          ,
+                               $Host [ "Username" ]                          ,
+                               $Host [ "Password" ]                          ,
+                               $Host [ "Database" ]                          ,
+                               $Port                                       ) ;
+  if ( $this -> SQL -> connect_errno > 0                                   ) {
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return true                                                                ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function Close ( )
 {
@@ -32,6 +38,8 @@ public function Close ( )
   return false                            ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function ConnectionError ( )
 {
   if ( is_a ( $this -> SQL , "mysqli" ) ) {
@@ -40,6 +48,27 @@ public function ConnectionError ( )
   return ""                               ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
+public function TryingConnect ( $Host , $AA                                ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                          ( $this -> Connect ( $Host )                 ) {
+    return true                                                              ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $AA [ "Answer"  ] = "No"                                                   ;
+  $AA [ "Error"   ] = $DB -> ConnectionError ( )                             ;
+  $AA [ "Problem" ] = $Translations [ "SQL::Lost" ]                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RJ = json_encode           ( $AA                                        ) ;
+  header                      ( "Content-Type: application/json"           ) ;
+  echo                          $RJ                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return false                                                               ;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
 public function Query ( $CMD )
 {
   if ( is_a ( $this -> SQL , "mysqli" ) ) {
@@ -47,6 +76,8 @@ public function Query ( $CMD )
   }                                       ;
   return false                            ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function Queries($CMDs)
 {
@@ -57,6 +88,8 @@ public function Queries($CMDs)
   return $rr                      ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function Prepare($CMD)
 {
   if ( is_a ( $this -> SQL , "mysqli" ) )   {
@@ -65,12 +98,16 @@ public function Prepare($CMD)
   return false                              ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function hasResult ( $qq )
 {
   if ( ! $qq                  ) return false ;
   if (   $qq -> num_rows <= 0 ) return false ;
   return true                                ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function FetchOne ( $QQ )
 {
@@ -82,6 +119,8 @@ public function FetchOne ( $QQ )
   return ""                                      ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function OrderBy($Item,$Sort)
 {
   if ( strlen ( $Sort ) <= 0 )        {
@@ -90,15 +129,21 @@ public function OrderBy($Item,$Sort)
   return   "order by {$Item} {$Sort}" ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function OrderByAsc($Item)
 {
   return $this -> OrderBy ( $Item , "asc" ) ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function OrderByDesc($Item)
 {
   return $this -> OrderBy ( $Item , "desc" ) ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function Limit($SID,$CNT)
 {
@@ -108,15 +153,21 @@ public function Limit($SID,$CNT)
   return   "limit {$SID} , $CNT" ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function LimitFirst()
 {
   return $this -> Limit ( 0 , 1 ) ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function Pair($Item,$Value)
 {
   return "`{$Item}` = {$Value}" ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function WhereUuid($U,$Tail = false)
 {
@@ -124,6 +175,8 @@ public function WhereUuid($U,$Tail = false)
   if ( $Tail ) $QQ = $QQ . " ;" ;
   return $QQ                    ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function FetchUuids($qq,$UU)
 {
@@ -135,13 +188,17 @@ public function FetchUuids($qq,$UU)
   return $UU                                           ;
 }
 
-public function ObtainUuids($QQ)
+//////////////////////////////////////////////////////////////////////////////
+
+public function ObtainUuids  ( $QQ       )
 {
   $UU  = array               (           ) ;
   $qq  = $this -> Query      ( $QQ       ) ;
   if ( $qq === false ) return $UU          ;
   return $this -> FetchUuids ( $qq , $UU ) ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function LastUuid ( $Table , $Item , $Heading )
 {
@@ -172,6 +229,8 @@ public function LastUuid ( $Table , $Item , $Heading )
   return $U                                       ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function AddUuid ( $Table , $U , $T )
 {
   $QQ = "insert into {$Table} (`uuid`,`type`,`used`) " .
@@ -179,11 +238,15 @@ public function AddUuid ( $Table , $U , $T )
   return $this -> Query ( $QQ )                        ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function AppendUuid ( $Table , $U )
 {
   $Q = "insert into {$Table} (`uuid`) values ( {$U} ) ;" ;
   return $this -> Query ( $Q )                           ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function GetLast ( $Table , $Item , $Heading )
 {
@@ -191,6 +254,8 @@ public function GetLast ( $Table , $Item , $Heading )
   if ( $this -> AppendUuid ( $Table , $L ) ) return $L ;
   return "0"                                           ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function UnusedUuid ( $Table , $Item = "`uuid`" )
 {
@@ -202,15 +267,21 @@ public function UnusedUuid ( $Table , $Item = "`uuid`" )
   return $NN [ 0 ]                              ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function UseUuid ( $Table , $U )
 {
   return $this -> UuidUsage ( $Table , $U , 1 ) ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function UselessUuid ( $Table , $U )
 {
   return $this -> UuidUsage ( $Table , $U , 0 ) ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function UuidUsage ( $Table , $U , $usage )
 {
@@ -219,12 +290,16 @@ public function UuidUsage ( $Table , $U , $usage )
   return $this -> Query ( $QQ )                       ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function DeleteUuid ( $Table , $U )
 {
   $WH = $this -> WhereUuid ( $U , true ) ;
   $QQ = "delete from {$Table} {$WH}"     ;
   return $this -> Query ( $QQ )          ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function ObtainsUuid($MainTable,$UuidTable)
 {
@@ -256,6 +331,8 @@ public function Forget($T1,$T2,$U)
   return $Correct                                             ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function LockWrites($TABLES)
 {
   $TX    = array   (                    ) ;
@@ -267,17 +344,23 @@ public function LockWrites($TABLES)
   $this -> Query ( $QQ )                  ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function LockWrite($TABLE)
 {
   $QQ    = "lock tables {$TABLE} write ;" ;
   $this -> Query ( $QQ )                  ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function UnlockTables()
 {
   $QQ    = "unlock tables ;" ;
   $this -> Query ( $QQ )     ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function Naming ( $Table , $U , $Locality , $Usage = "Default" )
 {
@@ -287,6 +370,8 @@ public function Naming ( $Table , $U , $Locality , $Usage = "Default" )
   $NI -> setRelevance ( $Usage                 ) ;
   return $NI -> Fetch ( $this      , $Table    ) ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function SearchByNameAndType ( $NAME , $TYPE , $NAMETAB , $UUIDTAB )
 {
@@ -310,6 +395,8 @@ public function SearchByNameAndType ( $NAME , $TYPE , $NAMETAB , $UUIDTAB )
   return $this -> FetchUuids ( $kk , $UU   )                                 ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function GetTutor($Table,$U)
 {
   if ( gmp_cmp ( $U , "0" ) <= 0 ) return "" ;
@@ -331,6 +418,8 @@ public function GetTutor($Table,$U)
   }                                          ;
   return $NN                                 ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function GetManager($Table,$U)
 {
@@ -354,6 +443,8 @@ public function GetManager($Table,$U)
   return $NN                                 ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function GetInsider($Table,$U)
 {
   if ( gmp_cmp ( $U , "0" ) <= 0 ) return "" ;
@@ -375,6 +466,8 @@ public function GetInsider($Table,$U)
   }                                          ;
   return $NN                                 ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function GetStudent($Table,$U)
 {
@@ -398,6 +491,8 @@ public function GetStudent($Table,$U)
   return $NN                                 ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function GetTrainee($Table,$U)
 {
   if ( gmp_cmp ( $U , "0" ) <= 0 ) return "" ;
@@ -420,6 +515,8 @@ public function GetTrainee($Table,$U)
   return $NN                                 ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function GetNameByLocalities($Table,$U,$Localities,$Usage = "Default")
 {
   $NN = ""                                              ;
@@ -429,6 +526,8 @@ public function GetNameByLocalities($Table,$U,$Localities,$Usage = "Default")
   }                                                     ;
   return $NN                                            ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function GetPassword ( $Table , $Uuid , $Name )
 {
@@ -443,6 +542,8 @@ public function GetPassword ( $Table , $Uuid , $Name )
   return $Pwd                                     ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function GetUnlock ( $Table , $Uuid , $Name )
 {
   $QQ  = "select `unlock` from {$Table}"          .
@@ -456,6 +557,8 @@ public function GetUnlock ( $Table , $Uuid , $Name )
   return $Pwd                                     ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 public function AssureUnlock($Table,$Uuid,$Name,$Tagx)
 {
   $QQ = "update {$Table}"           .
@@ -465,6 +568,8 @@ public function AssureUnlock($Table,$Uuid,$Name,$Tagx)
   ///////////////////////////////////
   return $this -> Query ( $QQ )     ;
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 public function AssurePassword($Table,$Uuid,$Name,$Pwd)
 {
@@ -501,6 +606,7 @@ public function AssurePassword($Table,$Uuid,$Name,$Pwd)
   return $this -> Query ( $QQ )                ;
 }
 
-}
+//////////////////////////////////////////////////////////////////////////////
 
+}
 ?>
