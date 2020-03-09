@@ -204,7 +204,7 @@ public function GetCourses($DB,$TABLE,$ORDER="asc")
   return $DB -> ObtainUuids ( $QQ )     ;
 }
 
-public function GetReadyCourses($DB,$TABLE,$ORDER="asc")
+public function GetReadyCourses ( $DB , $TABLE , $ORDER = "asc" )
 {
   $QQ = "select `uuid` from {$TABLE}"   .
         " where `used` = 1"             .

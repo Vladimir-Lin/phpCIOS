@@ -714,10 +714,10 @@ public static function GenerateCheckBoxItem   ( $TEMPL                       ,
   if ( $CHECKED ) $CHECK = " checked"                                        ;
   ////////////////////////////////////////////////////////////////////////////
   $MAPS  = array                                                             (
-    "$(CHECK-ITEM-ID)"      => $CID                                          ,
-    "$(CHECK-ITEM-NAME)"    => $MSG                                          ,
-    "$(CHECK-ITEM-CHECKED)" => $CHECK                                        ,
-    "$(CHECK-ITEM-JAVA)"    => $JAVA                                         ,
+    "$(CHECK-ITEM-ID)"        => $CID                                        ,
+    "$(CHECK-ITEM-NAME)"      => $MSG                                        ,
+    "$(CHECK-ITEM-CHECKED)"   => $CHECK                                      ,
+    "$(CHECK-ITEM-JAVA)"      => $JAVA                                       ,
   )                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   return Strings::ReplaceByKeys ( $TEMPL , $MAPS                           ) ;
