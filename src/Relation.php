@@ -380,6 +380,14 @@ public function ExactColumn ( $Table , $Item , $Options = "" , $Limits = "" )
   return "select " . $Item . " from " . $Table . " " . $WS . " ;" ;
 }
 
+public function Configure ( $First , $T1 , $T2 , $Relation )
+{
+  $this -> set         ( "first" , $First ) ;
+  $this -> setT1       ( $T1              ) ;
+  $this -> setT2       ( $T2              ) ;
+  $this -> setRelation ( $Relation        ) ;
+}
+
 public function InsertItems($Table,$items)
 {
   return "insert into " . $Table . " ("      .

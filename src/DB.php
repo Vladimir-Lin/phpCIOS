@@ -292,6 +292,15 @@ public function UuidUsage ( $Table , $U , $usage )
 
 //////////////////////////////////////////////////////////////////////////////
 
+public function GetUsed ( $Table , $U )
+{
+  $WH = $this -> WhereUuid ( $U , true )    ;
+  $QQ = "select `used` from {$Table} {$WH}" ;
+  return $this -> FetchOne ( $QQ       )    ;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
 public function DeleteUuid ( $Table , $U )
 {
   $WH = $this -> WhereUuid ( $U , true ) ;
@@ -604,6 +613,35 @@ public function AssurePassword($Table,$Uuid,$Name,$Pwd)
   }                                            ;
   //////////////////////////////////////////////
   return $this -> Query ( $QQ )                ;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+public function SortByName ( $TABLE , $PUIDs )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  if                                ( count ( $PUIDs ) <= 0                ) {
+    return $PUIDs                                                            ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PINS  = implode                  ( " , " , $PUIDs                       ) ;
+  $PUDX  = array                    (                                      ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ    = "select `uuid` from {$TABLE}"                                     .
+           " where `uuid` in ( {$PINS} )"                                    .
+           " order by `name` asc ;"                                          ;
+  $qq    = $DB -> Query             ( $QQ                                  ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                                ( $DB -> hasResult ( $qq )             ) {
+    while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                       {
+      $IDXV = $rr [ 0 ]                                                      ;
+      if                            ( ! in_array ( $IDXV , $PUDX )         ) {
+        array_push                  ( $PUDX , $IDXV                        ) ;
+      }                                                                      ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $PUDX                                                               ;
 }
 
 //////////////////////////////////////////////////////////////////////////////
