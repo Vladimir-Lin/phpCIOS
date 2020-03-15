@@ -161,7 +161,7 @@ public function toDateTime($TZ)
   return $DT                                          ;
 }
 
-public function Weekday($TZ)
+public function Weekday ( $TZ )
 {
   $DT = $this -> toDateTime ( $TZ      ) ;
   $WD = $DT   -> format     ( "N"      ) ;
@@ -235,15 +235,27 @@ public function Calculate($DTS)
   $this -> setTime ( strtotime ( $DTS , $this -> Timestamp ( ) ) ) ;
 }
 
-public function SecondsOfDay($TZ)
+public function SecondsOfDay ( $TZ )
 {
   $DX             = $this -> toDateString ( $TZ , "Y-m-d"     ) ;
   $DX             = "{$DX}T00:00:00"                            ;
   $XS             = new StarDate          (                   ) ;
-  $XS -> Stardate = $XS -> fromInput      ( $DX               ) ;
+  $XS -> Stardate = $XS -> fromInput      ( $DX , $TZ         ) ;
   $XV             = $XS -> secondsTo      ( $this             ) ;
   $XV             = intval                ( (string) $XV , 10 ) ;
   return $XV                                                    ;
+}
+
+public function SecondsOfWeek ( $TZ )
+{
+  //////////////////////////////////////////////////
+  $WD = $this -> Weekday      ( $TZ              ) ;
+  $SD = $this -> SecondsOfDay ( $TZ              ) ;
+  $WD = intval                ( $WD - 1     , 10 ) ;
+  $TT = intval                ( $WD * 86400 , 10 ) ;
+  $TT = intval                ( $TT + $SD   , 10 ) ;
+  //////////////////////////////////////////////////
+  return $TT                                       ;
 }
 
 // calcuate a person's age
