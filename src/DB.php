@@ -632,7 +632,7 @@ public function SortByName ( $TABLE , $PUIDs )
            " order by `name` asc ;"                                          ;
   $qq    = $this -> Query           ( $QQ                                  ) ;
   ////////////////////////////////////////////////////////////////////////////
-  if                                ( $DB -> hasResult ( $qq )             ) {
+  if                                ( $this -> hasResult ( $qq )           ) {
     while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                       {
       $IDXV = $rr [ 0 ]                                                      ;
       if                            ( ! in_array ( $IDXV , $PUDX )         ) {
