@@ -574,24 +574,27 @@ public function MakeSure ( $DB , $TABLE , $CANDIDATES , $TMP )
   return $CANDIDATES                             ;
 }
 
-public function ObtainByRole($DB,$TABLE,$CANDIDATE,$ACTING)
+public function ObtainByRole ( $DB , $TABLE , $CANDIDATE , $ACTING )
 {
-  $UU = array                   (                    ) ;
-  $RI = new Relation            (                    ) ;
-  //////////////////////////////////////////////////////
-  $RI -> setT1                  ( "People"           ) ;
-  $RI -> setT2                  ( "Role"             ) ;
-  $RI -> setRelation            ( "Acting"           ) ;
-  //////////////////////////////////////////////////////
-  foreach                       ( $CANDIDATE as $imx ) {
-    $RI -> set                  ( "first" , $imx     ) ;
-    $CC  = $RI -> Subordination ( $DB     , $TABLE   ) ;
-    if ( in_array ( $ACTING , $CC ) )                  {
-      array_push ( $UU , $imx )                        ;
-    }                                                  ;
-  }                                                    ;
-  //////////////////////////////////////////////////////
-  return $UU                                           ;
+  //////////////////////////////////////////////////////////////
+  $UU    = array                (                            ) ;
+  $RI    = new Relation         (                            ) ;
+  //////////////////////////////////////////////////////////////
+  $RI   -> setT1                ( "People"                   ) ;
+  $RI   -> setT2                ( "Role"                     ) ;
+  $RI   -> setRelation          ( "Acting"                   ) ;
+  //////////////////////////////////////////////////////////////
+  foreach                       ( $CANDIDATE as $imx         ) {
+    $RI -> set                  ( "first" , $imx             ) ;
+    $CC  = $RI -> Subordination ( $DB     , $TABLE           ) ;
+    if                          ( in_array ( $ACTING , $CC ) ) {
+      if                        ( ! in_array ( $imx , $UU )  ) {
+        array_push              ( $UU , $imx                 ) ;
+      }                                                        ;
+    }                                                          ;
+  }                                                            ;
+  //////////////////////////////////////////////////////////////
+  return $UU                                                   ;
 }
 
 public function SkipClasses($DB,$TABLE)
@@ -660,7 +663,7 @@ public function SkipQuotas($DB,$ITEMX)
   return $SUMS                                                               ;
 }
 
-public function SearchByKey($DB,$CANDIDATEs,$KEY)
+public function SearchByKey ( $DB , $CANDIDATEs , $KEY )
 {
   $RI  = new Relation     ( )                                                ;
   $NI  = new Name         ( )                                                ;
@@ -758,6 +761,14 @@ public function SearchByKey($DB,$CANDIDATEs,$KEY)
   if ( count ( $PNs ) > 0 )                                                  {
     if ( count ( $CANDIDATEs ) <= 0 ) $CANDIDATEs = $PNs ; else              {
       $CANDIDATEs = Parameters::JoinArray ( $CANDIDATEs , $PNs )             ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  if             ( count ( $CANDIDATEs ) > 0                               ) {
+    $CDS = array (                                                         ) ;
+    foreach      ( $CANDIDATEs as $C                                       ) {
+      if         ( ! in_array ( $C , $CDS )                                ) {
+      }                                                                      ;
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
