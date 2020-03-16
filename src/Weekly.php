@@ -49,14 +49,29 @@ public function FillHours($HOURS,$STATES)
   ////////////////////////////////////////////////////////////////////////////
 }
 
-public function DayCounts($DAY)
+public function DayCounts ( $DAY )
 {
   ////////////////////////////////////////////////////////////////////////////
   $DC = 0                                                                    ;
   ////////////////////////////////////////////////////////////////////////////
   foreach ( $this -> TimeSlots as $ts )                                      {
-    if ( $DAY == $ts -> Day ( ) )                                            {
-      $DC = $DC +1                                                           ;
+    if    ( $DAY == $ts -> Day ( )    )                                      {
+      $DC = $DC + 1                                                          ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DC                                                                 ;
+}
+
+public function SlotCounts ( $DAY , $SLOTS )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  $DC = 0                                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  foreach       ( $SLOTS as $ts   )                                          {
+    $D = intval ( $ts / 1440 , 10 )                                          ;
+    if          ( $DAY == $D      )                                          {
+      $DC = $DC + 1                                                          ;
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
@@ -152,6 +167,15 @@ public function Occupied ( $T )
     }                                   ;
   }                                     ;
   return false                          ;
+}
+
+public function toMinuteIndexes ( )
+{
+  $MI = array  (                              ) ;
+  foreach      ( $this -> TimeSlots as $ts    ) {
+    array_push ( $MI , $ts -> MinuteIndex ( ) ) ;
+  }                                             ;
+  return $MI                                    ;
 }
 
 }

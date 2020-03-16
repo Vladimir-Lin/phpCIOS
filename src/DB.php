@@ -630,7 +630,7 @@ public function SortByName ( $TABLE , $PUIDs )
   $QQ    = "select `uuid` from {$TABLE}"                                     .
            " where `uuid` in ( {$PINS} )"                                    .
            " order by `name` asc ;"                                          ;
-  $qq    = $DB -> Query             ( $QQ                                  ) ;
+  $qq    = $this -> Query           ( $QQ                                  ) ;
   ////////////////////////////////////////////////////////////////////////////
   if                                ( $DB -> hasResult ( $qq )             ) {
     while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                       {
