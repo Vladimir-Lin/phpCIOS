@@ -521,12 +521,12 @@ public function Join ( $DB , $Table )
   return $this -> Append ( $DB , $Table )      ;
 }
 
-public function Joins($DB,$Table,$LIST)
+public function Joins ( $DB , $Table , $LIST )
 {
-  foreach         ( $LIST as $L       ) {
-    $this -> set  ( "second" , $L     ) ;
-    $this -> Join ( $DB      , $Table ) ;
-  }                                     ;
+  foreach             ( $LIST as $L        ) {
+    $this -> set      ( "second" , $L      ) ;
+    $this -> Join     ( $DB      , $Table  ) ;
+  }                                          ;
 }
 
 public function PrefectOrder($DB,$Table)

@@ -15,10 +15,10 @@ public $Payer        ;
 public $Receptionist ;
 public $Item         ;
 public $States       ;
-public $Register     ;
-public $OpenDay      ;
-public $CloseDay     ;
-public $Log          ;
+public $Register     ; // 課堂註冊時間
+public $OpenDay      ; // 課堂開始時間
+public $CloseDay     ; // 課堂結束時間
+public $Log          ; // 登錄紀錄時間
 public $Update       ;
 public $Sections     ;
 
@@ -314,27 +314,32 @@ public function GetUuid($DB,$Table,$Main)
 {
   global $DataTypes                                          ;
   $BASE         = "2900000000000000000"                      ;
-  $TYPE         = $DataTypes [ "Lecture" ]                   ;
+  $RI           = new Relation ( )                           ;
+  $TYPE         = $RI -> Types [ "Lecture" ]                 ;
   $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE ) ;
   if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false   ;
   $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
   return $this -> Uuid                                       ;
 }
 
-public function UpdateItems($DB,$TABLE,$ITEMS)
+public function UpdateItems ( $DB , $TABLE , $ITEMS )
 {
   $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
            $DB -> WhereUuid ( $this -> Uuid , true )                ;
   return $DB -> Query ( $QQ )                                       ;
 }
 
-public function Update($DB,$TABLE)
+public function Update ( $DB , $TABLE )
 {
-  $ITEMS = $this -> valueItems ( )                                  ;
-  $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
-           $DB -> WhereUuid ( $this -> Uuid , true )                ;
-  unset ( $ITEMS )                                                  ;
-  return $DB -> Query ( $QQ )                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ITEMS  = $this -> valueItems (                      )                     ;
+  $VALUES = $this -> Pairs      ( $ITEMS               )                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ     = "update {$TABLE} set {$VALUES} "                                 .
+            $DB   -> WhereUuid  ( $this -> Uuid , true )                     ;
+  unset                         ( $ITEMS               )                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> Query           ( $QQ                  )                     ;
 }
 
 public function ObtainsByQuery($DB,$QQ)
@@ -405,6 +410,21 @@ public function ObtainCourses     ( $DB , $RELATIONS        )
   return $COURSES                                             ;
 }
 
+public function JoinCourses ( $DB , $RELATIONS , $COURSES ) {
+  ///////////////////////////////////////////////////////////
+  $RI  = new Relation       (                             ) ;
+  ///////////////////////////////////////////////////////////
+  $RI -> set                ( "first" , $this -> Uuid     ) ;
+  $RI -> setT1              ( "Lecture"                   ) ;
+  $RI -> setT2              ( "Course"                    ) ;
+  $RI -> setRelation        ( "Contains"                  ) ;
+  $RI -> Joins              ( $DB , $RELATIONS , $COURSES ) ;
+  ///////////////////////////////////////////////////////////
+  unset                     ( $RI                         ) ;
+  ///////////////////////////////////////////////////////////
+  return $COURSES                                           ;
+}
+
 public function ObtainLessons($DB,$RELATIONS)
 {
   $RI      = new Relation         (                         ) ;
@@ -448,14 +468,14 @@ public function removeSection($SECTION)
   $this -> Sections = $SX                                   ;
 }
 
-public function assureSections($DB,$TABLE)
+public function assureSections ( $DB , $TABLE )
 {
   if                   ( count ( $this -> Sections ) > 0        ) {
     $SS = implode      ( " , "  , $this -> Sections             ) ;
   } else                                                          {
     $SS = ""                                                      ;
   }                                                               ;
-  $PQ   = NewParameter ( 2 , 67 , "Periods"                     ) ;
+  $PQ   = ParameterQuery::NewParameter ( 2 , 67 , "Periods"     ) ;
   $PQ  -> setTable     ( $TABLE                                 ) ;
   $PQ  -> assureData   ( $DB , $this -> Uuid , "Sections" , $SS ) ;
 }

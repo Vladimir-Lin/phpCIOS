@@ -574,6 +574,21 @@ public function ObtainCourses($DB,$RELATIONS)
   return $COURSES                                             ;
 }
 
+public function JoinCourses ( $DB , $RELATIONS , $COURSES ) {
+  ///////////////////////////////////////////////////////////
+  $RI  = new Relation       (                             ) ;
+  ///////////////////////////////////////////////////////////
+  $RI -> set                ( "first" , $this -> Uuid     ) ;
+  $RI -> setT1              ( "Class"                     ) ;
+  $RI -> setT2              ( "Course"                    ) ;
+  $RI -> setRelation        ( "Contains"                  ) ;
+  $RI -> Joins              ( $DB , $RELATIONS , $COURSES ) ;
+  ///////////////////////////////////////////////////////////
+  unset                     ( $RI                         ) ;
+  ///////////////////////////////////////////////////////////
+  return $COURSES                                           ;
+}
+
 public function ObtainLessons($DB,$RELATIONS)
 {
   $RI      = new Relation         (                         ) ;
