@@ -134,6 +134,12 @@ public static function JsonNaming ( $NAME )
   return $NAME                                  ;
 }
 
+public static function XmlReplacement ( $HTML )
+{
+  $HTML = str_replace ( "\n" , "<br>" , $HTML ) ;
+  return $HTML                                  ;
+}
+
 public static function HtmlReplacement ( $HTML )
 {
   $HTML = str_replace ( "\n" , ""     , $HTML ) ;
