@@ -123,6 +123,20 @@ public static function MergeArray ( $AA , $BB )
   return $AA                           ;
 }
 
+public static function UniqueArray ( $UU )
+{
+  if             ( count ( $UU ) <= 0      ) {
+    return $UU                               ;
+  }                                          ;
+  $AA = array    (                         ) ;
+  foreach        ( $UU as $U               ) {
+    if           ( ! in_array ( $U , $AA ) ) {
+      array_push ( $AA , $U                ) ;
+    }                                        ;
+  }                                          ;
+  return $AA                                 ;
+}
+
 public static function TakeUuid($UUIDs,$START,$TOTAL)
 {
   $UU = array ( )                       ;
