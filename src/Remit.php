@@ -364,6 +364,7 @@ public function UpdateFresh   ( $DB , $TABLE      )
   array_push                  ( $S , "states"       ) ;
   array_push                  ( $S , "trade"        ) ;
   array_push                  ( $S , "payer"        ) ;
+  array_push                  ( $S , "inspector"    ) ;
   array_push                  ( $S , "currency"     ) ;
   array_push                  ( $S , "amount"       ) ;
   array_push                  ( $S , "paid"         ) ;
