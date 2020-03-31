@@ -358,18 +358,20 @@ public function UpdateItems($DB,$TABLE,$ITEMS)
 
 public function UpdateFresh   ( $DB , $TABLE      )
 {
-  $S = array                  (                   ) ;
-  array_push                  ( $S , "used"       ) ;
-  array_push                  ( $S , "type"       ) ;
-  array_push                  ( $S , "states"     ) ;
-  array_push                  ( $S , "trade"      ) ;
-  array_push                  ( $S , "payer"      ) ;
-  array_push                  ( $S , "currency"   ) ;
-  array_push                  ( $S , "amount"     ) ;
-  array_push                  ( $S , "paid"       ) ;
-  array_push                  ( $S , "moment"     ) ;
-  array_push                  ( $S , "number"     ) ;
-  return $this -> UpdateItems ( $DB , $TABLE , $S ) ;
+  $S = array                  (                     ) ;
+  array_push                  ( $S , "used"         ) ;
+  array_push                  ( $S , "type"         ) ;
+  array_push                  ( $S , "states"       ) ;
+  array_push                  ( $S , "trade"        ) ;
+  array_push                  ( $S , "payer"        ) ;
+  array_push                  ( $S , "currency"     ) ;
+  array_push                  ( $S , "amount"       ) ;
+  array_push                  ( $S , "paid"         ) ;
+  array_push                  ( $S , "moment"       ) ;
+  array_push                  ( $S , "number"       ) ;
+  array_push                  ( $S , "confirm"      ) ;
+  array_push                  ( $S , "verification" ) ;
+  return $this -> UpdateItems ( $DB , $TABLE , $S   ) ;
 }
 
 //////////////////////////////////////////////////////////////////////////////
