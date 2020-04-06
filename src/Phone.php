@@ -7,6 +7,7 @@ class Phone
 //////////////////////////////////////////////////////////////////////////////
 
 public    $Uuid          ;
+public    $Used          ;
 public    $ISD           ; // international subscriber dialing , international direct dialing
 public    $Area          ; // Area code
 public    $Number        ; // Local Phone Number
@@ -27,6 +28,7 @@ function __destruct()
 public function clear()
 {
   $this -> Uuid          = "0"       ;
+  $this -> Used          =  1        ;
   $this -> ISD           = ""        ;
   $this -> Area          = ""        ;
   $this -> Number        = ""        ;

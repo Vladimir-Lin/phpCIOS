@@ -12,6 +12,7 @@ public $Account     ;
 public $Hostname    ;
 public $Appellation ;
 public $Updated     ;
+public $Owners      ;
 
 function __construct()
 {
@@ -26,13 +27,14 @@ function __destruct()
 
 public function clear()
 {
-  $this -> Position    = -1    ;
-  $this -> Uuid        = "0"   ;
-  $this -> HostId      = "0"   ;
-  $this -> Account     = ""    ;
-  $this -> Hostname    = ""    ;
-  $this -> Appellation = ""    ;
-  $this -> Updated     = false ;
+  $this -> Position    = -1        ;
+  $this -> Uuid        = "0"       ;
+  $this -> HostId      = "0"       ;
+  $this -> Account     = ""        ;
+  $this -> Hostname    = ""        ;
+  $this -> Appellation = ""        ;
+  $this -> Updated     = false     ;
+  $this -> Owners      = array ( ) ;
 }
 
 public function isLoaded()
@@ -285,28 +287,30 @@ public function Newbie ( $DB , $EmailTable , $UuidTable )
   return $this -> Append ( $DB , $EmailTable , $UuidTable )         ;
 }
 
+public function GetRelation ( $First               ,
+                              $Second              ,
+                              $T = "People"        ,
+                              $R = "Subordination" )
+{
+  $RI  = new Relation       (                    ) ;
+  $RI -> set                ( "first"  , $First  ) ;
+  $RI -> set                ( "second" , $Second ) ;
+  $RI -> setT1              ( $T                 ) ;
+  $RI -> setT2              ( "EMail"            ) ;
+  $RI -> setRelation        ( $R                 ) ;
+  return $RI                                       ;
+}
+
 public function Subordination ( $DB , $Table , $U , $Type = "People" )
 {
-  $RI  = new Relation         (                 ) ;
-  $RI -> set                  ( "first" , $U    ) ;
-  $RI -> setT1                ( $Type           ) ;
-  $RI -> setT2                ( "EMail"         ) ;
-  $RI -> setRelation          ( "Subordination" ) ;
-  $UU  = $RI -> Subordination ( $DB , $Table    ) ;
-  unset                       ( $RI             ) ;
-  return $UU                                      ;
+  $RI = $this -> GetRelation   ( $U  , 0 , $Type ) ;
+  return $RI  -> Subordination ( $DB , $Table    ) ;
 }
 
 public function GetOwners ( $DB , $Table , $Type = "People" )
 {
-  $RI  = new Relation     (                          ) ;
-  $RI -> set              ( "second" , $this -> Uuid ) ;
-  $RI -> setT1            ( $Type                    ) ;
-  $RI -> setT2            ( "EMail"                  ) ;
-  $RI -> setRelation      ( "Subordination"          ) ;
-  $UU  = $RI -> GetOwners ( $DB , $Table             ) ;
-  unset                   ( $RI                      ) ;
-  return $UU                                           ;
+  $RI = $this -> GetRelation ( 0   , $U , $Type ) ;
+  return $RI  -> GetOwners   ( $DB , $Table     ) ;
 }
 
 public function FindByName ( $DB , $TABLE , $NAME )
