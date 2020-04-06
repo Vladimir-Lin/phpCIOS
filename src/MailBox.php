@@ -309,6 +309,7 @@ public function Subordination ( $DB , $Table , $U , $Type = "People" )
 
 public function GetOwners ( $DB , $Table , $Type = "People" )
 {
+  $U  = $this -> Uuid                             ;
   $RI = $this -> GetRelation ( 0   , $U , $Type ) ;
   return $RI  -> GetOwners   ( $DB , $Table     ) ;
 }
