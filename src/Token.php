@@ -498,7 +498,7 @@ public function ClassPoints($POINTS)
   return $PP                     ;
 }
 
-public function StudentSummary($DB,$PUID)
+public function StudentSummary ( $DB , $PUID )
 {
   ////////////////////////////////////////////////////////////////////////////
   $HH      = new Parameters ( )                                              ;
