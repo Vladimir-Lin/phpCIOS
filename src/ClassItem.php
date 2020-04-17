@@ -386,22 +386,26 @@ public function toString()
   return sprintf ( "cls3%08d" , gmp_mod ( $U , 100000000 ) ) ;
 }
 
-public function fromString($CLASSID)
+public function fromString ( $CLASSID )
 {
-  if               ( 12 != strlen ( $S )     ) {
-    $this -> Uuid = 0                          ;
-    return 0                                   ;
-  }                                            ;
-  $X = strtolower  ( $S                      ) ;
-  $C = substr      ( $X , 0 , 4              ) ;
-  if               ( $C != "cls3"            ) {
-    $this -> Uuid = 0                          ;
-    return 0                                   ;
-  }                                            ;
-  $C = substr      ( $S , 0 , 4              ) ;
-  $U = str_replace ( $C , "36000000000" , $S ) ;
-  $this -> Uuid = $U                           ;
-  return $U                                    ;
+  ////////////////////////////////////////////////////
+  if               ( 12 != strlen ( $CLASSID )     ) {
+    $this -> Uuid = 0                                ;
+    return 0                                         ;
+  }                                                  ;
+  ////////////////////////////////////////////////////
+  $X = strtolower  ( $CLASSID                      ) ;
+  $C = substr      ( $X , 0 , 4                    ) ;
+  if               ( $C != "cls3"                  ) {
+    $this -> Uuid = 0                                ;
+    return 0                                         ;
+  }                                                  ;
+  ////////////////////////////////////////////////////
+  $C = substr      ( $CLASSID , 0 , 4              ) ;
+  $U = str_replace ( $C , "36000000000" , $CLASSID ) ;
+  $this -> Uuid = $U                                 ;
+  ////////////////////////////////////////////////////
+  return $U                                          ;
 }
 
 public function ClassTime($TZ)

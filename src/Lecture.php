@@ -218,6 +218,28 @@ public function toString()
   return sprintf ( "lec2%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
 }
 
+public function fromString ( $LXID )
+{
+  /////////////////////////////////////////////////
+  if               ( 12 != strlen ( $LXID )     ) {
+    $this -> Uuid = 0                             ;
+    return 0                                      ;
+  }                                               ;
+  /////////////////////////////////////////////////
+  $X = strtolower  ( $LXID                      ) ;
+  $C = substr      ( $X , 0 , 4                 ) ;
+  if               ( $C != "lec2"               ) {
+    $this -> Uuid = 0                             ;
+    return 0                                      ;
+  }                                               ;
+  /////////////////////////////////////////////////
+  $C = substr      ( $LXID , 0 , 4              ) ;
+  $U = str_replace ( $C , "29000000000" , $LXID ) ;
+  $this -> Uuid = $U                              ;
+  /////////////////////////////////////////////////
+  return $U                                       ;
+}
+
 public function TimeItem($item,$TZ)
 {
   $ZZ = "0"                                       ;
