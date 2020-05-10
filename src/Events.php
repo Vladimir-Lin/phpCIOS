@@ -238,6 +238,10 @@ public static function StudentClassEvent                                     (
   $STV    = $PE -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s"        ) ;
   $ETV    = $PE -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s"        ) ;
   ////////////////////////////////////////////////////////////////////////////
+  $NOW    = new StarDate       (                                           ) ;
+  $NOW   -> Stardate = $PE -> Start                                          ;
+  $ETS    = $NOW -> Timestamp  (                                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
   $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Tutor           ) ;
   $SKYPE  = ""                                                               ;
   if                           ( gmp_cmp ( $IMP , "0" ) > 0                ) {
@@ -256,22 +260,23 @@ public static function StudentClassEvent                                     (
   $E     -> Editable           ( false                                     ) ;
   $E     -> AllDay             ( false                                     ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddDqPair          ( "name"     , $TX                          ) ;
-  $E     -> AddDqPair          ( "tutor"    , $CLASS -> Tutor              ) ;
-  $E     -> AddDqPair          ( "skype"    , $SKYPE                       ) ;
-  $E     -> AddDqPair          ( "classid"  , $CLSID                       ) ;
-  $E     -> AddDqPair          ( "clock"    , $STX                         ) ;
-  $E     -> AddDqPair          ( "lecture"  , $LTYPE                       ) ;
-  $E     -> AddDqPair          ( "extra"    , $EXTRA                       ) ;
-  $E     -> AddDqPair          ( "special"  , $CTMSG                       ) ;
-  $E     -> AddDqPair          ( "classmsg" , $CLSMSG                      ) ;
-  $E     -> AddDqPair          ( "luid"     , $LUID                        ) ;
-  $E     -> AddDqPair          ( "lecid"    , $LECID                       ) ;
-  $E     -> AddDqPair          ( "lecmsg"   , $LECMSG                      ) ;
+  $E     -> AddDqPair          ( "name"      , $TX                         ) ;
+  $E     -> AddDqPair          ( "tutor"     , $CLASS -> Tutor             ) ;
+  $E     -> AddDqPair          ( "skype"     , $SKYPE                      ) ;
+  $E     -> AddDqPair          ( "classid"   , $CLSID                      ) ;
+  $E     -> AddDqPair          ( "clock"     , $STX                        ) ;
+  $E     -> AddDqPair          ( "lecture"   , $LTYPE                      ) ;
+  $E     -> AddDqPair          ( "extra"     , $EXTRA                      ) ;
+  $E     -> AddDqPair          ( "special"   , $CTMSG                      ) ;
+  $E     -> AddDqPair          ( "classmsg"  , $CLSMSG                     ) ;
+  $E     -> AddDqPair          ( "luid"      , $LUID                       ) ;
+  $E     -> AddDqPair          ( "lecid"     , $LECID                      ) ;
+  $E     -> AddDqPair          ( "lecmsg"    , $LECMSG                     ) ;
+  $E     -> AddDqPair          ( "timestamp" , $ETS                        ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddPair            ( "status"   , $CLASS -> Type               ) ;
-  $E     -> AddPair            ( "type"     , 126                          ) ;
-  $E     -> AddPair            ( "language" , $LANG                        ) ;
+  $E     -> AddPair            ( "status"    , $CLASS -> Type              ) ;
+  $E     -> AddPair            ( "type"      , 126                         ) ;
+  $E     -> AddPair            ( "language"  , $LANG                       ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CXID   = $Translations   [ "ClassID"         ]                            ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
@@ -396,6 +401,10 @@ public static function TutorClassEvent                                       (
   $STV    = $PE -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s"        ) ;
   $ETV    = $PE -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s"        ) ;
   ////////////////////////////////////////////////////////////////////////////
+  $NOW    = new StarDate       (                                           ) ;
+  $NOW   -> Stardate = $PE -> Start                                          ;
+  $ETS    = $NOW -> Timestamp  (                                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
   $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Trainee         ) ;
   $SKYPE  = ""                                                               ;
   if                           ( gmp_cmp ( $IMP , "0" ) > 0                ) {
@@ -414,22 +423,23 @@ public static function TutorClassEvent                                       (
   $E     -> Editable           ( false                                     ) ;
   $E     -> AllDay             ( false                                     ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddDqPair          ( "name"     , $TX                          ) ;
-  $E     -> AddDqPair          ( "trainee"  , $CLASS -> Trainee            ) ;
-  $E     -> AddDqPair          ( "skype"    , $SKYPE                       ) ;
-  $E     -> AddDqPair          ( "classid"  , $CLSID                       ) ;
-  $E     -> AddDqPair          ( "clock"    , $STX                         ) ;
-  $E     -> AddDqPair          ( "lecture"  , $LTYPE                       ) ;
-  $E     -> AddDqPair          ( "extra"    , $EXTRA                       ) ;
-  $E     -> AddDqPair          ( "special"  , $CTMSG                       ) ;
-  $E     -> AddDqPair          ( "classmsg" , $CLSMSG                      ) ;
-  $E     -> AddDqPair          ( "luid"     , $LUID                        ) ;
-  $E     -> AddDqPair          ( "lecid"    , $LECID                       ) ;
-  $E     -> AddDqPair          ( "lecmsg"   , $LECMSG                      ) ;
+  $E     -> AddDqPair          ( "name"      , $TX                         ) ;
+  $E     -> AddDqPair          ( "trainee"   , $CLASS -> Trainee           ) ;
+  $E     -> AddDqPair          ( "skype"     , $SKYPE                      ) ;
+  $E     -> AddDqPair          ( "classid"   , $CLSID                      ) ;
+  $E     -> AddDqPair          ( "clock"     , $STX                        ) ;
+  $E     -> AddDqPair          ( "lecture"   , $LTYPE                      ) ;
+  $E     -> AddDqPair          ( "extra"     , $EXTRA                      ) ;
+  $E     -> AddDqPair          ( "special"   , $CTMSG                      ) ;
+  $E     -> AddDqPair          ( "classmsg"  , $CLSMSG                     ) ;
+  $E     -> AddDqPair          ( "luid"      , $LUID                       ) ;
+  $E     -> AddDqPair          ( "lecid"     , $LECID                      ) ;
+  $E     -> AddDqPair          ( "lecmsg"    , $LECMSG                     ) ;
+  $E     -> AddDqPair          ( "timestamp" , $ETS                        ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddPair            ( "status"   , $CLASS -> Type               ) ;
-  $E     -> AddPair            ( "type"     , 126                          ) ;
-  $E     -> AddPair            ( "language" , $CLASS -> Item               ) ;
+  $E     -> AddPair            ( "status"    , $CLASS -> Type              ) ;
+  $E     -> AddPair            ( "type"      , 126                         ) ;
+  $E     -> AddPair            ( "language"  , $CLASS -> Item              ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CXID   = $Translations   [ "ClassID"         ]                            ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
