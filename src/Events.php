@@ -238,9 +238,9 @@ public static function StudentClassEvent                                     (
   $STV    = $PE -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s"        ) ;
   $ETV    = $PE -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s"        ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $NOW    = new StarDate       (                                           ) ;
-  $NOW   -> Stardate = $PE -> Start                                          ;
-  $ETS    = $NOW -> Timestamp  (                                           ) ;
+  $NOX    = new StarDate       (                                           ) ;
+  $NOX   -> Stardate = $PE -> Start                                          ;
+  $ETS    = $NOX -> Timestamp  (                                           ) ;
   ////////////////////////////////////////////////////////////////////////////
   $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Tutor           ) ;
   $SKYPE  = ""                                                               ;
@@ -401,9 +401,9 @@ public static function TutorClassEvent                                       (
   $STV    = $PE -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s"        ) ;
   $ETV    = $PE -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s"        ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $NOW    = new StarDate       (                                           ) ;
-  $NOW   -> Stardate = $PE -> Start                                          ;
-  $ETS    = $NOW -> Timestamp  (                                           ) ;
+  $NOX    = new StarDate       (                                           ) ;
+  $NOX   -> Stardate = $PE -> Start                                          ;
+  $ETS    = $NOX -> Timestamp  (                                           ) ;
   ////////////////////////////////////////////////////////////////////////////
   $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Trainee         ) ;
   $SKYPE  = ""                                                               ;
