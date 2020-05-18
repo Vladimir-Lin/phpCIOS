@@ -67,7 +67,7 @@ public static function ReplaceTranslations ( $SOURCE , $REPLACES )
   return $SRCS                                  ;
 }
 
-public static function ReplaceByKeys($SOURCE,$REPLACES)
+public static function ReplaceByKeys ( $SOURCE , $REPLACES )
 {
   $SRCS = $SOURCE                             ;
   $KEYS = array_keys    ( $REPLACES         ) ;
