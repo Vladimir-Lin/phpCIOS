@@ -25,7 +25,7 @@ function __destruct ( )
 {
 }
 
-function Clear ( )
+public function Clear ( )
 {
   $this -> Id     = -1 ;
   $this -> Uuid   =  0 ;
@@ -168,12 +168,40 @@ public function ItemPair($item)
   return ""                                          ;
 }
 
+public function isValid ( )
+{
+  return ( gmp_cmp ( $this -> Uuid , 0 ) > 0 ) ;
+}
+
 public function toString ( )
 {
   return sprintf ( "prd9%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
 }
 
-public function setType($TYPE)
+public function fromString ( $S                                            ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                       ( 12 != strlen ( $S )                           ) {
+    $this -> Uuid = 0                                                        ;
+    return $this -> Uuid                                                     ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $X       = strtolower    ( $S                                            ) ;
+  $C       = substr        ( $X , 0 , 4                                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                       ( $C != "prd9"                                  ) {
+    $this -> Uuid = 0                                                        ;
+    return $this -> Uuid                                                     ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $C       = substr        ( $S , 0 , 4                                    ) ;
+  $U       = str_replace   ( $C , "35000000000" , $S                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this   -> Uuid = $U                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $this -> Uuid                                                       ;
+}
+
+public function setType ( $TYPE )
 {
   $this -> Type = $TYPE ;
 }
@@ -358,14 +386,14 @@ public function GetUuid ( $DB , $Table , $Main )
   return $this -> Uuid                                        ;
 }
 
-public function UpdateItems($DB,$TABLE,$ITEMS)
+public function UpdateItems ( $DB , $TABLE , $ITEMS )
 {
   $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
            $DB -> WhereUuid ( $this -> Uuid , true )                ;
   return $DB -> Query ( $QQ )                                       ;
 }
 
-public function Update($DB,$TABLE)
+public function Update ( $DB , $TABLE )
 {
   $ITEMS = $this -> valueItems ( )                                  ;
   $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
