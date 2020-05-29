@@ -255,12 +255,12 @@ public function isCorrect()
   return ( gmp_cmp ( $this -> End , $this -> Start ) > 0 ) ;
 }
 
-public function TypeString()
+public function TypeString ( )
 {
-  ///////////////////////////////////////
-  global $PeriodTypes                   ;
-  ///////////////////////////////////////
-  return $PeriodTypes [ $this -> Type ] ;
+  //////////////////////////////////////////
+  global $AllPeriodTypes                   ;
+  //////////////////////////////////////////
+  return $AllPeriodTypes [ $this -> Type ] ;
 }
 
 public function TimeItem($item,$TZ)

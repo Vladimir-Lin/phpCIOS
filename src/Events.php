@@ -851,6 +851,36 @@ public static function PublicEventItem ( $DB , $NAMTAB , $PEOPLE , $PERIOD , $CO
   return $E -> Content           (                                         ) ;
 }
 
+public static function UndecidedEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
+{
+  return self::PublicEventItem ( $DB               ,
+                                 $NAMTAB           ,
+                                 $PEOPLE           ,
+                                 $PERIOD           ,
+                                 "#7280FA"         ,
+                                 [ "Undecided" ] ) ;
+}
+
+public static function PlanningEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
+{
+  return self::PublicEventItem ( $DB              ,
+                                 $NAMTAB          ,
+                                 $PEOPLE          ,
+                                 $PERIOD          ,
+                                 "#72FA80"        ,
+                                 [ "Planning" ] ) ;
+}
+
+public static function SuspendedEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
+{
+  return self::PublicEventItem ( $DB               ,
+                                 $NAMTAB           ,
+                                 $PEOPLE           ,
+                                 $PERIOD           ,
+                                 "#C0FA72"         ,
+                                 [ "Suspended" ] ) ;
+}
+
 public static function VacationEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
 {
   return self::PublicEventItem ( $DB               ,
