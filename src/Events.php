@@ -171,6 +171,23 @@ public static function GetTutorClasses ( $DB , $TABLE , $PEOPLE , $PERIOD )
   return $DB -> ObtainUuids ( $QQ )                                          ;
 }
 
+public static function GetAuditionClasses ( $DB                              ,
+                                            $TABLE                           ,
+                                            $PEOPLE                          ,
+                                            $PERIOD                          )
+{
+  $PUID  = $PEOPLE -> Uuid                                                   ;
+  $START = $PERIOD -> Start                                                  ;
+  $ENDST = $PERIOD -> End                                                    ;
+  $QQ    = "select `uuid` from {$TABLE}"                                     .
+           " where ( `used` = 1 )"                                           .
+             " and ( `receptionist` = {$PUID} )"                             .
+             " and ( `start` >= {$START} )"                                  .
+               " and ( `end` <= {$ENDST} )"                                  .
+             " order by `start` asc ;"                                       ;
+  return $DB -> ObtainUuids ( $QQ )                                          ;
+}
+
 public static function ObtainsClasses ( $DB , $TABLE , $CLASSES )
 {
   $CLA    = array         (                                                ) ;
@@ -440,6 +457,507 @@ public static function TutorClassEvent                                       (
   $E     -> AddPair            ( "status"    , $CLASS -> Type              ) ;
   $E     -> AddPair            ( "type"      , 126                         ) ;
   $E     -> AddPair            ( "language"  , $CLASS -> Item              ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CXID   = $Translations   [ "ClassID"         ]                            ;
+  $CXID   = "{$CXID}{$CLSID}"                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  $STMSG  = $Translations   [ "StartTime"       ]                            ;
+  $STMSG  = "{$STMSG}{$STV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ETMSG  = $Translations   [ "EndTime"         ]                            ;
+  $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CRMSG  = $Translations   [ "Classes::Course" ]                            ;
+  $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CSMSG  = $Translations   [ "Classes::State"  ]                            ;
+  $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TOOLTIPS = "{$CXID}\n"                                                    .
+              "{$TN}\n"                                                      .
+              "{$CRMSG}\n"                                                   .
+              "{$CSMSG}\n"                                                   .
+              "{$SSMSG}\n"                                                   .
+              "{$TSMSG}\n"                                                   .
+              "{$STMSG}\n"                                                   .
+              "{$ETMSG}"                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                           ( $CLASS -> Type == 5                       ) {
+    $E     -> Classes          ( [ "StudentClassStop"    ]                 ) ;
+    $E     -> TextColor        ( "#216521"                                 ) ;
+  } else                                                                     {
+    $BTID   = $PE -> Between   ( $NOW -> Stardate                          ) ;
+    switch                     ( $BTID                                     ) {
+      case  1                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassRemove" ]                  ) ;
+          $E -> TextColor      ( "#212165"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassArrange" ]                 ) ;
+          $E -> TextColor      ( "#652121"                                 ) ;
+        }                                                                    ;
+      break                                                                  ;
+      case  0                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
+          $E -> TextColor      ( "#008B00"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassLecture" ]                 ) ;
+          $E -> TextColor      ( "#333333"                                 ) ;
+        }                                                                    ;
+      break                                                                  ;
+      case -1                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
+          $E -> TextColor      ( "#8B0000"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassComplete" ]                ) ;
+          $E -> TextColor      ( "#00008B"                                 ) ;
+          if                   ( $CLASS -> Type == 1                       ) {
+            $CNUMSG   = $Translations [ "Classes::NotUpdated" ]              ;
+            $TOOLTIPS = "{$TOOLTIPS}\n{$CNUMSG}"                             ;
+          }                                                                  ;
+        }                                                                    ;
+      break                                                                  ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddDqPair          ( "tooltip"  , $TOOLTIPS                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $E                                                                  ;
+}
+
+public static function AuditionCounselorsClassEvent                          (
+                         $DB                                                 ,
+                         $CLASS                                              ,
+                         $NOW                                                ,
+                         $TZ                                                 ,
+                         $NAMTAB                                             ,
+                         $PRDTAB                                             ,
+                         $IMSTAB                                             ,
+                         $RELTAB                                             )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  global $CourseListings                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSID  = $CLASS -> toString (                                           ) ;
+  $LUID   = $CLASS -> Lecture                                                ;
+  $LECID  = sprintf ( "lec2%08d" , gmp_mod ( $LUID , 100000000 )           ) ;
+  $CTMSG  = $CLASS -> ClassTypeString (                                    ) ;
+  $LTYPE  = $CourseListings [ $CLASS -> Item ]                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $EXTRA  = ""                                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSMSG = $Translations [ "ClassID"   ]                                    ;
+  $CLSMSG = "{$CLSMSG}{$CLSID}"                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LECMSG = $Translations [ "LectureID" ]                                    ;
+  $LECMSG = "{$LECMSG}{$LECID}"                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Student" ]                             ;
+  $SST    = $CLASS -> StudentString ( )                                      ;
+  $SSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Tutor" ]                               ;
+  $SST    = $CLASS -> TutorString   ( )                                      ;
+  $TSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( $CLASS -> isAbsent ( "trainee" ) )                                    {
+    $EXTRA  = $SSMSG                                                         ;
+  } else
+  if ( $CLASS -> isAbsent ( "tutor"   ) )                                    {
+    $EXTRA  = $TSMSG                                                         ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TX     = $DB    -> GetStudent ( $NAMTAB , $CLASS -> Trainee             ) ;
+  $TB     = $DB    -> GetTutor   ( $NAMTAB , $CLASS -> Tutor               ) ;
+  $CLZ    = $Translations [ "Classes::LecturingTutor"   ]                    ;
+  $CLT    = $Translations [ "Classes::LecturingTrainee" ]                    ;
+  $TN     = "{$CLT}{$TX}\n{$CLZ}{$TB}"                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PE     = $CLASS -> toPeriod (                                           ) ;
+  $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $STX    = $PE -> TimeFormat   ( "H:i:s" , "start" , $TZ                  ) ;
+  $STV    = $PE -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s"        ) ;
+  $ETV    = $PE -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s"        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NOX    = new StarDate       (                                           ) ;
+  $NOX   -> Stardate = $PE -> Start                                          ;
+  $ETS    = $NOX -> Timestamp  (                                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Trainee         ) ;
+  $SKYPE  = ""                                                               ;
+  if                           ( gmp_cmp ( $IMP , "0" ) > 0                ) {
+    $IMA  = new ImApp          (                                           ) ;
+    $IMA -> Uuid = $IMP                                                      ;
+    if                         ( $IMA -> ObtainsByUuid ( $DB , $IMSTAB )   ) {
+      $SKYPE = $IMA -> Account                                               ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E      = new Events         (                                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> Title              ( $TN                                       ) ;
+  $E     -> Id                 ( $CLASS -> Uuid                            ) ;
+  $E     -> TimeFields         ( $TZ , $PE                                 ) ;
+  $E     -> Editable           ( false                                     ) ;
+  $E     -> AllDay             ( false                                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddDqPair          ( "name"         , $TX                      ) ;
+  $E     -> AddDqPair          ( "trainee"      , $CLASS -> Trainee        ) ;
+  $E     -> AddDqPair          ( "tutor"        , $CLASS -> Tutor          ) ;
+  $E     -> AddDqPair          ( "receptionist" , $CLASS -> Receptionist   ) ;
+  $E     -> AddDqPair          ( "skype"        , $SKYPE                   ) ;
+  $E     -> AddDqPair          ( "classid"      , $CLSID                   ) ;
+  $E     -> AddDqPair          ( "clock"        , $STX                     ) ;
+  $E     -> AddDqPair          ( "lecture"      , $LTYPE                   ) ;
+  $E     -> AddDqPair          ( "extra"        , $EXTRA                   ) ;
+  $E     -> AddDqPair          ( "special"      , $CTMSG                   ) ;
+  $E     -> AddDqPair          ( "classmsg"     , $CLSMSG                  ) ;
+  $E     -> AddDqPair          ( "luid"         , $LUID                    ) ;
+  $E     -> AddDqPair          ( "lecid"        , $LECID                   ) ;
+  $E     -> AddDqPair          ( "lecmsg"       , $LECMSG                  ) ;
+  $E     -> AddDqPair          ( "timestamp"    , $ETS                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddPair            ( "status"       , $CLASS -> Type           ) ;
+  $E     -> AddPair            ( "type"         , 126                      ) ;
+  $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CXID   = $Translations   [ "ClassID"         ]                            ;
+  $CXID   = "{$CXID}{$CLSID}"                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  $STMSG  = $Translations   [ "StartTime"       ]                            ;
+  $STMSG  = "{$STMSG}{$STV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ETMSG  = $Translations   [ "EndTime"         ]                            ;
+  $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CRMSG  = $Translations   [ "Classes::Course" ]                            ;
+  $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CSMSG  = $Translations   [ "Classes::State"  ]                            ;
+  $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TOOLTIPS = "{$CXID}\n"                                                    .
+              "{$TN}\n"                                                      .
+              "{$CRMSG}\n"                                                   .
+              "{$CSMSG}\n"                                                   .
+              "{$SSMSG}\n"                                                   .
+              "{$TSMSG}\n"                                                   .
+              "{$STMSG}\n"                                                   .
+              "{$ETMSG}"                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                           ( $CLASS -> Type == 5                       ) {
+    $E     -> Classes          ( [ "StudentClassStop"    ]                 ) ;
+    $E     -> TextColor        ( "#216521"                                 ) ;
+  } else                                                                     {
+    $BTID   = $PE -> Between   ( $NOW -> Stardate                          ) ;
+    switch                     ( $BTID                                     ) {
+      case  1                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassRemove" ]                  ) ;
+          $E -> TextColor      ( "#212165"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassArrange" ]                 ) ;
+          $E -> TextColor      ( "#652121"                                 ) ;
+        }                                                                    ;
+      break                                                                  ;
+      case  0                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
+          $E -> TextColor      ( "#008B00"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassLecture" ]                 ) ;
+          $E -> TextColor      ( "#333333"                                 ) ;
+        }                                                                    ;
+      break                                                                  ;
+      case -1                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
+          $E -> TextColor      ( "#8B0000"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassComplete" ]                ) ;
+          $E -> TextColor      ( "#00008B"                                 ) ;
+          if                   ( $CLASS -> Type == 1                       ) {
+            $CNUMSG   = $Translations [ "Classes::NotUpdated" ]              ;
+            $TOOLTIPS = "{$TOOLTIPS}\n{$CNUMSG}"                             ;
+          }                                                                  ;
+        }                                                                    ;
+      break                                                                  ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddDqPair          ( "tooltip"  , $TOOLTIPS                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $E                                                                  ;
+}
+
+public static function AuditionTutorsClassEvent                              (
+                         $DB                                                 ,
+                         $CLASS                                              ,
+                         $NOW                                                ,
+                         $TZ                                                 ,
+                         $NAMTAB                                             ,
+                         $PRDTAB                                             ,
+                         $IMSTAB                                             ,
+                         $RELTAB                                             )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  global $CourseListings                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSID  = $CLASS -> toString (                                           ) ;
+  $LUID   = $CLASS -> Lecture                                                ;
+  $LECID  = sprintf ( "lec2%08d" , gmp_mod ( $LUID , 100000000 )           ) ;
+  $CTMSG  = $CLASS -> ClassTypeString (                                    ) ;
+  $LTYPE  = $CourseListings [ $CLASS -> Item ]                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $EXTRA  = ""                                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSMSG = $Translations [ "ClassID"   ]                                    ;
+  $CLSMSG = "{$CLSMSG}{$CLSID}"                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LECMSG = $Translations [ "LectureID" ]                                    ;
+  $LECMSG = "{$LECMSG}{$LECID}"                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Student" ]                             ;
+  $SST    = $CLASS -> StudentString ( )                                      ;
+  $SSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Tutor" ]                               ;
+  $SST    = $CLASS -> TutorString   ( )                                      ;
+  $TSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( $CLASS -> isAbsent ( "trainee" ) )                                    {
+    $EXTRA  = $SSMSG                                                         ;
+  } else
+  if ( $CLASS -> isAbsent ( "tutor"   ) )                                    {
+    $EXTRA  = $TSMSG                                                         ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TX     = $DB    -> GetStudent ( $NAMTAB , $CLASS -> Trainee             ) ;
+  $TB     = $DB    -> GetTrainee ( $NAMTAB , $CLASS -> Receptionist        ) ;
+  $CLZ    = $Translations [ "Classes::LecturingTrainee"   ]                  ;
+  $CLT    = $Translations [ "Classes::LecturingCounselor" ]                  ;
+  $TN     = "{$CLT}{$TX}\n{$CLZ}{$TB}"                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PE     = $CLASS -> toPeriod (                                           ) ;
+  $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $STX    = $PE -> TimeFormat   ( "H:i:s" , "start" , $TZ                  ) ;
+  $STV    = $PE -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s"        ) ;
+  $ETV    = $PE -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s"        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NOX    = new StarDate       (                                           ) ;
+  $NOX   -> Stardate = $PE -> Start                                          ;
+  $ETS    = $NOX -> Timestamp  (                                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Trainee         ) ;
+  $SKYPE  = ""                                                               ;
+  if                           ( gmp_cmp ( $IMP , "0" ) > 0                ) {
+    $IMA  = new ImApp          (                                           ) ;
+    $IMA -> Uuid = $IMP                                                      ;
+    if                         ( $IMA -> ObtainsByUuid ( $DB , $IMSTAB )   ) {
+      $SKYPE = $IMA -> Account                                               ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E      = new Events         (                                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> Title              ( $TN                                       ) ;
+  $E     -> Id                 ( $CLASS -> Uuid                            ) ;
+  $E     -> TimeFields         ( $TZ , $PE                                 ) ;
+  $E     -> Editable           ( false                                     ) ;
+  $E     -> AllDay             ( false                                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddDqPair          ( "name"         , $TX                      ) ;
+  $E     -> AddDqPair          ( "trainee"      , $CLASS -> Trainee        ) ;
+  $E     -> AddDqPair          ( "tutor"        , $CLASS -> Tutor          ) ;
+  $E     -> AddDqPair          ( "receptionist" , $CLASS -> Receptionist   ) ;
+  $E     -> AddDqPair          ( "skype"        , $SKYPE                   ) ;
+  $E     -> AddDqPair          ( "classid"      , $CLSID                   ) ;
+  $E     -> AddDqPair          ( "clock"        , $STX                     ) ;
+  $E     -> AddDqPair          ( "lecture"      , $LTYPE                   ) ;
+  $E     -> AddDqPair          ( "extra"        , $EXTRA                   ) ;
+  $E     -> AddDqPair          ( "special"      , $CTMSG                   ) ;
+  $E     -> AddDqPair          ( "classmsg"     , $CLSMSG                  ) ;
+  $E     -> AddDqPair          ( "luid"         , $LUID                    ) ;
+  $E     -> AddDqPair          ( "lecid"        , $LECID                   ) ;
+  $E     -> AddDqPair          ( "lecmsg"       , $LECMSG                  ) ;
+  $E     -> AddDqPair          ( "timestamp"    , $ETS                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddPair            ( "status"       , $CLASS -> Type           ) ;
+  $E     -> AddPair            ( "type"         , 126                      ) ;
+  $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CXID   = $Translations   [ "ClassID"         ]                            ;
+  $CXID   = "{$CXID}{$CLSID}"                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  $STMSG  = $Translations   [ "StartTime"       ]                            ;
+  $STMSG  = "{$STMSG}{$STV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ETMSG  = $Translations   [ "EndTime"         ]                            ;
+  $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CRMSG  = $Translations   [ "Classes::Course" ]                            ;
+  $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CSMSG  = $Translations   [ "Classes::State"  ]                            ;
+  $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TOOLTIPS = "{$CXID}\n"                                                    .
+              "{$TN}\n"                                                      .
+              "{$CRMSG}\n"                                                   .
+              "{$CSMSG}\n"                                                   .
+              "{$SSMSG}\n"                                                   .
+              "{$TSMSG}\n"                                                   .
+              "{$STMSG}\n"                                                   .
+              "{$ETMSG}"                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                           ( $CLASS -> Type == 5                       ) {
+    $E     -> Classes          ( [ "StudentClassStop"    ]                 ) ;
+    $E     -> TextColor        ( "#216521"                                 ) ;
+  } else                                                                     {
+    $BTID   = $PE -> Between   ( $NOW -> Stardate                          ) ;
+    switch                     ( $BTID                                     ) {
+      case  1                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassRemove" ]                  ) ;
+          $E -> TextColor      ( "#212165"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassArrange" ]                 ) ;
+          $E -> TextColor      ( "#652121"                                 ) ;
+        }                                                                    ;
+      break                                                                  ;
+      case  0                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
+          $E -> TextColor      ( "#008B00"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassLecture" ]                 ) ;
+          $E -> TextColor      ( "#333333"                                 ) ;
+        }                                                                    ;
+      break                                                                  ;
+      case -1                                                                :
+        if                     ( $CLASS -> isCancelled ( )                 ) {
+          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
+          $E -> TextColor      ( "#8B0000"                                 ) ;
+        } else                                                               {
+          $E -> Classes        ( [ "StudentClassComplete" ]                ) ;
+          $E -> TextColor      ( "#00008B"                                 ) ;
+          if                   ( $CLASS -> Type == 1                       ) {
+            $CNUMSG   = $Translations [ "Classes::NotUpdated" ]              ;
+            $TOOLTIPS = "{$TOOLTIPS}\n{$CNUMSG}"                             ;
+          }                                                                  ;
+        }                                                                    ;
+      break                                                                  ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddDqPair          ( "tooltip"  , $TOOLTIPS                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $E                                                                  ;
+}
+
+public static function AuditionStudentsClassEvent                            (
+                         $DB                                                 ,
+                         $CLASS                                              ,
+                         $NOW                                                ,
+                         $TZ                                                 ,
+                         $NAMTAB                                             ,
+                         $PRDTAB                                             ,
+                         $IMSTAB                                             ,
+                         $RELTAB                                             )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  global $CourseListings                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSID  = $CLASS -> toString (                                           ) ;
+  $LUID   = $CLASS -> Lecture                                                ;
+  $LECID  = sprintf ( "lec2%08d" , gmp_mod ( $LUID , 100000000 )           ) ;
+  $CTMSG  = $CLASS -> ClassTypeString (                                    ) ;
+  $LTYPE  = $CourseListings [ $CLASS -> Item ]                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $EXTRA  = ""                                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSMSG = $Translations [ "ClassID"   ]                                    ;
+  $CLSMSG = "{$CLSMSG}{$CLSID}"                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LECMSG = $Translations [ "LectureID" ]                                    ;
+  $LECMSG = "{$LECMSG}{$LECID}"                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Student" ]                             ;
+  $SST    = $CLASS -> StudentString ( )                                      ;
+  $SSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $XXV    = $Translations [ "Classes::Tutor" ]                               ;
+  $SST    = $CLASS -> TutorString   ( )                                      ;
+  $TSMSG  = "{$XXV}{$SST}"                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( $CLASS -> isAbsent ( "trainee" ) )                                    {
+    $EXTRA  = $SSMSG                                                         ;
+  } else
+  if ( $CLASS -> isAbsent ( "tutor"   ) )                                    {
+    $EXTRA  = $TSMSG                                                         ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TX     = $DB    -> GetTutor   ( $NAMTAB , $CLASS -> Tutor               ) ;
+  $TB     = $DB    -> GetTrainee ( $NAMTAB , $CLASS -> Receptionist        ) ;
+  $CLZ    = $Translations [ "Classes::LecturingTutor"     ]                  ;
+  $CLT    = $Translations [ "Classes::LecturingCounselor" ]                  ;
+  $TN     = "{$CLT}{$TX}\n{$CLZ}{$TB}"                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PE     = $CLASS -> toPeriod (                                           ) ;
+  $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $STX    = $PE -> TimeFormat   ( "H:i:s" , "start" , $TZ                  ) ;
+  $STV    = $PE -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s"        ) ;
+  $ETV    = $PE -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s"        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NOX    = new StarDate       (                                           ) ;
+  $NOX   -> Stardate = $PE -> Start                                          ;
+  $ETS    = $NOX -> Timestamp  (                                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Trainee         ) ;
+  $SKYPE  = ""                                                               ;
+  if                           ( gmp_cmp ( $IMP , "0" ) > 0                ) {
+    $IMA  = new ImApp          (                                           ) ;
+    $IMA -> Uuid = $IMP                                                      ;
+    if                         ( $IMA -> ObtainsByUuid ( $DB , $IMSTAB )   ) {
+      $SKYPE = $IMA -> Account                                               ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E      = new Events         (                                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> Title              ( $TN                                       ) ;
+  $E     -> Id                 ( $CLASS -> Uuid                            ) ;
+  $E     -> TimeFields         ( $TZ , $PE                                 ) ;
+  $E     -> Editable           ( false                                     ) ;
+  $E     -> AllDay             ( false                                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddDqPair          ( "name"         , $TX                      ) ;
+  $E     -> AddDqPair          ( "trainee"      , $CLASS -> Trainee        ) ;
+  $E     -> AddDqPair          ( "tutor"        , $CLASS -> Tutor          ) ;
+  $E     -> AddDqPair          ( "receptionist" , $CLASS -> Receptionist   ) ;
+  $E     -> AddDqPair          ( "skype"        , $SKYPE                   ) ;
+  $E     -> AddDqPair          ( "classid"      , $CLSID                   ) ;
+  $E     -> AddDqPair          ( "clock"        , $STX                     ) ;
+  $E     -> AddDqPair          ( "lecture"      , $LTYPE                   ) ;
+  $E     -> AddDqPair          ( "extra"        , $EXTRA                   ) ;
+  $E     -> AddDqPair          ( "special"      , $CTMSG                   ) ;
+  $E     -> AddDqPair          ( "classmsg"     , $CLSMSG                  ) ;
+  $E     -> AddDqPair          ( "luid"         , $LUID                    ) ;
+  $E     -> AddDqPair          ( "lecid"        , $LECID                   ) ;
+  $E     -> AddDqPair          ( "lecmsg"       , $LECMSG                  ) ;
+  $E     -> AddDqPair          ( "timestamp"    , $ETS                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E     -> AddPair            ( "status"       , $CLASS -> Type           ) ;
+  $E     -> AddPair            ( "type"         , 126                      ) ;
+  $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CXID   = $Translations   [ "ClassID"         ]                            ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
