@@ -134,7 +134,7 @@ public static function GetTraineeClasses ( $DB , $TABLE , $PEOPLE , $PERIOD , $I
            " where ( `used` = 1 )"                                           .
              " and ( `trainee` = {$PUID} )"                                  .
              " and ( `item` = {$ITEM} )"                                     .
-             " and ( `type` in ( 1 , 2 , 4 ) )"                              .
+             " and ( `type` in ( 1 , 2 , 4 , 6 , 8 ) )"                      .
              " and ( `start` >= {$START} )"                                  .
                " and ( `end` <= {$ENDST} )"                                  .
              " order by `start` asc ;"                                       ;
@@ -244,9 +244,21 @@ public static function StudentClassEvent                                     (
     $EXTRA  = $TSMSG                                                         ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $TX     = $DB    -> GetTutor ( $NAMTAB , $CLASS -> Tutor                 ) ;
-  $CLT    = $Translations [ "Classes::LecturingTutor" ]                      ;
-  $TN     = "{$CLT}{$TX}"                                                    ;
+  switch ( $CLASS -> Type )                                                  {
+    case 6                                                                   :
+    case 8                                                                   :
+      $TX   = $DB    -> GetTutor   ( $NAMTAB , $CLASS -> Tutor             ) ;
+      $TB   = $DB    -> GetTrainee ( $NAMTAB , $CLASS -> Receptionist      ) ;
+      $CLT  = $Translations [ "Classes::LecturingTutor"     ]                ;
+      $CLZ  = $Translations [ "Classes::LecturingCounselor" ]                ;
+      $TN   = "{$CLT}{$TX}\n{$CLZ}{$TB}"                                     ;
+    break                                                                    ;
+    default                                                                  :
+      $TX   = $DB    -> GetTutor ( $NAMTAB , $CLASS -> Tutor               ) ;
+      $CLT  = $Translations [ "Classes::LecturingTutor" ]                    ;
+      $TN   = "{$CLT}{$TX}"                                                  ;
+    break                                                                    ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $PE     = $CLASS -> toPeriod (                                           ) ;
   $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
@@ -277,23 +289,24 @@ public static function StudentClassEvent                                     (
   $E     -> Editable           ( false                                     ) ;
   $E     -> AllDay             ( false                                     ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddDqPair          ( "name"      , $TX                         ) ;
-  $E     -> AddDqPair          ( "tutor"     , $CLASS -> Tutor             ) ;
-  $E     -> AddDqPair          ( "skype"     , $SKYPE                      ) ;
-  $E     -> AddDqPair          ( "classid"   , $CLSID                      ) ;
-  $E     -> AddDqPair          ( "clock"     , $STX                        ) ;
-  $E     -> AddDqPair          ( "lecture"   , $LTYPE                      ) ;
-  $E     -> AddDqPair          ( "extra"     , $EXTRA                      ) ;
-  $E     -> AddDqPair          ( "special"   , $CTMSG                      ) ;
-  $E     -> AddDqPair          ( "classmsg"  , $CLSMSG                     ) ;
-  $E     -> AddDqPair          ( "luid"      , $LUID                       ) ;
-  $E     -> AddDqPair          ( "lecid"     , $LECID                      ) ;
-  $E     -> AddDqPair          ( "lecmsg"    , $LECMSG                     ) ;
-  $E     -> AddDqPair          ( "timestamp" , $ETS                        ) ;
+  $E     -> AddDqPair          ( "name"         , $TX                      ) ;
+  $E     -> AddDqPair          ( "tutor"        , $CLASS -> Tutor          ) ;
+  $E     -> AddDqPair          ( "receptionist" , $CLASS -> Receptionist   ) ;
+  $E     -> AddDqPair          ( "skype"        , $SKYPE                   ) ;
+  $E     -> AddDqPair          ( "classid"      , $CLSID                   ) ;
+  $E     -> AddDqPair          ( "clock"        , $STX                     ) ;
+  $E     -> AddDqPair          ( "lecture"      , $LTYPE                   ) ;
+  $E     -> AddDqPair          ( "extra"        , $EXTRA                   ) ;
+  $E     -> AddDqPair          ( "special"      , $CTMSG                   ) ;
+  $E     -> AddDqPair          ( "classmsg"     , $CLSMSG                  ) ;
+  $E     -> AddDqPair          ( "luid"         , $LUID                    ) ;
+  $E     -> AddDqPair          ( "lecid"        , $LECID                   ) ;
+  $E     -> AddDqPair          ( "lecmsg"       , $LECMSG                  ) ;
+  $E     -> AddDqPair          ( "timestamp"    , $ETS                     ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddPair            ( "status"    , $CLASS -> Type              ) ;
-  $E     -> AddPair            ( "type"      , 126                         ) ;
-  $E     -> AddPair            ( "language"  , $LANG                       ) ;
+  $E     -> AddPair            ( "status"       , $CLASS -> Type           ) ;
+  $E     -> AddPair            ( "type"         , 126                      ) ;
+  $E     -> AddPair            ( "language"     , $LANG                    ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CXID   = $Translations   [ "ClassID"         ]                            ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
@@ -407,9 +420,21 @@ public static function TutorClassEvent                                       (
     $EXTRA  = $TSMSG                                                         ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $TX     = $DB    -> GetTrainee ( $NAMTAB , $CLASS -> Trainee             ) ;
-  $CLT    = $Translations [ "Classes::LecturingTrainee" ]                    ;
-  $TN     = "{$CLT}{$TX}"                                                    ;
+  switch ( $CLASS -> Type )                                                  {
+    case 6                                                                   :
+    case 8                                                                   :
+      $TX   = $DB    -> GetStudent ( $NAMTAB , $CLASS -> Trainee           ) ;
+      $TB   = $DB    -> GetTrainee ( $NAMTAB , $CLASS -> Receptionist      ) ;
+      $CLT  = $Translations [ "Classes::LecturingTrainee"   ]                ;
+      $CLZ  = $Translations [ "Classes::LecturingCounselor" ]                ;
+      $TN   = "{$CLT}{$TX}\n{$CLZ}{$TB}"                                     ;
+    break                                                                    ;
+    default                                                                  :
+      $TX   = $DB    -> GetTrainee ( $NAMTAB , $CLASS -> Trainee           ) ;
+      $CLT  = $Translations [ "Classes::LecturingTrainee" ]                  ;
+      $TN   = "{$CLT}{$TX}"                                                  ;
+    break                                                                    ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $PE     = $CLASS -> toPeriod (                                           ) ;
   $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
@@ -440,23 +465,24 @@ public static function TutorClassEvent                                       (
   $E     -> Editable           ( false                                     ) ;
   $E     -> AllDay             ( false                                     ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddDqPair          ( "name"      , $TX                         ) ;
-  $E     -> AddDqPair          ( "trainee"   , $CLASS -> Trainee           ) ;
-  $E     -> AddDqPair          ( "skype"     , $SKYPE                      ) ;
-  $E     -> AddDqPair          ( "classid"   , $CLSID                      ) ;
-  $E     -> AddDqPair          ( "clock"     , $STX                        ) ;
-  $E     -> AddDqPair          ( "lecture"   , $LTYPE                      ) ;
-  $E     -> AddDqPair          ( "extra"     , $EXTRA                      ) ;
-  $E     -> AddDqPair          ( "special"   , $CTMSG                      ) ;
-  $E     -> AddDqPair          ( "classmsg"  , $CLSMSG                     ) ;
-  $E     -> AddDqPair          ( "luid"      , $LUID                       ) ;
-  $E     -> AddDqPair          ( "lecid"     , $LECID                      ) ;
-  $E     -> AddDqPair          ( "lecmsg"    , $LECMSG                     ) ;
-  $E     -> AddDqPair          ( "timestamp" , $ETS                        ) ;
+  $E     -> AddDqPair          ( "name"         , $TX                      ) ;
+  $E     -> AddDqPair          ( "trainee"      , $CLASS -> Trainee        ) ;
+  $E     -> AddDqPair          ( "receptionist" , $CLASS -> Receptionist   ) ;
+  $E     -> AddDqPair          ( "skype"        , $SKYPE                   ) ;
+  $E     -> AddDqPair          ( "classid"      , $CLSID                   ) ;
+  $E     -> AddDqPair          ( "clock"        , $STX                     ) ;
+  $E     -> AddDqPair          ( "lecture"      , $LTYPE                   ) ;
+  $E     -> AddDqPair          ( "extra"        , $EXTRA                   ) ;
+  $E     -> AddDqPair          ( "special"      , $CTMSG                   ) ;
+  $E     -> AddDqPair          ( "classmsg"     , $CLSMSG                  ) ;
+  $E     -> AddDqPair          ( "luid"         , $LUID                    ) ;
+  $E     -> AddDqPair          ( "lecid"        , $LECID                   ) ;
+  $E     -> AddDqPair          ( "lecmsg"       , $LECMSG                  ) ;
+  $E     -> AddDqPair          ( "timestamp"    , $ETS                     ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddPair            ( "status"    , $CLASS -> Type              ) ;
-  $E     -> AddPair            ( "type"      , 126                         ) ;
-  $E     -> AddPair            ( "language"  , $CLASS -> Item              ) ;
+  $E     -> AddPair            ( "status"       , $CLASS -> Type           ) ;
+  $E     -> AddPair            ( "type"         , 126                      ) ;
+  $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CXID   = $Translations   [ "ClassID"         ]                            ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
