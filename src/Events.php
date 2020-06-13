@@ -1435,6 +1435,27 @@ public static function VacationEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
                                  [ "Vacations" ] ) ;
 }
 
+
+public static function PrivateVacationEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
+{
+  return self::PublicEventItem ( $DB                      ,
+                                 $NAMTAB                  ,
+                                 $PEOPLE                  ,
+                                 $PERIOD                  ,
+                                 "#72FA80"                ,
+                                 [ "PrivateVacations" ] ) ;
+}
+
+public static function ExceptionalVacationEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
+{
+  return self::PublicEventItem ( $DB                          ,
+                                 $NAMTAB                      ,
+                                 $PEOPLE                      ,
+                                 $PERIOD                      ,
+                                 "#8072FA"                    ,
+                                 [ "ExceptionalVacations" ] ) ;
+}
+
 public static function PayDayEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
 {
   return self::PublicEventItem ( $DB             ,
