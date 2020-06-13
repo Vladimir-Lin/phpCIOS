@@ -125,6 +125,16 @@ public function Content ( )
   return "{\n{$ITEMS}\n}"                      ;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+public static function isEvent       ( $Filter , $Events , $Key , $Checked ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                                 ( $Filter                             ) {
+    $Checked = in_array              ( $Key , $Events                      ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $Checked                                                            ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public static function GetTraineeClasses ( $DB , $TABLE , $PEOPLE , $PERIOD , $ITEM )
 {
   $PUID  = $PEOPLE -> Uuid                                                   ;
@@ -1240,6 +1250,36 @@ public static function GetPublicEventsByType ( $DB , $TABLE , $PERIOD , $TYPE )
   return $DB -> ObtainUuids ( $QQ )                                          ;
 }
 
+public static function GetPrivateVacationEvents ( $DB                        ,
+                                                  $TABLE                     ,
+                                                  $RELATION                  ,
+                                                  $PUID                      ,
+                                                  $PERIOD                    )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  $START = $PERIOD -> Start                                                  ;
+  $ENDST = $PERIOD -> End                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $C1    = "( ( `start` >= {$START} ) and ( `end` <= {$ENDST} ) )"           ;
+  $C2    = "( ( `start` >= {$START} ) and ( `start` <= {$ENDST} ) )"         ;
+  $C3    = "( ( `end` >= {$START} ) and ( `end` <= {$ENDST} ) )"             ;
+  ////////////////////////////////////////////////////////////////////////////
+  $WH    = "select `second` from {$RELATION}"                                .
+           " where ( `first` = {$PUID} )"                                    .
+                " and ( `t1` = 103 )"                                        .
+                " and ( `t2` = 92 )"                                         .
+          " and ( `relation` = 19 ) ;"                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ    = "select `uuid` from {$TABLE}"                                     .
+           " where ( `used` = 1 )"                                           .
+             " and ( `type` = 9 )"                                           .
+           " and ( {$C1} or {$C2} or {$C3} )"                                .
+           " and ( `uuid` in ( {$WH} ) )"                                    .
+           " order by `start` asc ;"                                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> ObtainUuids ( $QQ )                                          ;
+}
+
 public static function ObtainsPeriods ( $DB , $TABLE , $VACATIONS )
 {
   $PERIODs = array         (                    ) ;
@@ -1308,13 +1348,18 @@ public static function PaymentTermItem ( $DB , $PEOPLE, $TZ , $E , $PAYDAY , $TE
   return $E                                                                  ;
 }
 
-public static function PublicEventItem ( $DB , $NAMTAB , $PEOPLE , $PERIOD , $COLOR , $CLASSES )
+public static function PublicEventItem ( $DB                                 ,
+                                         $NAMTAB                             ,
+                                         $PEOPLE                             ,
+                                         $PERIOD                             ,
+                                         $COLOR                              ,
+                                         $CLASSES                            )
 {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   ////////////////////////////////////////////////////////////////////////////
   $RELT  = $GLOBALS [ "TableMapping" ] [ "Relation" ]                        ;
-  $PERT  = "`erp`.`periods`"                                                 ;
+  $PERT  = $GLOBALS [ "TableMapping" ] [ "Periods"  ]                        ;
   $PUID  = $PERIOD -> Uuid                                                   ;
   $LANG  = $PEOPLE -> Language                                               ;
   $TZ    = $PEOPLE -> TZ                                                     ;
@@ -1492,7 +1537,7 @@ public static function SolarTermEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
                                  $NAMTAB           ,
                                  $PEOPLE           ,
                                  $PERIOD           ,
-                                 "#77FF77"         ,
+                                 "#225533"         ,
                                  [ "SolarTerm" ] ) ;
 }
 
@@ -1508,6 +1553,130 @@ public static function PublicEventsByType ( $DB , $PEOPLE , $PERIOD , $TYPE , $P
     }                                                                        ;
   }                                                                          ;
   return $EVENTS                                                             ;
+}
+
+public static function PrivateVacationEvents ( $DB                           ,
+                                               $PEOPLE                       ,
+                                               $PUID                         ,
+                                               $PERIOD                       ,
+                                               $PRDTAB                       ,
+                                               $RELATION                     ,
+                                               $NAMTAB                       ,
+                                               $FUNC                         )
+{
+  $EVENTS = array                          (                               ) ;
+  $UU     = self::GetPrivateVacationEvents ( $DB                             ,
+                                             $PRDTAB                         ,
+                                             $RELATION                       ,
+                                             $PUID                           ,
+                                             $PERIOD                       ) ;
+  if                                       ( count ( $UU ) > 0             ) {
+    $PRDs = self::ObtainsPeriods           ( $DB , $PRDTAB , $UU           ) ;
+    foreach                                ( $PRDs as $P                   ) {
+      $E  = $FUNC                          ( $DB , $NAMTAB , $PEOPLE , $P  ) ;
+      array_push                           ( $EVENTS , $E                  ) ;
+    }                                                                        ;
+  }                                                                          ;
+  return $EVENTS                                                             ;
+}
+
+public static function ShowPrivateVacationEvents ( $DB                       ,
+                                                   $PEOPLE                   ,
+                                                   $PUID                     ,
+                                                   $PERIOD                   ,
+                                                   $EVENTS                   ,
+                                                   $ShowPrivateVacation      )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  if ( ! $ShowPrivateVacation ) return $EVENTS                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PRDTAB   = $GLOBALS [ "TableMapping" ] [ "Periods"  ]                     ;
+  $RELATION = $GLOBALS [ "TableMapping" ] [ "Relation" ]                     ;
+  $NAMTAB   = $GLOBALS [ "TableMapping" ] [ "Names"    ]                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $FUNC     = "CIOS\Events::PrivateVacationEvent"                            ;
+  $E        = self::PrivateVacationEvents ( $DB                              ,
+                                            $PEOPLE                          ,
+                                            $PUID                            ,
+                                            $PERIOD                          ,
+                                            $PRDTAB                          ,
+                                            $RELATION                        ,
+                                            $NAMTAB                          ,
+                                            $FUNC                          ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return Parameters::MergeArray           ( $EVENTS , $E                   ) ;
+}
+
+public static function ShowPublicVacationEvents ( $DB                        ,
+                                                  $PEOPLE                    ,
+                                                  $PERIOD                    ,
+                                                  $EVENTS                    ,
+                                                  $ShowPublicEvents          )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  global $ShowSpecialDays                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( ! $ShowPublicEvents ) return $EVENTS                                  ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PRDTAB = $GLOBALS [ "TableMapping" ] [ "Periods" ]                        ;
+  $NAMTAB = $GLOBALS [ "TableMapping" ] [ "Names"   ]                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $EVF    = "CIOS\Events::ExceptionalVacationEvent"                          ;
+  $E      = Events::PublicEventsByType  ( $DB                                ,
+                                          $PEOPLE                            ,
+                                          $PERIOD                            ,
+                                          10                                 ,
+                                          $PRDTAB                            ,
+                                          $NAMTAB                            ,
+                                          $EVF                             ) ;
+  $EVENTS = Parameters::MergeArray      ( $EVENTS , $E                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $EVF    = "CIOS\Events::VacationEvent"                                     ;
+  $E      = Events::PublicEventsByType  ( $DB                                ,
+                                          $PEOPLE                            ,
+                                          $PERIOD                            ,
+                                          12                                 ,
+                                          $PRDTAB                            ,
+                                          $NAMTAB                            ,
+                                          $EVF                             ) ;
+  $EVENTS = Parameters::MergeArray      ( $EVENTS , $E                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                                    ( $ShowSpecialDays                 ) {
+    $EVF  = "CIOS\Events::SpecialDayEvent"                                   ;
+    $E    = Events::PublicEventsByType  ( $DB                                ,
+                                          $PEOPLE                            ,
+                                          $PERIOD                            ,
+                                          13                                 ,
+                                          $PRDTAB                            ,
+                                          $NAMTAB                            ,
+                                          $EVF                             ) ;
+    $EVENTS = Parameters::MergeArray    ( $EVENTS , $E                     ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $EVENTS                                                             ;
+}
+
+public static function ShowSolarTermsEvents ( $DB                            ,
+                                              $PEOPLE                        ,
+                                              $PERIOD                        ,
+                                              $EVENTS                        ,
+                                              $ShowSolarTerms                )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  if ( ! $ShowSolarTerms ) return $EVENTS                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PRDTAB = $GLOBALS [ "TableMapping" ] [ "Periods" ]                        ;
+  $NAMTAB = $GLOBALS [ "TableMapping" ] [ "Names"   ]                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $E      = self::PublicEventsByType  ( $DB                                  ,
+                                        $PEOPLE                              ,
+                                        $PERIOD                              ,
+                                        14                                   ,
+                                        $PRDTAB                              ,
+                                        $NAMTAB                              ,
+                                        "CIOS\Events::SolarTermEvent"      ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return Parameters::MergeArray       ( $EVENTS , $E                       ) ;
 }
 
 }
