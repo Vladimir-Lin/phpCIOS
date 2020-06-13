@@ -1462,7 +1462,7 @@ public static function PayDayEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD )
                                  $NAMTAB         ,
                                  $PEOPLE         ,
                                  $PERIOD         ,
-                                 "#FA8072"       ,
+                                 "#409936"       ,
                                  [ "PayDays" ] ) ;
 }
 
