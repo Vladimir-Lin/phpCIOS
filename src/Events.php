@@ -1240,11 +1240,12 @@ public static function GetPublicEventsByType ( $DB , $TABLE , $PERIOD , $TYPE )
   $C1    = "( ( `start` >= {$START} ) and ( `end` <= {$ENDST} ) )"           ;
   $C2    = "( ( `start` >= {$START} ) and ( `start` <= {$ENDST} ) )"         ;
   $C3    = "( ( `end` >= {$START} ) and ( `end` <= {$ENDST} ) )"             ;
+  $C4    = "( ( `start` <= {$START} ) and ( `end` >= {$ENDST} ) )"           ;
   ////////////////////////////////////////////////////////////////////////////
   $QQ    = "select `uuid` from {$TABLE}"                                     .
            " where ( `used` = 1 )"                                           .
              " and ( `type` = {$TYPE} )"                                     .
-           " and ( {$C1} or {$C2} or {$C3} )"                                .
+           " and ( {$C1} or {$C2} or {$C3} or {$C4} )"                       .
            " order by `start` asc ;"                                         ;
   ////////////////////////////////////////////////////////////////////////////
   return $DB -> ObtainUuids ( $QQ )                                          ;
@@ -1263,17 +1264,18 @@ public static function GetPrivateVacationEvents ( $DB                        ,
   $C1    = "( ( `start` >= {$START} ) and ( `end` <= {$ENDST} ) )"           ;
   $C2    = "( ( `start` >= {$START} ) and ( `start` <= {$ENDST} ) )"         ;
   $C3    = "( ( `end` >= {$START} ) and ( `end` <= {$ENDST} ) )"             ;
+  $C4    = "( ( `start` <= {$START} ) and ( `end` >= {$ENDST} ) )"           ;
   ////////////////////////////////////////////////////////////////////////////
   $WH    = "select `second` from {$RELATION}"                                .
            " where ( `first` = {$PUID} )"                                    .
                 " and ( `t1` = 103 )"                                        .
                 " and ( `t2` = 92 )"                                         .
-          " and ( `relation` = 19 ) ;"                                       ;
+          " and ( `relation` = 19 )"                                         ;
   ////////////////////////////////////////////////////////////////////////////
   $QQ    = "select `uuid` from {$TABLE}"                                     .
            " where ( `used` = 1 )"                                           .
              " and ( `type` = 9 )"                                           .
-           " and ( {$C1} or {$C2} or {$C3} )"                                .
+           " and ( {$C1} or {$C2} or {$C3} or {$C4} )"                       .
            " and ( `uuid` in ( {$WH} ) )"                                    .
            " order by `start` asc ;"                                         ;
   ////////////////////////////////////////////////////////////////////////////

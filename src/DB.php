@@ -16,14 +16,18 @@ public function Connect      ( $Host                                       ) {
     $Port      = "3306"                                                      ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $this -> SQL = new \mysqli ( $Host [ "Hostname" ]                          ,
-                               $Host [ "Username" ]                          ,
-                               $Host [ "Password" ]                          ,
-                               $Host [ "Database" ]                          ,
-                               $Port                                       ) ;
-  if ( $this -> SQL -> connect_errno > 0                                   ) {
-    return false                                                             ;
-  }                                                                          ;
+//  try                                                                        {
+    $this -> SQL = new \mysqli ( $Host [ "Hostname" ]                        ,
+                                 $Host [ "Username" ]                        ,
+                                 $Host [ "Password" ]                        ,
+                                 $Host [ "Database" ]                        ,
+                                 $Port                                     ) ;
+    if ( $this -> SQL -> connect_errno > 0                                 ) {
+      return false                                                           ;
+    }                                                                        ;
+//  } catch ( Exception $e )                                                   {
+//    echo $e -> errorMessage ( )                                              ;
+//  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
 }
