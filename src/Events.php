@@ -607,10 +607,14 @@ public static function AuditionCounselorsClassEvent                          (
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $TX     = $DB    -> GetStudent ( $NAMTAB , $CLASS -> Trainee             ) ;
+  $CLT    = $Translations [ "Classes::LecturingTrainee" ]                    ;
+  $CLTXZ  = "{$CLT}{$TX}"                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
   $TB     = $DB    -> GetTutor   ( $NAMTAB , $CLASS -> Tutor               ) ;
   $CLZ    = $Translations [ "Classes::LecturingTutor"   ]                    ;
-  $CLT    = $Translations [ "Classes::LecturingTrainee" ]                    ;
-  $TN     = "{$CLT}{$TX}\n{$CLZ}{$TB}"                                       ;
+  $CLZXZ  = "{$CLZ}{$TB}"                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TN     = $Translations [ "Students::Booking" ]                            ;
   ////////////////////////////////////////////////////////////////////////////
   $PE     = $CLASS -> toPeriod (                                           ) ;
   $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
@@ -633,19 +637,31 @@ public static function AuditionCounselorsClassEvent                          (
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
+  $IMP    = $CLASS  -> SkypeID ( $DB , $RELTAB , $CLASS -> Tutor           ) ;
+  $TSKYPE = ""                                                               ;
+  if                           ( gmp_cmp ( $IMP , "0" ) > 0                ) {
+    $IMA  = new ImApp          (                                           ) ;
+    $IMA -> Uuid = $IMP                                                      ;
+    if                         ( $IMA -> ObtainsByUuid ( $DB , $IMSTAB )   ) {
+      $TSKYPE = $IMA -> Account                                              ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
   $E      = new Events         (                                           ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> Title              ( $TN                                       ) ;
   $E     -> Id                 ( $CLASS -> Uuid                            ) ;
+  $E     -> Title              ( $TN                                       ) ;
   $E     -> TimeFields         ( $TZ , $PE                                 ) ;
   $E     -> Editable           ( false                                     ) ;
   $E     -> AllDay             ( false                                     ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $E     -> AddDqPair          ( "name"         , $TX                      ) ;
   $E     -> AddDqPair          ( "trainee"      , $CLASS -> Trainee        ) ;
+  $E     -> AddDqPair          ( "student"      , $CLTXZ                   ) ;
   $E     -> AddDqPair          ( "tutor"        , $CLASS -> Tutor          ) ;
+  $E     -> AddDqPair          ( "teacher"      , $CLZXZ                   ) ;
   $E     -> AddDqPair          ( "receptionist" , $CLASS -> Receptionist   ) ;
   $E     -> AddDqPair          ( "skype"        , $SKYPE                   ) ;
+  $E     -> AddDqPair          ( "tskype"       , $TSKYPE                  ) ;
   $E     -> AddDqPair          ( "classid"      , $CLSID                   ) ;
   $E     -> AddDqPair          ( "clock"        , $STX                     ) ;
   $E     -> AddDqPair          ( "lecture"      , $LTYPE                   ) ;
@@ -661,19 +677,19 @@ public static function AuditionCounselorsClassEvent                          (
   $E     -> AddPair            ( "type"         , 126                      ) ;
   $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $CXID   = $Translations   [ "ClassID"         ]                            ;
+  $CXID   = $Translations   [ "ClassID"          ]                           ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $STMSG  = $Translations   [ "StartTime"       ]                            ;
+  $STMSG  = $Translations   [ "StartTime"        ]                           ;
   $STMSG  = "{$STMSG}{$STV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $ETMSG  = $Translations   [ "EndTime"         ]                            ;
+  $ETMSG  = $Translations   [ "EndTime"          ]                           ;
   $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $CRMSG  = $Translations   [ "Classes::Course" ]                            ;
+  $CRMSG  = $Translations   [ "Classes::Course:" ]                           ;
   $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $CSMSG  = $Translations   [ "Classes::State"  ]                            ;
+  $CSMSG  = $Translations   [ "Classes::State"   ]                           ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
@@ -685,44 +701,31 @@ public static function AuditionCounselorsClassEvent                          (
               "{$STMSG}\n"                                                   .
               "{$ETMSG}"                                                     ;
   ////////////////////////////////////////////////////////////////////////////
-  if                           ( $CLASS -> Type == 5                       ) {
-    $E     -> Classes          ( [ "StudentClassStop"    ]                 ) ;
-    $E     -> TextColor        ( "#216521"                                 ) ;
+  if                           ( $CLASS -> Type == 9                       ) {
+    $E -> Classes              ( [ "BookingClassCancel" ]                  ) ;
+    $E -> TextColor            ( "#212165"                                 ) ;
   } else                                                                     {
+    //////////////////////////////////////////////////////////////////////////
     $BTID   = $PE -> Between   ( $NOW -> Stardate                          ) ;
     switch                     ( $BTID                                     ) {
       case  1                                                                :
-        if                     ( $CLASS -> isCancelled ( )                 ) {
-          $E -> Classes        ( [ "StudentClassRemove" ]                  ) ;
-          $E -> TextColor      ( "#212165"                                 ) ;
-        } else                                                               {
-          $E -> Classes        ( [ "StudentClassArrange" ]                 ) ;
-          $E -> TextColor      ( "#652121"                                 ) ;
-        }                                                                    ;
+        $E -> Classes          ( [ "BookingClassArrange" ]                 ) ;
+        $E -> TextColor        ( "#652121"                                 ) ;
       break                                                                  ;
       case  0                                                                :
-        if                     ( $CLASS -> isCancelled ( )                 ) {
-          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
-          $E -> TextColor      ( "#008B00"                                 ) ;
-        } else                                                               {
-          $E -> Classes        ( [ "StudentClassLecture" ]                 ) ;
-          $E -> TextColor      ( "#333333"                                 ) ;
-        }                                                                    ;
+        $E -> Classes          ( [ "BookingClassLecturing" ]               ) ;
+        $E -> TextColor        ( "#333333"                                 ) ;
       break                                                                  ;
       case -1                                                                :
-        if                     ( $CLASS -> isCancelled ( )                 ) {
-          $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
-          $E -> TextColor      ( "#8B0000"                                 ) ;
-        } else                                                               {
-          $E -> Classes        ( [ "StudentClassComplete" ]                ) ;
-          $E -> TextColor      ( "#00008B"                                 ) ;
-          if                   ( $CLASS -> Type == 1                       ) {
-            $CNUMSG   = $Translations [ "Classes::NotUpdated" ]              ;
-            $TOOLTIPS = "{$TOOLTIPS}\n{$CNUMSG}"                             ;
-          }                                                                  ;
+        $E -> Classes          ( [ "BookingClassComplete" ]                ) ;
+        $E -> TextColor        ( "#00008B"                                 ) ;
+        if                     ( $CLASS -> Type == 6                       ) {
+          $CNUMSG   = $Translations [ "Classes::NotUpdated" ]                ;
+          $TOOLTIPS = "{$TOOLTIPS}\n{$CNUMSG}"                               ;
         }                                                                    ;
       break                                                                  ;
     }                                                                        ;
+    //////////////////////////////////////////////////////////////////////////
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $E     -> AddDqPair          ( "tooltip"  , $TOOLTIPS                    ) ;
@@ -1385,23 +1388,28 @@ public static function PublicEventItem ( $DB                                 ,
   ////////////////////////////////////////////////////////////////////////////
   switch                         ( $PERIOD -> Type                         ) {
     case 12                                                                  :
+      ////////////////////////////////////////////////////////////////////////
       $RDMSG = $Translations [ "RestDay"   ]                                 ;
       $TTMSG = $Translations [ "LocalTime" ]                                 ;
       $STMSG = $PERIOD -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s" ) ;
       $ETMSG = $PERIOD -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s" ) ;
       $TT    = "{$PNAM}\n\n{$RDMSG}\n\n{$TTMSG}\n{$STMSG}\n{$ETMSG}"         ;
       $E    -> AddDqPair         ( "tooltip" , $TT                         ) ;
+      ////////////////////////////////////////////////////////////////////////
     break                                                                    ;
     case 13                                                                  :
+      ////////////////////////////////////////////////////////////////////////
       $TTMSG = $Translations [ "LocalTime" ]                                 ;
       $STMSG = $PERIOD -> toLongString ( $TZ , "start" , "Y/m/d" , "H:i:s" ) ;
       $ETMSG = $PERIOD -> toLongString ( $TZ , "end"   , "Y/m/d" , "H:i:s" ) ;
       $TT    = "{$PNAM}\n\n{$TTMSG}\n{$STMSG}\n{$ETMSG}"                     ;
       $E    -> AddDqPair         ( "tooltip" , $TT                         ) ;
+      ////////////////////////////////////////////////////////////////////////
     break                                                                    ;
     case 14                                                                  :
     break                                                                    ;
     case 15                                                                  :
+      ////////////////////////////////////////////////////////////////////////
       $RI   -> set                  ( "first" , $PERIOD -> Uuid            ) ;
       $RI   -> setT1                ( "Period"                             ) ;
       $RI   -> setT2                ( "Period"                             ) ;
@@ -1417,10 +1425,12 @@ public static function PublicEventItem ( $DB                                 ,
                                       $PERIOD                                ,
                                       $PRX                                 ) ;
       }                                                                      ;
+      ////////////////////////////////////////////////////////////////////////
     break                                                                    ;
     case 16                                                                  :
     break                                                                    ;
     case 17                                                                  :
+      ////////////////////////////////////////////////////////////////////////
       $RI   -> set                  ( "second" , $PERIOD -> Uuid           ) ;
       $RI   -> setT1                ( "Period"                             ) ;
       $RI   -> setT2                ( "Period"                             ) ;
@@ -1436,6 +1446,7 @@ public static function PublicEventItem ( $DB                                 ,
                                       $PRX                                   ,
                                       $PERIOD                              ) ;
       }                                                                      ;
+      ////////////////////////////////////////////////////////////////////////
     break                                                                    ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
@@ -1489,7 +1500,7 @@ public static function PrivateVacationEvent ( $DB , $NAMTAB , $PEOPLE , $PERIOD 
                                  $NAMTAB                  ,
                                  $PEOPLE                  ,
                                  $PERIOD                  ,
-                                 "#72FA80"                ,
+                                 "#7280FA"                ,
                                  [ "PrivateVacations" ] ) ;
 }
 
@@ -1679,6 +1690,76 @@ public static function ShowSolarTermsEvents ( $DB                            ,
                                         "CIOS\Events::SolarTermEvent"      ) ;
   ////////////////////////////////////////////////////////////////////////////
   return Parameters::MergeArray       ( $EVENTS , $E                       ) ;
+}
+
+public static function ShowPaymentsEvents ( $DB                              ,
+                                            $PEOPLE                          ,
+                                            $PERIOD                          ,
+                                            $EVENTS                          ,
+                                            $PAYMENT                         ,
+                                            $ShowPayments                    )
+{
+  ////////////////////////////////////////////////////////////////////////////
+  global $ShowLectureTerms                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( ! $ShowPayments ) return $EVENTS                                      ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PRDTAB = $GLOBALS [ "TableMapping" ] [ "Periods" ]                        ;
+  $NAMTAB = $GLOBALS [ "TableMapping" ] [ "Names"   ]                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  switch                                  ( $PAYMENT                       ) {
+    case 2                                                                   :
+      $K  = "CIOS\Events::PayDayEvent"                                       ;
+      $E  = Events::PublicEventsByType    ( $DB                              ,
+                                            $PEOPLE                          ,
+                                            $PERIOD                          ,
+                                            16                               ,
+                                            $PRDTAB                          ,
+                                            $NAMTAB                          ,
+                                            $K                             ) ;
+      $EVENTS = Parameters::MergeArray    ( $EVENTS , $E                   ) ;
+    break                                                                    ;
+    default                                                                  :
+      $K  = "CIOS\Events::PayDayEvent"                                       ;
+      $E  = Events::PublicEventsByType    ( $DB                              ,
+                                            $PEOPLE                          ,
+                                            $PERIOD                          ,
+                                            15                               ,
+                                            $PRDTAB                          ,
+                                            $NAMTAB                          ,
+                                            $K                             ) ;
+      $EVENTS = Parameters::MergeArray    ( $EVENTS , $E                   ) ;
+    break                                                                    ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( ! $ShowLectureTerms ) return $EVENTS                                  ;
+  ////////////////////////////////////////////////////////////////////////////
+  switch                                  ( $PAYMENT                       ) {
+    case 2                                                                   :
+      $K  = "CIOS\Events::LectureTermEvent"                                  ;
+      $E  = Events::PublicEventsByType    ( $DB                              ,
+                                            $PEOPLE                          ,
+                                            $PERIOD                          ,
+                                            17                               ,
+                                            $PRDTAB                          ,
+                                            $NAMTAB                          ,
+                                            $K                             ) ;
+      $EVENTS = Parameters::MergeArray    ( $EVENTS , $E                   ) ;
+    break                                                                    ;
+    default                                                                  :
+      $K  = "CIOS\Events::LectureTermEvent"                                  ;
+      $E  = Events::PublicEventsByType    ( $DB                              ,
+                                            $PEOPLE                          ,
+                                            $PERIOD                          ,
+                                            17                               ,
+                                            $PRDTAB                          ,
+                                            $NAMTAB                          ,
+                                            $K                             ) ;
+      $EVENTS = Parameters::MergeArray    ( $EVENTS , $E                   ) ;
+    break                                                                    ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $EVENTS                                                             ;
 }
 
 }
