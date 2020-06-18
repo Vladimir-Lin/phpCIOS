@@ -58,6 +58,24 @@ public function Items( $S = "," )
   return $L                            ;
 }
 
+public function toJson ( )
+{
+  $X = $this -> tableItems   (          ) ;
+  $J = array                 (          ) ;
+  foreach                    ( $X as $V ) {
+    $J [ $V ] = $this -> get ( $V       ) ;
+  }                                       ;
+  return $J                               ;
+}
+
+public function fromJson ( $JSON )
+{
+  $X = $this -> tableItems   (                   ) ;
+  foreach                    ( $X as $V          ) {
+    $J [ $V ] = $this -> set ( $V , $JSON [ $V ] ) ;
+  }                                                ;
+}
+
 public function OptionsTail($Options,$Limits)
 {
   $Q = ""                        ;
