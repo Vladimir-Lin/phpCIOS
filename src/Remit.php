@@ -17,6 +17,7 @@ public $Inspector    ;
 public $Currency     ;
 public $Amount       ;
 public $Paid         ;
+public $Charge       ;
 public $Moment       ;
 public $Number       ;
 public $Confirm      ;
@@ -49,6 +50,7 @@ public function Clear()
   $this -> Currency     =  ""   ;
   $this -> Amount       =  ""   ;
   $this -> Paid         =  0    ;
+  $this -> Charge       =  0    ;
   $this -> Moment       =  0    ;
   $this -> Number       =  ""   ;
   $this -> Confirm      =  0    ;
@@ -73,6 +75,7 @@ public function assign($Item)
   $this -> Currency     = $Item -> Currency     ;
   $this -> Amount       = $Item -> Amount       ;
   $this -> Paid         = $Item -> Paid         ;
+  $this -> Charge       = $Item -> Charge       ;
   $this -> Moment       = $Item -> Moment       ;
   $this -> Number       = $Item -> Number       ;
   $this -> Confirm      = $Item -> Confirm      ;
@@ -98,6 +101,7 @@ public function tableItems()
   array_push ( $S , "currency"     ) ;
   array_push ( $S , "amount"       ) ;
   array_push ( $S , "paid"         ) ;
+  array_push ( $S , "charge"       ) ;
   array_push ( $S , "moment"       ) ;
   array_push ( $S , "number"       ) ;
   array_push ( $S , "confirm"      ) ;
@@ -122,6 +126,7 @@ public function valueItems()
   array_push ( $S , "currency"     ) ;
   array_push ( $S , "amount"       ) ;
   array_push ( $S , "paid"         ) ;
+  array_push ( $S , "charge"       ) ;
   array_push ( $S , "moment"       ) ;
   array_push ( $S , "number"       ) ;
   array_push ( $S , "confirm"      ) ;
@@ -147,6 +152,7 @@ public function set($item,$V)
   if ( "currency"     == $a ) $this -> Currency     = $V ;
   if ( "amount"       == $a ) $this -> Amount       = $V ;
   if ( "paid"         == $a ) $this -> Paid         = $V ;
+  if ( "charge"       == $a ) $this -> Charge       = $V ;
   if ( "moment"       == $a ) $this -> Moment       = $V ;
   if ( "number"       == $a ) $this -> Number       = $V ;
   if ( "confirm"      == $a ) $this -> Confirm      = $V ;
@@ -174,6 +180,7 @@ public function get($item)
   if ( "currency"     == $a ) return (string) $this -> Currency     ;
   if ( "amount"       == $a ) return (string) $this -> Amount       ;
   if ( "paid"         == $a ) return (string) $this -> Paid         ;
+  if ( "charge"       == $a ) return (string) $this -> Charge       ;
   if ( "moment"       == $a ) return (string) $this -> Moment       ;
   if ( "number"       == $a ) return (string) $this -> Number       ;
   if ( "confirm"      == $a ) return (string) $this -> Confirm      ;
@@ -253,6 +260,9 @@ public function ItemPair($item)
   if ( "paid"         == $a )                               {
     return "`{$a}` = " . (string) $this -> Paid             ;
   }                                                         ;
+  if ( "charge"       == $a )                               {
+    return "`{$a}` = " . (string) $this -> Charge           ;
+  }                                                         ;
   if ( "moment" == $a )                                     {
     return "`{$a}` = " . (string) $this -> Moment           ;
   }                                                         ;
@@ -321,6 +331,7 @@ public function obtain($R)
   $this -> Currency     = $R [ "currency"     ] ;
   $this -> Amount       = $R [ "amount"       ] ;
   $this -> Paid         = $R [ "paid"         ] ;
+  $this -> Charge       = $R [ "charge"       ] ;
   $this -> Moment       = $R [ "moment"       ] ;
   $this -> Number       = $R [ "number"       ] ;
   $this -> Confirm      = $R [ "confirm"      ] ;
