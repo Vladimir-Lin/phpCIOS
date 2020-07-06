@@ -138,7 +138,7 @@ public function Obtain ( $R )
 
 public function ObtainsId ( $DB , $TABLE , $ID )
 {
-  $QQ = "select `id`,`username`,`scope`,`keyword`,`value``,`ltime` from {$TABLE}" .
+  $QQ = "select `id`,`username`,`scope`,`keyword`,`value`,`ltime` from {$TABLE}" .
         " where `id` = {$ID} ;"                 ;
   $qq  = $DB -> Query ( $QQ )                   ;
   if ( $DB -> hasResult ( $qq ) )               {
