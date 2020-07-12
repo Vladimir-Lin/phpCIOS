@@ -391,6 +391,17 @@ public function ObtainsLectures ( $DB , $LECTURES , $ITEM , $ORDER = "asc" )
         " order by `openday` {$ORDER} ;" ;
   return $DB -> ObtainUuids ( $QQ )      ;
 }
+//////////////////////////////////////////////////////////////////////////////
+public function ObtainsByPayer          ( $DB , $LECTURES , $ORDER = "asc" ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $VV   = $this -> Trainee                                                   ;
+  $PP   = $this -> Payer                                                     ;
+  $QQ   = "select `uuid` from {$LECTURES}"                                   .
+          " where ( `trainee` = {$VV} ) and ( `payer` = {$PP} )"             .
+          " order by `openday` {$ORDER} ;"                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> ObtainUuids             ( $QQ                              ) ;
+}
 
 public function ObtainMembers ( $DB , $LECTURES , $FROM , $MEMBER , $PUID , $ORDER = "desc" )
 {
