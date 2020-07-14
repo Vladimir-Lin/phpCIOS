@@ -79,17 +79,17 @@ public function Classes ( $NAMES                                           ) {
 }
 //////////////////////////////////////////////////////////////////////////////
 public function AllDay ( $ALL                                              ) {
-  $ES   = "false"                                                            ;
+  $ES   = false                                                              ;
   if                   ( $ALL                                              ) {
-    $ES = "true"                                                             ;
+    $ES = true                                                               ;
   }                                                                          ;
   $this -> AddPair     ( "allDay" , $ES                                    ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function Editable ( $EDIT                                           ) {
-  $ES    = "false"                                                           ;
+  $ES    = false                                                             ;
   if                     ( $EDIT                                           ) {
-    $ES  = "true"                                                            ;
+    $ES  = true                                                              ;
   }                                                                          ;
   $this -> AddPair       ( "editable" , $ES                                ) ;
 }
