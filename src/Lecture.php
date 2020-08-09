@@ -1,112 +1,117 @@
 <?php
-
-namespace CIOS ;
-
-class Lecture extends Columns
-{
-/////////////////////////////////////////////////////////
-
-public $Id           ;
-public $Uuid         ;
-public $Trainee      ;
-public $Tutor        ;
-public $Manager      ;
-public $Payer        ;
-public $Receptionist ;
-public $Item         ;
-public $States       ;
-public $Register     ; // 課堂註冊時間
-public $OpenDay      ; // 課堂開始時間
-public $CloseDay     ; // 課堂結束時間
-public $Log          ; // 登錄紀錄時間
-public $Update       ;
-public $Sections     ;
-
-/////////////////////////////////////////////////////////
-function __construct()
-{
-  $this -> Clear ( ) ;
+//////////////////////////////////////////////////////////////////////////////
+// 排課資訊
+//////////////////////////////////////////////////////////////////////////////
+namespace CIOS                                                               ;
+//////////////////////////////////////////////////////////////////////////////
+class Lecture extends Columns                                                {
+//////////////////////////////////////////////////////////////////////////////
+// +| Variables |+
+//////////////////////////////////////////////////////////////////////////////
+public $Id                                                                   ;
+public $Uuid                                                                 ;
+public $Trainee                                                              ;
+public $Tutor                                                                ;
+public $Manager                                                              ;
+public $Payer                                                                ;
+public $Receptionist                                                         ;
+public $Item                                                                 ;
+public $States                                                               ;
+public $Register                                                             ; // 課堂註冊時間
+public $OpenDay                                                              ; // 課堂開始時間
+public $CloseDay                                                             ; // 課堂結束時間
+public $Log                                                                  ; // 登錄紀錄時間
+public $Update                                                               ;
+public $Sections                                                             ;
+//////////////////////////////////////////////////////////////////////////////
+// -| Variables |-
+//////////////////////////////////////////////////////////////////////////////
+function __construct ( )                                                     {
+  $this -> Clear ( )                                                         ;
 }
-
-function __destruct()
-{
+//////////////////////////////////////////////////////////////////////////////
+function __destruct ( )                                                      {
 }
-
-public function Clear()
-{
-  $this -> Id           = -1        ;
-  $this -> Uuid         = "0"       ;
-  $this -> Trainee      = "0"       ;
-  $this -> Tutor        = "0"       ;
-  $this -> Manager      = "0"       ;
-  $this -> Payer        = "0"       ;
-  $this -> Receptionist = "0"       ;
-  $this -> Item         = "0"       ;
-  $this -> States       =  0        ;
-  $this -> Register     = "0"       ;
-  $this -> OpenDay      = "0"       ;
-  $this -> CloseDay     = "0"       ;
-  $this -> Log          = "0"       ;
-  $this -> Update       = ""        ;
-  $this -> Sections     = array ( ) ;
+//////////////////////////////////////////////////////////////////////////////
+// +| Clear |+
+//////////////////////////////////////////////////////////////////////////////
+public function Clear ( )                                                    {
+  $this -> Id           = -1                                                 ;
+  $this -> Uuid         = "0"                                                ;
+  $this -> Trainee      = "0"                                                ;
+  $this -> Tutor        = "0"                                                ;
+  $this -> Manager      = "0"                                                ;
+  $this -> Payer        = "0"                                                ;
+  $this -> Receptionist = "0"                                                ;
+  $this -> Item         = "0"                                                ;
+  $this -> States       =  0                                                 ;
+  $this -> Register     = "0"                                                ;
+  $this -> OpenDay      = "0"                                                ;
+  $this -> CloseDay     = "0"                                                ;
+  $this -> Log          = "0"                                                ;
+  $this -> Update       = ""                                                 ;
+  $this -> Sections     = array ( )                                          ;
 }
-
-public function assign($Item)
-{
-  $this -> Id           = $Item -> Id           ;
-  $this -> Uuid         = $Item -> Uuid         ;
-  $this -> Trainee      = $Item -> Trainee      ;
-  $this -> Tutor        = $Item -> Tutor        ;
-  $this -> Manager      = $Item -> Manager      ;
-  $this -> Payer        = $Item -> Payer        ;
-  $this -> Receptionist = $Item -> Receptionist ;
-  $this -> Item         = $Item -> Item         ;
-  $this -> States       = $Item -> States       ;
-  $this -> Register     = $Item -> Register     ;
-  $this -> OpenDay      = $Item -> OpenDay      ;
-  $this -> CloseDay     = $Item -> CloseDay     ;
-  $this -> Log          = $Item -> Log          ;
-  $this -> Update       = $Item -> Update       ;
-  $this -> Sections     = $Item -> Sections     ;
+//////////////////////////////////////////////////////////////////////////////
+// -| Clear |-
+//////////////////////////////////////////////////////////////////////////////
+// +| assign |+
+//////////////////////////////////////////////////////////////////////////////
+public function assign ( $Item )                                             {
+  $this -> Id           = $Item -> Id                                        ;
+  $this -> Uuid         = $Item -> Uuid                                      ;
+  $this -> Trainee      = $Item -> Trainee                                   ;
+  $this -> Tutor        = $Item -> Tutor                                     ;
+  $this -> Manager      = $Item -> Manager                                   ;
+  $this -> Payer        = $Item -> Payer                                     ;
+  $this -> Receptionist = $Item -> Receptionist                              ;
+  $this -> Item         = $Item -> Item                                      ;
+  $this -> States       = $Item -> States                                    ;
+  $this -> Register     = $Item -> Register                                  ;
+  $this -> OpenDay      = $Item -> OpenDay                                   ;
+  $this -> CloseDay     = $Item -> CloseDay                                  ;
+  $this -> Log          = $Item -> Log                                       ;
+  $this -> Update       = $Item -> Update                                    ;
+  $this -> Sections     = $Item -> Sections                                  ;
 }
-
-public function tableItems()
-{
-  $S = array (                     ) ;
-  array_push ( $S , "id"           ) ;
-  array_push ( $S , "uuid"         ) ;
-  array_push ( $S , "trainee"      ) ;
-  array_push ( $S , "tutor"        ) ;
-  array_push ( $S , "manager"      ) ;
-  array_push ( $S , "payer"        ) ;
-  array_push ( $S , "receptionist" ) ;
-  array_push ( $S , "item"         ) ;
-  array_push ( $S , "states"       ) ;
-  array_push ( $S , "register"     ) ;
-  array_push ( $S , "openday"      ) ;
-  array_push ( $S , "closeday"     ) ;
-  array_push ( $S , "log"          ) ;
-  array_push ( $S , "ltime"        ) ;
-  return $S                          ;
+//////////////////////////////////////////////////////////////////////////////
+// -| assign |-
+//////////////////////////////////////////////////////////////////////////////
+// +| tableItems |+
+//////////////////////////////////////////////////////////////////////////////
+public function tableItems ( )                                               {
+  return [ "id"                                                              ,
+           "uuid"                                                            ,
+           "trainee"                                                         ,
+           "tutor"                                                           ,
+           "manager"                                                         ,
+           "payer"                                                           ,
+           "receptionist"                                                    ,
+           "item"                                                            ,
+           "states"                                                          ,
+           "register"                                                        ,
+           "openday"                                                         ,
+           "closeday"                                                        ,
+           "log"                                                             ,
+           "ltime"                                                         ] ;
 }
-
-public function valueItems()
-{
-  $S = array (                     ) ;
-  array_push ( $S , "trainee"      ) ;
-  array_push ( $S , "tutor"        ) ;
-  array_push ( $S , "manager"      ) ;
-  array_push ( $S , "payer"        ) ;
-  array_push ( $S , "receptionist" ) ;
-  array_push ( $S , "item"         ) ;
-  array_push ( $S , "states"       ) ;
-  array_push ( $S , "register"     ) ;
-  array_push ( $S , "openday"      ) ;
-  array_push ( $S , "closeday"     ) ;
-  array_push ( $S , "log"          ) ;
-  return $S                          ;
+//////////////////////////////////////////////////////////////////////////////
+// -| tableItems |-
+//////////////////////////////////////////////////////////////////////////////
+public function valueItems ( )                                               {
+  return [ "trainee"                                                         ,
+           "tutor"                                                           ,
+           "manager"                                                         ,
+           "payer"                                                           ,
+           "receptionist"                                                    ,
+           "item"                                                            ,
+           "states"                                                          ,
+           "register"                                                        ,
+           "openday"                                                         ,
+           "closeday"                                                        ,
+           "log"                                                           ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function set($item,$V)
 {
   $a = strtolower ( $item )                              ;
@@ -125,7 +130,7 @@ public function set($item,$V)
   if ( "log"          == $a ) $this -> Log          = $V ;
   if ( "ltime"        == $a ) $this -> Update       = $V ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function get($item)
 {
   $a = strtolower ( $item )                                         ;
@@ -145,12 +150,12 @@ public function get($item)
   if ( "ltime"        == $a ) return (string) $this -> Update       ;
   return ""                                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Pair($item)
 {
   return "`{$item}` = " . $this -> get ( $item ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Pairs($Items)
 {
   $P = array ( )                                ;
@@ -161,7 +166,7 @@ public function Pairs($Items)
   unset        ( $P         )                   ;
   return $Q                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ItemPair($item)
 {
   $a = strtolower ( $item )                             ;
@@ -212,12 +217,12 @@ public function ItemPair($item)
   }                                                     ;
   return ""                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toString()
 {
   return sprintf ( "lec2%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function fromString ( $LXID )
 {
   /////////////////////////////////////////////////
@@ -239,7 +244,25 @@ public function fromString ( $LXID )
   /////////////////////////////////////////////////
   return $U                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// +| toJsonWithTimestamp |+
+//////////////////////////////////////////////////////////////////////////////
+public function toJsonWithTimestamp      (                                 ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $NOW      = new StarDate               (                                 ) ;
+  $JSOX     = $this -> toJson            (                                 ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NOW     -> Stardate = $this -> OpenDay                                    ;
+  $JSOX [ "StartTimestamp" ] = $NOW -> Timestamp ( )                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NOW     -> Stardate = $this -> CloseDay                                   ;
+  $JSOX [ "EndTimestamp"   ] = $NOW -> Timestamp ( )                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $JSOX                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
+// -| toJsonWithTimestamp |-
+//////////////////////////////////////////////////////////////////////////////
 public function TimeItem($item,$TZ)
 {
   $ZZ = "0"                                       ;
@@ -256,7 +279,7 @@ public function TimeItem($item,$TZ)
   unset                               ( $SD )     ;
   return $DD                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TimeFormat($fmt,$item,$TZ)
 {
   $DD = $this -> TimeItem ( $item , $TZ ) ;
@@ -265,7 +288,7 @@ public function TimeFormat($fmt,$item,$TZ)
   unset                   ( $DD         ) ;
   return $FMT                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toPeriod()
 {
   $PERIODE  = new Periode ( )           ;
@@ -274,7 +297,7 @@ public function toPeriod()
   $PERIODE -> End   = $this -> CloseDay ;
   return $PERIODE                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function obtain($R)
 {
   $this -> Id           = $R [ "id"           ] ;
@@ -292,7 +315,7 @@ public function obtain($R)
   $this -> Log          = $R [ "log"          ] ;
   $this -> Update       = $R [ "ltime"        ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function RegisterTime($TZ,$JOIN=" ",$DateFormat="Y/m/d D A",$TimeFormat="H:i:s")
 {
   $REG    = new StarDate (             ) ;
@@ -305,7 +328,7 @@ public function RegisterTime($TZ,$JOIN=" ",$DateFormat="Y/m/d D A",$TimeFormat="
   unset                  ( $REG        ) ;
   return $REGSTR                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function LogTime($TZ,$JOIN=" ",$DateFormat="Y/m/d D A",$TimeFormat="H:i:s")
 {
   $LOG    = new StarDate (         ) ;
@@ -318,7 +341,7 @@ public function LogTime($TZ,$JOIN=" ",$DateFormat="Y/m/d D A",$TimeFormat="H:i:s
   unset                  ( $LOG    ) ;
   return $LOGSTR                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CallOffJS($TZ)
 {
   $NOW  = new StarDate             (               ) ;
@@ -331,7 +354,7 @@ public function CallOffJS($TZ)
   $ET   = $END -> toDateTimeString ( $TZ           ) ;
   return "CallOffClass('{$LS}','{$ST}','{$ET}')"     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetUuid($DB,$Table,$Main)
 {
   global $DataTypes                                          ;
@@ -343,14 +366,14 @@ public function GetUuid($DB,$Table,$Main)
   $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
   return $this -> Uuid                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function UpdateItems ( $DB , $TABLE , $ITEMS )
 {
   $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
            $DB -> WhereUuid ( $this -> Uuid , true )                ;
   return $DB -> Query ( $QQ )                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Update ( $DB , $TABLE )
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -363,7 +386,7 @@ public function Update ( $DB , $TABLE )
   ////////////////////////////////////////////////////////////////////////////
   return $DB -> Query           ( $QQ                  )                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsByQuery($DB,$QQ)
 {
   $qq = $DB -> Query ( $QQ )                 ;
@@ -374,7 +397,7 @@ public function ObtainsByQuery($DB,$QQ)
   }                                          ;
   return false                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsByUuid ( $DB , $TABLE )
 {
   $IT = $this -> Items ( )                        ;
@@ -382,7 +405,7 @@ public function ObtainsByUuid ( $DB , $TABLE )
         $DB -> WhereUuid ( $this -> Uuid , true ) ;
   return $this -> ObtainsByQuery ( $DB , $QQ )    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsLectures ( $DB , $LECTURES , $ITEM , $ORDER = "asc" )
 {
   $VV = $this -> get ( $ITEM )           ;
@@ -402,7 +425,7 @@ public function ObtainsByPayer          ( $DB , $LECTURES , $ORDER = "asc" ) {
   ////////////////////////////////////////////////////////////////////////////
   return $DB -> ObtainUuids             ( $QQ                              ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainMembers ( $DB , $LECTURES , $FROM , $MEMBER , $PUID , $ORDER = "desc" )
 {
   $UUX = array ( )                                     ;
@@ -420,7 +443,7 @@ public function ObtainMembers ( $DB , $LECTURES , $FROM , $MEMBER , $PUID , $ORD
   }                                                    ;
   return $UUX                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainTutors ( $DB , $TABLE , $PUID , $ORDER = "desc" )
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -430,7 +453,7 @@ public function ObtainTutors ( $DB , $TABLE , $PUID , $ORDER = "desc" )
   ////////////////////////////////////////////////////////////////////////////
   return $DB -> ObtainUuids  ( $QQ                  )                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainCourses     ( $DB , $RELATIONS        )
 {
   $RI      = new Relation         (                         ) ;
@@ -442,7 +465,7 @@ public function ObtainCourses     ( $DB , $RELATIONS        )
   unset                           ( $RI                     ) ;
   return $COURSES                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function JoinCourses ( $DB , $RELATIONS , $COURSES ) {
   ///////////////////////////////////////////////////////////
   $RI  = new Relation       (                             ) ;
@@ -457,7 +480,7 @@ public function JoinCourses ( $DB , $RELATIONS , $COURSES ) {
   ///////////////////////////////////////////////////////////
   return $COURSES                                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainLessons($DB,$RELATIONS)
 {
   $RI      = new Relation         (                         ) ;
@@ -469,7 +492,7 @@ public function ObtainLessons($DB,$RELATIONS)
   unset                           ( $RI                     ) ;
   return $LESSONS                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainSections ( $DB , $TABLE )
 {
   $PQ    = ParameterQuery::NewParameter ( 2 , 67 , "Periods"               ) ;
@@ -481,14 +504,14 @@ public function ObtainSections ( $DB , $TABLE )
     $this -> Sections = array           (                                  ) ;
   }                                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addSection($SECTION)
 {
   if ( in_array ( $SECTION          , $this -> Sections ) ) return ;
   array_push    ( $this -> Sections , $SECTION          )          ;
   asort         ( $this -> Sections                     )          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function removeSection($SECTION)
 {
   if ( ! in_array ( $SECTION , $this -> Sections ) ) return ;
@@ -500,7 +523,7 @@ public function removeSection($SECTION)
   }                                                         ;
   $this -> Sections = $SX                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assureSections ( $DB , $TABLE )
 {
   if                   ( count ( $this -> Sections ) > 0        ) {
@@ -512,7 +535,7 @@ public function assureSections ( $DB , $TABLE )
   $PQ  -> setTable     ( $TABLE                                 ) ;
   $PQ  -> assureData   ( $DB , $this -> Uuid , "Sections" , $SS ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TimeAt($STD,$ID,$TZ)
 {
   $WD  = $STD -> Weekday      ( $TZ )        ;
@@ -540,7 +563,7 @@ public function TimeAt($STD,$ID,$TZ)
   ////////////////////////////////////////////
   return false                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TimeInside($STD,$TZ)
 {
   foreach ( $this -> Sections as $ID )                      {
@@ -548,7 +571,7 @@ public function TimeInside($STD,$TZ)
   }                                                         ;
   return false                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function NextClassTime($START,$TZ)
 {
   if ( count ( $this -> Sections ) <= 0 ) return $Start ;
@@ -562,7 +585,7 @@ public function NextClassTime($START,$TZ)
   ///////////////////////////////////////////////////////
   return $SD -> Stardate                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentJson($DB,$TZ,$NAME,$LECTUREID,$NOW)
 {
   $HH   = new Parameters        (                        )                  ;
@@ -608,7 +631,7 @@ public function StudentJson($DB,$TZ,$NAME,$LECTUREID,$NOW)
   ///////////////////////////////////////////////////////////////////////////
   return $JSC                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function RegisterJson($DB,$TZ,$NAME,$LECTUREID)
 {
   $HH   = new Parameters        (                        )                  ;
@@ -644,7 +667,7 @@ public function RegisterJson($DB,$TZ,$NAME,$LECTUREID)
   ///////////////////////////////////////////////////////////////////////////
   return $JSC                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentLectures($DB,$TZ,$JAVA,$LECTURES,$NAME,$LECTUREID,$NOW)
 {
   $UU = $this -> ObtainsLectures ( $DB , $LECTURES , "trainee" ) ;
@@ -667,7 +690,7 @@ public function StudentLectures($DB,$TZ,$JAVA,$LECTURES,$NAME,$LECTUREID,$NOW)
     }                                                            ;
   }                                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentRegister($DB,$TZ,$JAVA,$LECTURES,$NAME,$LECTUREID)
 {
   $UU = $this -> ObtainsLectures ( $DB , $LECTURES , "trainee" ) ;
@@ -683,7 +706,7 @@ public function StudentRegister($DB,$TZ,$JAVA,$LECTURES,$NAME,$LECTUREID)
     }                                                            ;
   }                                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function OfficerLectures($DB,$TZ,$JAVA,$LECTURES,$NAME,$LECTUREID)
 {
   $UU = $this -> ObtainsLectures ( $DB , $LECTURES , "manager" ) ;
@@ -699,7 +722,7 @@ public function OfficerLectures($DB,$TZ,$JAVA,$LECTURES,$NAME,$LECTUREID)
     }                                                            ;
   }                                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ReceptionistLectures($DB,$TZ,$JAVA,$LECTURES,$NAME,$LECTUREID)
 {
   $UU = $this -> ObtainsLectures ( $DB , $LECTURES , "receptionist" ) ;
@@ -715,7 +738,7 @@ public function ReceptionistLectures($DB,$TZ,$JAVA,$LECTURES,$NAME,$LECTUREID)
     }                                                                 ;
   }                                                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addTd($HR,$MSG="",$WIDTH="3%",$bgcolors="")
 {
   $HD  = $HR -> addTd ( $MSG                  ) ;
@@ -724,7 +747,7 @@ public function addTd($HR,$MSG="",$WIDTH="3%",$bgcolors="")
   $HD -> SafePair     ( "bgcolor" , $bgcolors ) ;
   return $HD                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addNameItem($HR,$NAME,$KEY,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   /////////////////////////////////////////////////////////
@@ -734,7 +757,7 @@ public function addNameItem($HR,$NAME,$KEY,$LeftWidth="3%",$NameWidth="15%",$bgc
   $this -> addTd ( $HR , $LST  , $LeftWidth , $bgcolors ) ;
   $this -> addTd ( $HR , $NAME , $NameWidth , $bgcolors ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addBriefIndex($HB,$COLS=6)
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -755,7 +778,7 @@ public function addBriefIndex($HB,$COLS=6)
   $HX -> AddPair          ( "onclick" , $LCJ                               ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addStudent($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   $this -> addNameItem ( $HR                 ,
@@ -765,7 +788,7 @@ public function addStudent($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgcolors=
                          $NameWidth          ,
                          $bgcolors         ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addTutor($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   $this -> addNameItem ( $HR               ,
@@ -775,7 +798,7 @@ public function addTutor($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgcolors=""
                          $NameWidth        ,
                          $bgcolors       ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addManager($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   $this -> addNameItem ( $HR                 ,
@@ -785,7 +808,7 @@ public function addManager($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgcolors=
                          $NameWidth          ,
                          $bgcolors         ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addReceptionist($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   $this -> addNameItem ( $HR                      ,
@@ -795,7 +818,7 @@ public function addReceptionist($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgco
                          $NameWidth               ,
                          $bgcolors              ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addPayer($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   $this -> addNameItem ( $HR               ,
@@ -805,7 +828,7 @@ public function addPayer($HR,$NAME,$LeftWidth="3%",$NameWidth="15%",$bgcolors=""
                          $NameWidth        ,
                          $bgcolors       ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function DateTimeInput($TIMESTRING,$ITEM)
 {
   $JSC  = "LectureTimeChanged(this.value,'{$ITEM}','{$this->Uuid}') ;" ;
@@ -820,7 +843,7 @@ public function DateTimeInput($TIMESTRING,$ITEM)
   //////////////////////////////////////////////////////////////////////
   return $INP                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addRegistration($HR,$TZ,$NameWidth="3%",$TimeWidth="15%",$bgcolors="")
 {
   ////////////////////////////////////////////////////////////
@@ -832,7 +855,7 @@ public function addRegistration($HR,$TZ,$NameWidth="3%",$TimeWidth="15%",$bgcolo
   $this -> addTd ( $HR , $REGKEY  , $NameWidth , $bgcolors ) ;
   $this -> addTd ( $HR , $REGTIME , $TimeWidth , $bgcolors ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function editRegistration($HR,$TZ,$NameWidth="3%",$TimeWidth="15%",$bgcolors="")
 {
   //////////////////////////////////////////////////////////////
@@ -848,7 +871,7 @@ public function editRegistration($HR,$TZ,$NameWidth="3%",$TimeWidth="15%",$bgcol
   $HD     -> AddTag          ( $INP                          ) ;
   //////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function RegistrationEditing($HR,$TZ,$editable=false,$NameWidth="3%",$TimeWidth="15%",$bgcolors="")
 {
   if ( $editable )                          {
@@ -865,7 +888,7 @@ public function RegistrationEditing($HR,$TZ,$editable=false,$NameWidth="3%",$Tim
                                 $bgcolors ) ;
   }                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addLog($HR,$TZ,$NameWidth="3%",$TimeWidth="15%",$bgcolors="")
 {
   ////////////////////////////////////////////////////////////
@@ -877,7 +900,7 @@ public function addLog($HR,$TZ,$NameWidth="3%",$TimeWidth="15%",$bgcolors="")
   $this -> addTd ( $HR , $LOGKEY  , $NameWidth , $bgcolors ) ;
   $this -> addTd ( $HR , $LOGTIME , $TimeWidth , $bgcolors ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function editLog($HR,$TZ,$NameWidth="3%",$TimeWidth="15%",$bgcolors="")
 {
   /////////////////////////////////////////////////////////////
@@ -893,7 +916,7 @@ public function editLog($HR,$TZ,$NameWidth="3%",$TimeWidth="15%",$bgcolors="")
   $HD     -> AddTag          ( $INP                         ) ;
   /////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function LogEditing($HR,$TZ,$editable=false,$NameWidth="3%",$TimeWidth="15%",$bgcolors="")
 {
   if ( $editable )                 {
@@ -910,7 +933,7 @@ public function LogEditing($HR,$TZ,$editable=false,$NameWidth="3%",$TimeWidth="1
                        $bgcolors ) ;
   }                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addPeriod($HR,$TZ,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   ///////////////////////////////////////////////////////////////////////
@@ -929,7 +952,7 @@ public function addPeriod($HR,$TZ,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
   $this -> addTd ( $HR , $LCS   , $LeftWidth , $bgcolors )              ;
   $this -> addTd ( $HR , $ETIME , $NameWidth , $bgcolors )              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function editPeriod($HR,$TZ,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   ///////////////////////////////////////////////////////////////////
@@ -955,7 +978,7 @@ public function editPeriod($HR,$TZ,$LeftWidth="3%",$NameWidth="15%",$bgcolors=""
   $HD     -> AddTag       ( $INP                                  ) ;
   ///////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function PeriodEditing($HR,$TZ,$editable=false,$NameWidth="3%",$TimeWidth="15%",$bgcolors="")
 {
   if ( $editable )                    {
@@ -972,7 +995,7 @@ public function PeriodEditing($HR,$TZ,$editable=false,$NameWidth="3%",$TimeWidth
                           $bgcolors ) ;
   }                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addPeople($ITEM)
 {
   $HH    = new Parameters        (                                     ) ;
@@ -994,7 +1017,7 @@ public function addPeople($ITEM)
   ////////////////////////////////////////////////////////////////////////
   return $INP                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CourseListing()
 {
   global $CourseNames                                         ;
@@ -1006,7 +1029,7 @@ public function CourseListing()
   $HT -> AddPair     ( "onchange"   , $JSC          )         ;
   return $HT                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCourse($HR,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   ////////////////////////////////////////////////////////
@@ -1019,7 +1042,7 @@ public function addCourse($HR,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
   $this -> addTd ( $HR , $LSS , $LeftWidth , $bgcolors ) ;
   $this -> addTd ( $HR , $LST , $NameWidth , $bgcolors ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CourseEditing($HR,$editable=false,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   ///////////////////////////////////////////////////////////////////////
@@ -1034,7 +1057,7 @@ public function CourseEditing($HR,$editable=false,$LeftWidth="3%",$NameWidth="15
     $this -> addCourse    ( $HR , $LeftWidth , $NameWidth , $bgcolors ) ;
   }                                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StatusListing()
 {
   global $LectureStates                                      ;
@@ -1046,7 +1069,7 @@ public function StatusListing()
   $HT -> AddPair     ( "onchange"     , $JSC            )    ;
   return $HT                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addStatus($HR,$LeftWidth="10%",$NameWidth="15%",$bgcolors="")
 {
   ////////////////////////////////////////////////////////
@@ -1059,7 +1082,7 @@ public function addStatus($HR,$LeftWidth="10%",$NameWidth="15%",$bgcolors="")
   $this -> addTd ( $HR , $LSS , $LeftWidth , $bgcolors ) ;
   $this -> addTd ( $HR , $LST , $NameWidth , $bgcolors ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StatusEditing($HR,$editable=false,$LeftWidth="3%",$NameWidth="15%",$bgcolors="")
 {
   ///////////////////////////////////////////////////////////////////////
@@ -1074,7 +1097,7 @@ public function StatusEditing($HR,$editable=false,$LeftWidth="3%",$NameWidth="15
     $this -> addStatus    ( $HR , $LeftWidth , $NameWidth , $bgcolors ) ;
   }                                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addLectureID($HR,$LeftWidth="3%",$NameWidth="5%",$bgcolors="")
 {
   ////////////////////////////////////////////////////////
@@ -1087,7 +1110,7 @@ public function addLectureID($HR,$LeftWidth="3%",$NameWidth="5%",$bgcolors="")
   $this -> addTd ( $HR , $LST , $LeftWidth , $bgcolors ) ;
   $this -> addTd ( $HR , $LID , $NameWidth , $bgcolors ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCallOff($TZ,$CLASSID="")
 {
   /////////////////////////////////////////////////////////////////
@@ -1101,7 +1124,7 @@ public function addCallOff($TZ,$CLASSID="")
   /////////////////////////////////////////////////////////////////
   return $HBX                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCoursesRemove($CLASSID="SelectionButton")
 {
   ///////////////////////////////////////////////////
@@ -1117,7 +1140,7 @@ public function addCoursesRemove($CLASSID="SelectionButton")
   ///////////////////////////////////////////////////
   return $BTN                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCoursesButton($CLASSID="SelectionButton")
 {
   //////////////////////////////////////////////////
@@ -1133,7 +1156,7 @@ public function addCoursesButton($CLASSID="SelectionButton")
   //////////////////////////////////////////////////
   return $BTN                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCourseSelection($DIV,$COURSES,$BTNCLASS="SelectionButton",$CLASSID="")
 {
   $BTN  = $this -> addCoursesRemove ( $BTNCLASS                      ) ;
@@ -1143,7 +1166,7 @@ public function addCourseSelection($DIV,$COURSES,$BTNCLASS="SelectionButton",$CL
   $HS  -> setSplitter               ( "\n"                           ) ;
   $HS  -> AddPair                   ( "id"       , "SelectedCourses" ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addAppendCourse($DIV,$ALL,$BTNCLASS="SelectionButton",$CLASSID="")
 {
   $HS     = $DIV  -> addSelection     ( $ALL , "" , $CLASSID ) ;
@@ -1153,7 +1176,7 @@ public function addAppendCourse($DIV,$ALL,$BTNCLASS="SelectionButton",$CLASSID="
   $BTN    = $this -> addCoursesButton ( $BTNCLASS            ) ;
   $DIV   -> AddTag                    ( $BTN                 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CoursesEditor($COURSES,$ALL,$BTNCLASS="SelectionButton",$CLASSID="")
 {
   //////////////////////////////////////////////////////////////////
@@ -1199,9 +1222,8 @@ public function CoursesEditor($COURSES,$ALL,$BTNCLASS="SelectionButton",$CLASSID
   //////////////////////////////////////////////////////////////////
   return $MHT                                                      ;
 }
-
-public function EditCourses($DB,$LANG)
-{
+//////////////////////////////////////////////////////////////////////////////
+public function EditCourses           ( $DB , $LANG                        ) {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   ////////////////////////////////////////////////////////////////////////////
@@ -1235,15 +1257,14 @@ public function EditCourses($DB,$LANG)
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $CET     = $this -> CoursesEditor   ( $ZNAMES                              ,
-                                        $WNAMES                               ,
+                                        $WNAMES                              ,
                                         "SelectionButton"                    ,
                                         "SelectCourse"                     ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $CET                                                                ;
 }
-
-public function addTimeSections($HD)
-{
+//////////////////////////////////////////////////////////////////////////////
+public function addTimeSections ( $HD )                                      {
   ////////////////////////////////////////////////////////////////
   global $WeekDays                                               ;
   global $DayPeriods                                             ;
@@ -1271,18 +1292,16 @@ public function addTimeSections($HD)
   $HD  -> AddPair              ( "nowrap"  , "nowrap"          ) ;
   $HD  -> AddPair              ( "align"   , "right"           ) ;
 }
-
-public function MinutesString($MINUTES)
-{
+//////////////////////////////////////////////////////////////////////////////
+public function MinutesString ( $MINUTES )                                   {
   $HS = intval ( $MINUTES / 60 , 10 )                 ;
   $MS = intval ( $MINUTES % 60 , 10 )                 ;
   if ( $HS < 10 ) $VS = "0{$HS}" ; else $VS = "{$HS}" ;
   if ( $MS < 10 ) $VK = "0{$MS}" ; else $VK = "{$MS}" ;
   return "{$VS}:{$VK}:00"                             ;
 }
-
-public function SectionString($MINUTES)
-{
+//////////////////////////////////////////////////////////////////////////////
+public function SectionString ( $MINUTES )                                   {
   global $WeekDays                           ;
   global $HourNames                          ;
   ////////////////////////////////////////////
@@ -1301,9 +1320,8 @@ public function SectionString($MINUTES)
   ////////////////////////////////////////////
   return $WDV                                ;
 }
-
-public function TimeSectionsSelector($SECTIONCLASS="")
-{
+//////////////////////////////////////////////////////////////////////////////
+public function TimeSectionsSelector($SECTIONCLASS="")                       {
   ///////////////////////////////////////////////////////////////
   global $Translations                                          ;
   global $WeekDays                                              ;
@@ -1324,9 +1342,8 @@ public function TimeSectionsSelector($SECTIONCLASS="")
   ///////////////////////////////////////////////////////////////
   return $HS                                                    ;
 }
-
-public function addSectionsEditor($HD,$SECTIONCLASS="")
-{
+//////////////////////////////////////////////////////////////////////////////
+public function addSectionsEditor($HD,$SECTIONCLASS="")                      {
   //////////////////////////////////////////////////////////////
   global $WeekDays                                             ;
   global $DayPeriods                                           ;
@@ -1355,9 +1372,8 @@ public function addSectionsEditor($HD,$SECTIONCLASS="")
   $BTN   -> AddPair          ( "class"   , "SelectionButton" ) ;
   $BTN   -> AddPair          ( "onclick" , $JSC              ) ;
 }
-
-public function TimeSectionEditor($SECTID="",$SECTIONCLASS="")
-{
+//////////////////////////////////////////////////////////////////////////////
+public function TimeSectionEditor($SECTID="",$SECTIONCLASS="")               {
   /////////////////////////////////////////////////////////
   $HT    = new HtmlTag           (                      ) ;
   $HB    = $HT -> ConfigureTable (                      ) ;
@@ -1377,9 +1393,8 @@ public function TimeSectionEditor($SECTID="",$SECTIONCLASS="")
   /////////////////////////////////////////////////////////
   return $HT                                              ;
 }
-
-function AppendSections($DIV,$editable,$SELECTIONS="Selections")
-{
+//////////////////////////////////////////////////////////////////////////////
+function AppendSections($DIV,$editable,$SELECTIONS="Selections")             {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   ////////////////////////////////////////////////////////////////////////////
@@ -1406,9 +1421,8 @@ function AppendSections($DIV,$editable,$SELECTIONS="Selections")
   $HBX  -> AddPair                       ( "onclick" , $JSC                ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
-function CloseSections($DIV,$editable,$SELECTIONS="Selections")
-{
+//////////////////////////////////////////////////////////////////////////////
+function CloseSections($DIV,$editable,$SELECTIONS="Selections")              {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   ////////////////////////////////////////////////////////////////////////////
@@ -1435,7 +1449,7 @@ function CloseSections($DIV,$editable,$SELECTIONS="Selections")
   $HBX  -> AddPair                       ( "onclick" , $JSC                ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>

@@ -1,40 +1,38 @@
 <?php
-
-namespace CIOS ;
-
-class ClassItem extends Columns
-{
-
-public $Id           ;
-public $Uuid         ;
-public $Type         ;
-public $Used         ;
-public $States       ;
-public $Trainee      ;
-public $Tutor        ;
-public $Manager      ;
-public $Receptionist ;
-public $Item         ;
-public $Lecture      ;
-public $Description  ;
-public $Period       ;
-public $Start        ;
-public $End          ;
-public $Update       ;
-
-/////////////////////////////////////////////////////////
-
-function __construct()
-{
-  $this -> Clear ( ) ;
+//////////////////////////////////////////////////////////////////////////////
+namespace CIOS                                                               ;
+//////////////////////////////////////////////////////////////////////////////
+class ClassItem extends Columns                                              {
+//////////////////////////////////////////////////////////////////////////////
+// +| Variables |+
+//////////////////////////////////////////////////////////////////////////////
+public $Id                                                                   ;
+public $Uuid                                                                 ;
+public $Type                                                                 ;
+public $Used                                                                 ;
+public $States                                                               ;
+public $Trainee                                                              ;
+public $Tutor                                                                ;
+public $Manager                                                              ;
+public $Receptionist                                                         ;
+public $Item                                                                 ;
+public $Lecture                                                              ;
+public $Description                                                          ;
+public $Period                                                               ;
+public $Start                                                                ;
+public $End                                                                  ;
+public $Update                                                               ;
+//////////////////////////////////////////////////////////////////////////////
+// -| Variables |-
+//////////////////////////////////////////////////////////////////////////////
+function __construct ( )                                                     {
+  $this -> Clear ( )                                                         ;
 }
-
-function __destruct()
-{
+//////////////////////////////////////////////////////////////////////////////
+function __destruct ( )                                                      {
 }
-
-public function Clear()
-{
+//////////////////////////////////////////////////////////////////////////////
+public function Clear ( )                                                    {
   $this -> Id           = -1 ;
   $this -> Uuid         =  0 ;
   $this -> Type         =  0 ;
@@ -407,7 +405,25 @@ public function fromString ( $CLASSID )
   ////////////////////////////////////////////////////
   return $U                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// +| toJsonWithTimestamp |+
+//////////////////////////////////////////////////////////////////////////////
+public function toJsonWithTimestamp      (                                 ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $NOW      = new StarDate               (                                 ) ;
+  $JSOX     = $this -> toJson            (                                 ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NOW     -> Stardate = $this -> Start                                      ;
+  $JSOX [ "StartTimestamp" ] = $NOW -> Timestamp ( )                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NOW     -> Stardate = $this -> End                                        ;
+  $JSOX [ "EndTimestamp"   ] = $NOW -> Timestamp ( )                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $JSOX                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
+// -| toJsonWithTimestamp |-
+//////////////////////////////////////////////////////////////////////////////
 public function ClassTime($TZ)
 {
   $SSD  = new StarDate ( )                 ;
