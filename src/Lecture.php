@@ -496,6 +496,18 @@ public function JoinCourses ( $DB , $RELATIONS , $COURSES ) {
   ///////////////////////////////////////////////////////////
   return $COURSES                                           ;
 }
+
+public function RemoveCourse ( $DB , $RELATION , $COURSE                   ) {
+  $RI   = new Relation       (                                             ) ;
+  $RI  -> set                ( "first"  , $this -> Uuid                    ) ;
+  $RI  -> set                ( "second" , $COURSE                          ) ;
+  $RI  -> setT1              ( "Lecture"                                   ) ;
+  $RI  -> setT2              ( "Course"                                    ) ;
+  $RI  -> setRelation        ( "Contains"                                  ) ;
+  $QQ   = $RI -> Delete      ( $RELATION                                   ) ;
+  $DB  -> Query              ( $QQ                                         ) ;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 public function ObtainLessons($DB,$RELATIONS)
 {
