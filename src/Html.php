@@ -218,26 +218,32 @@ public function TagsContent()
   return $L                                     ;
 }
 
-public function setDiv($Msg="",$IDNAME="",$CLASSNAME="")
-{
-  $this -> Tag  = "div"                       ;
-  $this -> Type = 1                           ;
-  $this -> SafePair  ( "id"    , $IDNAME    ) ;
-  $this -> SafePair  ( "class" , $CLASSNAME ) ;
-  if                 ( strlen ( $Msg ) > 0  ) {
-    $this -> AddText ( $Msg                 ) ;
-  }                                           ;
+public function setDiv ( $Msg = "" , $IDNAME = "" , $CLASSNAME = "" )        {
+  $this   -> Tag  = "div"                                                    ;
+  $this   -> Type = 1                                                        ;
+  $this   -> SafePair  ( "id"    , $IDNAME                                 ) ;
+  $this   -> SafePair  ( "class" , $CLASSNAME                              ) ;
+  $T       = "{$Msg}"                                                        ;
+  if                   ( is_a ( $Msg , "CIOS\Html" )                       ) {
+    $this -> AddTag    ( $Msg                                              ) ;
+  } else
+  if                   ( strlen ( $T ) > 0                                 ) {
+    $this -> AddText   ( $T                                                ) ;
+  }                                                                          ;
 }
 
-public function setSpan($Msg="",$IDNAME="",$CLASSNAME="")
-{
-  $this -> Tag  = "span"                      ;
-  $this -> Type = 1                           ;
-  $this -> SafePair  ( "id"    , $IDNAME    ) ;
-  $this -> SafePair  ( "class" , $CLASSNAME ) ;
-  if                 ( strlen ( $Msg ) > 0  ) {
-    $this -> AddText ( $Msg                 ) ;
-  }                                           ;
+public function setSpan ( $Msg = "" , $IDNAME = "" , $CLASSNAME = "" )       {
+  $this   -> Tag  = "span"                                                   ;
+  $this   -> Type = 1                                                        ;
+  $this   -> SafePair   ( "id"    , $IDNAME                                ) ;
+  $this   -> SafePair   ( "class" , $CLASSNAME                             ) ;
+  $T       = "{$Msg}"                                                        ;
+  if                    ( is_a ( $Msg , "CIOS\Html" )                      ) {
+    $this -> AddTag     ( $Msg                                             ) ;
+  } else
+  if                    ( strlen ( $T ) > 0                                ) {
+    $this -> AddText    ( $T                                               ) ;
+  }                                                                          ;
 }
 
 public function setInput()
@@ -289,52 +295,48 @@ public function ConfigureTable($BORDER=0,$SPACING=0,$PADDING=0)
   return $HB                                        ;
 }
 
-public function addDiv($Msg = "",$IDNAME="",$CLASSNAME="")
-{
-  $HD    = new Html (                             ) ;
-  $HD   -> setDiv   ( $Msg , $IDNAME , $CLASSNAME ) ;
-  $this -> AddTag   ( $HD                         ) ;
-  return $HD                                        ;
+public function addDiv ( $Msg = "" , $IDNAME = "" , $CLASSNAME = "" )        {
+  $HD    = new Html (                             )                          ;
+  $HD   -> setDiv   ( $Msg , $IDNAME , $CLASSNAME )                          ;
+  $this -> AddTag   ( $HD                         )                          ;
+  return $HD                                                                 ;
 }
 
-public function addSpan($Msg = "",$IDNAME="",$CLASSNAME="")
-{
-  $HD    = new Html (                             ) ;
-  $HD   -> setSpan  ( $Msg , $IDNAME , $CLASSNAME ) ;
-  $this -> AddTag   ( $HD                         ) ;
-  return $HD                                        ;
+public function addSpan($Msg = "",$IDNAME="",$CLASSNAME="")                  {
+  $HD    = new Html (                             )                          ;
+  $HD   -> setSpan  ( $Msg , $IDNAME , $CLASSNAME )                          ;
+  $this -> AddTag   ( $HD                         )                          ;
+  return $HD                                                                 ;
 }
 
-public function addTr()
-{
-  $HR    = new Html (      ) ;
-  $HR   -> setTag   ( "tr" ) ;
-  $this -> AddTag   ( $HR  ) ;
-  return $HR                 ;
+public function addTr (      )                                               {
+  $HR    = new Html   (      )                                               ;
+  $HR   -> setTag     ( "tr" )                                               ;
+  $this -> AddTag     ( $HR  )                                               ;
+  return $HR                                                                 ;
 }
 
-public function addTd ( $MSG = "" )
-{
-  $HD    = new Html (                             ) ;
-  $HD   -> setTag   ( "td"                        ) ;
-  $this -> AddTag   ( $HD                         ) ;
-  if                ( is_a ( $MSG , "CIOS\Html" ) ) {
-    $HD -> AddTag   ( $MSG                        ) ;
+public function addTd ( $MSG = ""                   )                        {
+  $HD    = new Html   (                             )                        ;
+  $HD   -> setTag     ( "td"                        )                        ;
+  $this -> AddTag     ( $HD                         )                        ;
+  $T     = "{$MSG}"                                                          ;
+  if                  ( is_a ( $MSG , "CIOS\Html" ) )                        {
+    $HD -> AddTag     ( $MSG                        )                        ;
   } else
-  if                ( strlen ( $MSG ) > 0         ) {
-    $HD -> AddText  ( $MSG                        ) ;
-  }                                                 ;
-  return $HD                                        ;
+  if                  ( strlen ( $T ) > 0           )                        {
+    $HD -> AddText    ( $T                          )                        ;
+  }                                                                          ;
+  return $HD                                                                 ;
 }
 
-public function addTDs($MSGs)
-{
-  $HDs  = array          (               ) ;
-  foreach                ( $MSGs as $msg ) {
-    $HD = $this -> addTd ( $msg          ) ;
-    array_push           ( $HDs , $HD    ) ;
-  }                                        ;
-  return $HDs                              ;
+public function addTDs   ( $MSGs         )                                   {
+  $HDs  = array          (               )                                   ;
+  foreach                ( $MSGs as $msg )                                   {
+    $HD = $this -> addTd ( $msg          )                                   ;
+    array_push           ( $HDs , $HD    )                                   ;
+  }                                                                          ;
+  return $HDs                                                                ;
 }
 
 public function addTrLine($MSGs)
