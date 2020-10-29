@@ -344,22 +344,24 @@ public function toDateString            (
   return $SS                                       ;
 }
 
-public function toDuration()
-{
-  $DT  = gmp_sub ( $this -> End , $this -> Start ) ;
-  $HH  = intval  ( $DT / 3600   , 10             ) ;
-  $DT  = gmp_sub ( $DT          , $HH * 3600     ) ;
-  $MM  = intval  ( $DT /   60   , 10             ) ;
-  $DT  = gmp_sub ( $DT          , $MM *   60     ) ;
-  $DT  = intval  ( $DT          , 10             ) ;
-  if ( $MM < 10 ) $MM = "0{$MM}"                   ;
-  if ( $DT < 10 ) $DT = "0{$DT}"                   ;
-  if             ( $HH > 0                       ) {
-    $DS = "{$HH}:{$MM}:{$DT}"                      ;
-  } else                                           {
-    $DS = "{$MM}:{$DT}"                            ;
-  }                                                ;
-  return $DS                                       ;
+public function toDuration ( )                                               {
+  $DT  = gmp_sub ( $this -> End , $this -> Start )                           ;
+  if             ( gmp_cmp ( $DT , 0 ) < 0       )                           {
+    return "00:00"                                                           ;
+  }                                                                          ;
+  $HH  = intval  ( $DT / 3600   , 10             )                           ;
+  $DT  = gmp_sub ( $DT          , $HH * 3600     )                           ;
+  $MM  = intval  ( $DT /   60   , 10             )                           ;
+  $DT  = gmp_sub ( $DT          , $MM *   60     )                           ;
+  $DT  = intval  ( $DT          , 10             )                           ;
+  if ( $MM < 10 ) $MM = "0{$MM}"                                             ;
+  if ( $DT < 10 ) $DT = "0{$DT}"                                             ;
+  if             ( $HH > 0                       )                           {
+    $DS = "{$HH}:{$MM}:{$DT}"                                                ;
+  } else                                                                     {
+    $DS = "{$MM}:{$DT}"                                                      ;
+  }                                                                          ;
+  return $DS                                                                 ;
 }
 
 public function obtain($R)
