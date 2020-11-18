@@ -521,15 +521,16 @@ public function ObtainLessons($DB,$RELATIONS)
   return $LESSONS                                             ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainSections ( $DB , $TABLE )
-{
-  $PQ    = ParameterQuery::NewParameter ( 2 , 67 , "Periods"               ) ;
-  $PQ   -> setTable                     ( $TABLE                           ) ;
-  $SECTs = $PQ -> Data                  ( $DB , $this -> Uuid , "Sections" ) ;
-  if                                    ( strlen ( $SECTs ) > 0            ) {
-    $this -> Sections = explode         ( " , " , $SECTs                   ) ;
+public function ObtainSections            ( $DB , $TABLE                   ) {
+  $PQ      = ParameterQuery::NewParameter ( 2 , 67 , "Periods"             ) ;
+  $PQ     -> setTable                     ( $TABLE                         ) ;
+  $SECTs   = $PQ -> Data                  ( $DB                              ,
+                                            $this -> Uuid                    ,
+                                            "Sections"                     ) ;
+  if                                      ( strlen ( $SECTs ) > 0          ) {
+    $this -> Sections = explode           ( " , " , $SECTs                 ) ;
   } else                                                                     {
-    $this -> Sections = array           (                                  ) ;
+    $this -> Sections = array             (                                ) ;
   }                                                                          ;
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -612,6 +613,49 @@ public function NextClassTime($START,$TZ)
   }                                                     ;
   ///////////////////////////////////////////////////////
   return $SD -> Stardate                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function LastestClassPeriod        ( $DB , $CLSTAB                  ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $LUID          = $this -> Uuid                                             ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ            = "select `start`,`end` from {$CLSTAB}"                     .
+                   " where ( `lecture` = {$LUID} )"                          .
+                   " and ( `used` = 1 )"                                     .
+                   " and ( `type` in ( 1 , 2 , 3 , 4 , 6 , 7 , 8 , 9 ) )"    .
+                   " order by `end` desc"                                    .
+                   " limit 0,1 ;"                                            ;
+  ////////////////////////////////////////////////////////////////////////////
+  $qq            = $DB -> Query           ( $QQ                            ) ;
+  if                                      ( $DB -> hasResult ( $qq )       ) {
+    //////////////////////////////////////////////////////////////////////////
+    $rr          = $qq -> fetch_array     ( MYSQLI_BOTH                    ) ;
+    return array                                                             (
+      "Answer"   =>   true                                                   ,
+      "Start"    =>   $rr [ 0 ]                                              ,
+      "End"      =>   $rr [ 1 ]                                              ,
+    )                                                                        ;
+    //////////////////////////////////////////////////////////////////////////
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return array                            ( "Answer" => false              ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function LastestClassMoment       ( $DB , $CLSTAB                   ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $NOW     = new StarDate                (                                 ) ;
+  $NOW    -> Now                         (                                 ) ;
+  $SDT     = $NOW  -> Stardate                                               ;
+  $ANSWER  = $this -> LastestClassPeriod ( $DB , $CLSTAB                   ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                                     ( $ANSWER [ "Answer" ]            ) {
+    $ETX   = $ANSWER                     [ "End"                           ] ;
+    if                                   ( gmp_cmp ( $ETX , $SDT ) > 0     ) {
+      $SDT = $ETX                                                            ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $SDT                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function StudentJson($DB,$TZ,$NAME,$LECTUREID,$NOW)
