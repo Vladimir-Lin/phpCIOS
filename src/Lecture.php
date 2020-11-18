@@ -658,6 +658,21 @@ public function LastestClassMoment       ( $DB , $CLSTAB                   ) {
   return $SDT                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function isClassCollision         ( $DB , $CLSTAB , $START          ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $T       = gmp_add                     ( $START , 300                    ) ;
+  $TUID    = $this -> Trainee                                                ;
+  $XUID    = $this -> Tutor                                                  ;
+  $QQ      = "select count(*) from {$CLSTAB}"                                .
+             " where ( `used` = 1 )"                                         .
+             " and ( `start` > {$T} )"                                       .
+             " and ( `end` < {$T} )"                                         .
+             " and ( `type` in ( 1 , 2 , 4 , 6 , 7 , 8 ) )"                  .
+             " and ( ( `trainee` = {$TUID} ) or ( `tutor` = {$XUID} ) ) ;"   ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> FetchOne                 ( $QQ                             ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function StudentJson($DB,$TZ,$NAME,$LECTUREID,$NOW)
 {
   $HH   = new Parameters        (                        )                  ;
