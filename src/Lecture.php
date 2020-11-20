@@ -665,8 +665,8 @@ public function isClassCollision         ( $DB , $CLSTAB , $START          ) {
   $XUID    = $this -> Tutor                                                  ;
   $QQ      = "select count(*) from {$CLSTAB}"                                .
              " where ( `used` = 1 )"                                         .
-             " and ( `start` > {$T} )"                                       .
-             " and ( `end` < {$T} )"                                         .
+             " and ( `start` < {$T} )"                                       .
+             " and ( `end` > {$T} )"                                         .
              " and ( `type` in ( 1 , 2 , 4 , 6 , 7 , 8 ) )"                  .
              " and ( ( `trainee` = {$TUID} ) or ( `tutor` = {$XUID} ) ) ;"   ;
   ////////////////////////////////////////////////////////////////////////////
