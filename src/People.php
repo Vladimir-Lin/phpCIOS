@@ -1,10 +1,9 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
-class People
-{
-
+//////////////////////////////////////////////////////////////////////////////
+class People                                                                 {
+//////////////////////////////////////////////////////////////////////////////
 public $Uuid      = 0                     ;
 public $Role      = 0                     ;
 public $TzId      = "2700000000000000270" ;
@@ -18,9 +17,8 @@ public $Owners                            ;
 public $Name                              ;
 public $Roles     = [ ]                   ;
 public $Attributes                        ;
-
-function __construct( $OBJ = 0 )
-{
+//////////////////////////////////////////////////////////////////////////////
+function __construct ( $OBJ = 0 )                                            {
   if ( is_a         ( $OBJ , "CIOS\People" ) ) {
     $this -> assign ( $OBJ                   ) ;
   } else
@@ -28,13 +26,11 @@ function __construct( $OBJ = 0 )
     $this -> Uuid =   $OBJ                     ;
   }
 }
-
-function __destruct()
-{
+//////////////////////////////////////////////////////////////////////////////
+function __destruct ( )                                                      {
 }
-
-public function assign($item)
-{
+//////////////////////////////////////////////////////////////////////////////
+public function assign ( $item )                                             {
   $this -> Uuid        = $item -> Uuid      ;
   $this -> Role        = $item -> Role      ;
   $this -> TzId        = $item -> TzId      ;
@@ -49,7 +45,7 @@ public function assign($item)
   $this -> Roles       = $item -> Roles     ;
   $this -> $Attributes = array ( )          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toString ( )
 {
   $U = $this -> Uuid                                         ;
@@ -57,7 +53,7 @@ public function toString ( )
   if ( $H != "14000000000" ) return ""                       ;
   return sprintf ( "act1%08d" , gmp_mod ( $U , 100000000 ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function fromString ( $S )
 {
   if               ( 12 != strlen ( $S )     ) {
@@ -75,7 +71,7 @@ public function fromString ( $S )
   $this -> Uuid = $U                           ;
   return $U                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetObjects ( $DB , $TABLE , $T2 , $RELATION )
 {
   $RI  = new Relation         (                         ) ;
@@ -87,22 +83,22 @@ public function GetObjects ( $DB , $TABLE , $T2 , $RELATION )
   unset                       ( $RI                     ) ;
   return $XX                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetEMails ( $DB , $TABLE = "`erp`.`relations`" )
 {
   return $this -> GetObjects ( $DB , $TABLE , "EMail" , "Subordination" ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetIMs ( $DB , $TABLE = "`erp`.`relations`" )
 {
   return $this -> GetObjects ( $DB , $TABLE , "InstantMessage" , "Subordination" ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetPhones ( $DB , $TABLE = "`erp`.`relations`" )
 {
   return $this -> GetObjects ( $DB , $TABLE , "Phone" , "Subordination" ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetLanguage ( $DB , $TABLE = "`erp`.`relations`" )
 {
   $RA = $this -> GetObjects     ( $DB , $TABLE , "Language" , "Using" ) ;
@@ -115,13 +111,13 @@ public function GetLanguage ( $DB , $TABLE = "`erp`.`relations`" )
   if ( $this -> Language >= 2000 ) $this -> Language = 1001             ;
   return $this -> Language                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetRoles ( $DB , $TABLE = "`erp`.`relations`" )
 {
   $this -> Roles = $this -> GetObjects ( $DB , $TABLE , "Role" , "Acting" ) ;
   return $this -> Roles                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetTimeZone ( $DB , $TABLE = "`erp`.`relations`" )
 {
   $this -> TzId   = "2700000000000000270"                               ;
@@ -132,14 +128,14 @@ public function GetTimeZone ( $DB , $TABLE = "`erp`.`relations`" )
   if ( count ( $RA ) > 0 ) $this -> TzId = $RA [ 0 ]                    ;
   return $this -> TzId                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetZoneName ( $DB , $TABLE )
 {
   $TZS        = new TimeZones       (                              ) ;
   $this -> TZ = $TZS -> GetZoneName ( $DB , $TABLE , $this -> TzId ) ;
   return $this -> TZ                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetSeniority ( $DB )
 {
   $this -> Seniority = ParameterQuery::GetParameterStatus (
@@ -147,7 +143,7 @@ public function GetSeniority ( $DB )
                          $this -> Uuid                    ,
                          "Level"                        ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetLevel ( $DB )
 {
   $this -> Level = ParameterQuery::GetParameterPersonal (
@@ -155,7 +151,7 @@ public function GetLevel ( $DB )
                      $this -> Uuid                      ,
                      "Level"                          ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetCourse ( $DB )
 {
   $this -> Item = ParameterQuery::GetParameterStatus                 (
@@ -166,7 +162,7 @@ public function GetCourse ( $DB )
     $this -> Item = 1                                                ;
   }                                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetCourses ( $DB )
 {
   $ITEMs           = ParameterQuery::GetParameterData (
@@ -178,7 +174,7 @@ public function GetCourses ( $DB )
                        "Teaching"                   ) ;
   $this -> Courses = explode ( " , " , $ITEMs )       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isCounselor ( )
 {
   if ( ! $this -> ContainsRole ( 7 ) ) return false             ;
@@ -187,7 +183,7 @@ public function isCounselor ( )
   }                                                             ;
   return false                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isTeamLeader ( )
 {
   if ( ! $this -> ContainsRole ( 7 ) ) return false             ;
@@ -196,7 +192,7 @@ public function isTeamLeader ( )
   }                                                             ;
   return false                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isManager ( )
 {
   if ( ( $this -> Level >= 500 ) and ( $this -> Level < 800 ) ) {
@@ -204,7 +200,7 @@ public function isManager ( )
   }                                                             ;
   return false                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isSubsidiary ( )
 {
   if ( ( $this -> Level >= 800 ) and ( $this -> Level < 900 ) ) {
@@ -212,18 +208,18 @@ public function isSubsidiary ( )
   }                                                             ;
   return false                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TutorParameters ( $DB )
 {
   $this -> GetSeniority ( $DB ) ;
   $this -> GetCourses   ( $DB ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentParameters ( $DB )
 {
   $this -> GetCourse ( $DB ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ManagerParameters ( $DB )
 {
   $this -> GetSeniority ( $DB )    ;
@@ -239,23 +235,23 @@ public function ManagerParameters ( $DB )
   if ( $this -> isManager    ( ) ) {
   }
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function EmployeeParameters ( $DB )
 {
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function RoleId ( )
 {
   return $this -> ShortRole ( $this -> Role ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ShortRole ( $X )
 {
   $R = (string) $X                                              ;
   $R = (string) str_replace ( "1700000000" , "" , (string) $R ) ;
   return intval ( (string) $R , 10 )                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ContainsRole ( $X )
 {
   foreach ( $this -> Roles as $R )  {
@@ -264,12 +260,12 @@ public function ContainsRole ( $X )
   }                                 ;
   return false                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function AddRole ( $R )
 {
   array_push ( $this -> Roles , $R ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toRoleString ( )
 {
   if ( count ( $this -> Roles ) <= 0 ) return ""     ;
@@ -280,7 +276,7 @@ public function toRoleString ( )
   }                                                  ;
   return implode            ( " , " , $RL          ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function DecideRole ( )
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -314,7 +310,7 @@ public function DecideRole ( )
   ////////////////////////////////////////////////////////////////////////////
   return $this -> Role                                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetParameters ( $DB )
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -371,7 +367,7 @@ public function GetParameters ( $DB )
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SessionStart ( )
 {
   $COURSESTR                        = implode ( " , " , $this -> Courses ) ;
@@ -413,7 +409,7 @@ public function SessionStart ( )
   }                                                                        ;
   //////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Recovery()
 {
   if ( ! isset ( $_SESSION [ "Authorized" ] ) ) return            ;
@@ -437,7 +433,7 @@ public function Recovery()
   $CCS               = (string) $_SESSION [ "ACTIONS_COURSES"   ] ;
   $this -> Courses   = explode ( " , " , $CCS )                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function HomeDir ( $ROLE )
 {
   switch ( $ROLE )                                                           {
@@ -487,12 +483,12 @@ public function HomeDir ( $ROLE )
   }                                                                          ;
   return "visitors"                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Home (  )
 {
   return $this -> HomeDir ( $this -> RoleId ( ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Obtains ( $DB )
 {
   $this -> ObtainTimeZone             ( $DB )    ;
@@ -523,7 +519,7 @@ public function Obtains ( $DB )
     //////////////////////////////////////////////
   }                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainTimeZone ( $DB )
 {
   $PUID          = $this -> Uuid                                             ;
@@ -537,7 +533,7 @@ public function ObtainTimeZone ( $DB )
     $this -> TZ = $NN [ 0 ]                                                  ;
   }                                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ListTimeZone ( $Table = "`erp`.`relations`" )
 {
   $RA  = array                (                         ) ;
@@ -555,7 +551,7 @@ public function ListTimeZone ( $Table = "`erp`.`relations`" )
   /////////////////////////////////////////////////////////
   return "2700000000000000270"                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function MakeSure ( $DB , $TABLE , $CANDIDATES , $TMP )
 {
   foreach ( $TMP as $nsx )                       {
@@ -573,7 +569,7 @@ public function MakeSure ( $DB , $TABLE , $CANDIDATES , $TMP )
   }                                              ;
   return $CANDIDATES                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainByRole ( $DB , $TABLE , $CANDIDATE , $ACTING )
 {
   //////////////////////////////////////////////////////////////
@@ -596,7 +592,7 @@ public function ObtainByRole ( $DB , $TABLE , $CANDIDATE , $ACTING )
   //////////////////////////////////////////////////////////////
   return $UU                                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SkipClasses($DB,$TABLE)
 {
   //////////////////////////////////////////////////////
@@ -615,7 +611,7 @@ public function SkipClasses($DB,$TABLE)
   //////////////////////////////////////////////////////
   return $CLASSES                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SkipQuotas($DB,$ITEMX)
 {
   $HH    = new Parameters ( )                                                ;
@@ -662,7 +658,7 @@ public function SkipQuotas($DB,$ITEMX)
   ////////////////////////////////////////////////////////////////////////////
   return $SUMS                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SearchByKey ( $DB , $CANDIDATEs , $KEY )
 {
   $RI  = new Relation     ( )                                                ;
@@ -773,7 +769,7 @@ public function SearchByKey ( $DB , $CANDIDATEs , $KEY )
   ////////////////////////////////////////////////////////////////////////////
   return $CANDIDATEs                                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SearchByKeys($DB,$CANDIDATEs,$KEYs)
 {
   foreach ( $KEYs as $key )                                           {
@@ -783,7 +779,7 @@ public function SearchByKeys($DB,$CANDIDATEs,$KEYs)
   }                                                                   ;
   return $CANDIDATEs                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SearchByLine($DB,$CANDIDATEs,$TXT,$SPLITTER=" ")
 {
   $KEYs = explode ( $SPLITTER , $TXT )                              ;
@@ -792,7 +788,7 @@ public function SearchByLine($DB,$CANDIDATEs,$TXT,$SPLITTER=" ")
   unset ( $KEYs )                                                   ;
   return $CANDIDATEs                                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CorrectPassword()
 {
   $PwdCorrect = false                                          ;
@@ -811,7 +807,7 @@ public function CorrectPassword()
   if ( ! $PwdCorrect ) return false                            ;
   return true                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetNameByParameter ( $KEY )
 {
   $NI = new NameItem ( )                                 ;
@@ -820,7 +816,7 @@ public function GetNameByParameter ( $KEY )
   $NI -> Name = trim ( $NI -> Name )                     ;
   return $NI                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetMembers($DB,$TABLE,$ORDER="desc",$RELATION="Subordination")
 {
   $RI  = new RelationItem     (                                ) ;
@@ -834,7 +830,7 @@ public function GetMembers($DB,$TABLE,$ORDER="desc",$RELATION="Subordination")
   unset                       ( $RI                            ) ;
   return $LX                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetOwners($DB,$TABLE,$ORDER="desc",$RELATION="Subordination")
 {
   $RI  = new RelationItem (                             ) ;
@@ -848,7 +844,7 @@ public function GetOwners($DB,$TABLE,$ORDER="desc",$RELATION="Subordination")
   unset                   ( $RI                         ) ;
   return $LX                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function JoinMoment($DB,$RI,$TABLE)
 {
   $RI -> set                ( "second"  , $this -> Uuid )              ;
@@ -857,7 +853,7 @@ public function JoinMoment($DB,$RI,$TABLE)
   $rr  = $qq -> fetch_array ( MYSQLI_BOTH               )              ;
   return $rr [ 0 ]                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 ?>

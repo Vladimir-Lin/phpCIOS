@@ -446,6 +446,16 @@ public function GetConsumedListings ( $DB , $TABLE , $PUID , $ITEM         ) {
   return $DB -> ObtainUuids         ( $QQ                                  ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function GetTransferListings ( $DB , $TABLE , $PUID                 ) {
+  $QQ = "select `uuid` from {$TABLE}"                                        .
+        " where ( `owner` = {$PUID} )"                                       .
+        " and ( `action` = 3 )"                                              .
+        " and ( `states` = 3 )"                                              .
+        " and ( `tokens` > 0 )"                                              .
+        " order by `ltime` asc ;"                                            ;
+  return $DB -> ObtainUuids         ( $QQ                                  ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function GetTokensByFunction    ( $DB                                 ,
                                          $TABLE                              ,
                                          $PUID                               ,
@@ -492,6 +502,74 @@ public function GetConsumedTokens        ( $DB , $TABLE , $PUID , $ITEM    ) {
                                            $PUID                             ,
                                            $ITEM                             ,
                                            "GetConsumedListings"           ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetLastestTransferToken ( $DB , $TABLE                     ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $OWNER = $this -> Owner                                                    ;
+  $QQ    = "select `uuid` from {$TABLE}"                                     .
+           " where ( `owner` = {$OWNER} )"                                   .
+           " and ( `action` = 3 )"                                           .
+           " and ( `states` = 3 )"                                           .
+           " order by `ltime` asc"                                           .
+           " limit 0 , 1 ;"                                                  ;
+  return $DB -> FetchOne                ( $QQ                              ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function UpdateTransferTokens    ( $DB , $TABLE , $STATE , $NOW     ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $TUID = $this -> Uuid                                                      ;
+  $OUID = $this -> Description                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "update {$TABLE}"                                                  .
+          " set `states` = {$STATE} , `modify` = {$NOW}"                     .
+          " where ( `uuid` in ( {$TUID} , {$OUID} ) )"                       .
+          " and ( `states` = 3 ) ;"                                          ;
+  $DB  -> Query                         ( $QQ                              ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function AcceptTransferSkips     ( $DB , $TABLE                     ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $TUID = $this -> Uuid                                                      ;
+  $OUID = $this -> Description                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "update {$TABLE} set `action` = 3 , `states` = 7"                  .
+          " where ( `reason` in ( {$TUID} , {$OUID} ) )"                     .
+          " and ( `action` = 9 )"                                            .
+          " and ( `states` = 8 ) ;"                                          ;
+  $DB  -> Query                         ( $QQ                              ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "update {$TABLE} set `action` = 5 , `states` = 7"                  .
+          " where ( `reason` in ( {$TUID} , {$OUID} ) )"                     .
+          " and ( `action` = 7 )"                                            .
+          " and ( `states` = 8 ) ;"                                          ;
+  $DB  -> Query                         ( $QQ                              ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function CancelTransferSkips     ( $DB , $TABLE                     ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $TUID = $this -> Uuid                                                      ;
+  $OUID = $this -> Description                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "update {$TABLE} set `action` = 0"                                 .
+          " where ( `reason` in ( {$TUID} , {$OUID} ) ) ;"                   ;
+  $DB  -> Query                         ( $QQ                              ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function UpdateTransferSkips     ( $DB , $TABLE , $STATE , $NOW     ) {
+  ////////////////////////////////////////////////////////////////////////////
+  switch                                ( $STATE                           ) {
+    case 1                                                                   :
+      $this -> AcceptTransferSkips      ( $DB , $TABLE                     ) ;
+    break                                                                    ;
+    case 4                                                                   :
+      $this -> CancelTransferSkips      ( $DB , $TABLE                     ) ;
+    break                                                                    ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 public function ClassPoints ( $POINTS                                      ) {
