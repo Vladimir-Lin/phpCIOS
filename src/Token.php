@@ -315,212 +315,201 @@ public function ObtainsByUuid    ( $DB , $TABLE                            ) {
   return $this -> ObtainsByQuery ( $DB , $QQ                               ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsByReason($DB,$TABLE,$REASON)
-{
-  $QQ = "select `uuid` from {$TABLE}" .
-        " where `reason` = {$REASON}" .
-        " order by `creation` desc ;" ;
-  return $DB -> ObtainUuids ( $QQ )   ;
+public function ObtainsByReason ( $DB , $TABLE , $REASON )                   {
+  $QQ = "select `uuid` from {$TABLE}"                                        .
+        " where `reason` = {$REASON}"                                        .
+        " order by `creation` desc ;"                                        ;
+  return $DB -> ObtainUuids     ( $QQ )                                      ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainRelated($DB,$RELATIONS,$CLASSID)
-{
-  $RI     = new Relation         (                    ) ;
-  $RI    -> set                  ( "first" , $CLASSID ) ;
-  $RI    -> setT1                ( "Class"            ) ;
-  $RI    -> setT2                ( "Token"            ) ;
-  $RI    -> setRelation          ( "Subordination"    ) ;
-  $TOKENS = $RI -> Subordination ( $DB , $RELATIONS   ) ;
-  unset                          ( $RI                ) ;
-  return $TOKENS                                        ;
+public function ObtainRelated    ( $DB , $RELATIONS , $CLASSID             ) {
+  $RI     = new Relation         (                                         ) ;
+  $RI    -> set                  ( "first" , $CLASSID                      ) ;
+  $RI    -> setT1                ( "Class"                                 ) ;
+  $RI    -> setT2                ( "Token"                                 ) ;
+  $RI    -> setRelation          ( "Subordination"                         ) ;
+  $TOKENS = $RI -> Subordination ( $DB , $RELATIONS                        ) ;
+  unset                          ( $RI                                     ) ;
+  return $TOKENS                                                             ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsByClass($DB,$TABLE,$RELATIONS,$CLASSID)
-{
-  $TOKENS = $this -> ObtainsByReason ( $DB , $TABLE     , $CLASSID ) ;
-  $TKNS   = $this -> ObtainRelated   ( $DB , $RELATIONS , $CLASSID ) ;
-  $TOKENS = $DB   -> JoinArray       ( $TOKENS , $TKNS             ) ;
-  return $TOKENS                                                     ;
+public function ObtainsByClass       ( $DB , $TABLE , $RELATION , $CLASSID ) {
+  $TOKENS = $this -> ObtainsByReason ( $DB , $TABLE    , $CLASSID          ) ;
+  $TKNS   = $this -> ObtainRelated   ( $DB , $RELATION , $CLASSID          ) ;
+  $TOKENS = $DB   -> JoinArray       ( $TOKENS , $TKNS                     ) ;
+  return $TOKENS                                                             ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function ObtainsTrades($DB,$TOKENS)
-{
-  $QQ = "select `uuid` from {$TOKENS}"                 .
-        " where `owner` = " . (string) $this -> Owner  .
-         " and `action` = " . (string) $this -> Action .
-         " and `states` = " . (string) $this -> States .
-          " and `rtype` = " . (string) $this -> rType  .
-           " and `item` = " . (string) $this -> Item   .
-          " ;"                                         ;
-  return $DB -> ObtainUuids ( $QQ )                    ;
+public function ObtainsTrades ( $DB , $TOKENS                              ) {
+  $QQ = "select `uuid` from {$TOKENS}"                                       .
+        " where `owner` = " . (string) $this -> Owner                        .
+         " and `action` = " . (string) $this -> Action                       .
+         " and `states` = " . (string) $this -> States                       .
+          " and `rtype` = " . (string) $this -> rType                        .
+           " and `item` = " . (string) $this -> Item                         .
+          " ;"                                                               ;
+  return $DB -> ObtainUuids   ( $QQ                                        ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function ObtainsConsumed($DB,$TOKENS,$NOW)
-{
-  $QQ = "select `uuid` from {$TOKENS}"                 .
-        " where `owner` = " . (string) $this -> Owner  .
-         " and `action` = " . (string) $this -> Action .
-         " and `states` = " . (string) $this -> States .
-          " and `rtype` = " . (string) $this -> rType  .
-           " and `item` = " . (string) $this -> Item   .
-        " and ( `creation` < {$NOW} )" .  " ;"         ;
-  return $DB -> ObtainUuids ( $QQ )                    ;
+public function ObtainsConsumed ( $DB , $TOKENS , $NOW                     ) {
+  $QQ = "select `uuid` from {$TOKENS}"                                       .
+        " where `owner` = " . (string) $this -> Owner                        .
+         " and `action` = " . (string) $this -> Action                       .
+         " and `states` = " . (string) $this -> States                       .
+          " and `rtype` = " . (string) $this -> rType                        .
+           " and `item` = " . (string) $this -> Item                         .
+        " and ( `creation` < {$NOW} )" .  " ;"                               ;
+  return $DB -> ObtainUuids     ( $QQ                                      ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function ObtainsSkipQuotas($DB,$TABLE)
-{
-  $this -> SkipQuotas = 0                    ;
-  $QQ  = "select `amount` from {$TABLE}"     .
-         " where `owner` = {$this->Owner}"   .
-          " and `reason` = {$this->Uuid}"    .
-          " and `action` = 3 ;"              ;
-  $qq  = $DB -> Query ( $QQ )                ;
-  if ( $DB -> hasResult ( $qq ) )            {
-    $rr = $qq -> fetch_array ( MYSQLI_BOTH ) ;
-    $this -> SkipQuotas = $rr [ 0 ]          ;
-  }                                          ;
+public function ObtainsSkipQuotas ( $DB , $TABLE                           ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> SkipQuotas = 0                                                    ;
+  $OWID  = $this -> Owner                                                    ;
+  $TKID  = $this -> Uuid                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ    = "select `amount` from {$TABLE}"                                   .
+           " where `owner` = {$OWID}"                                        .
+            " and `reason` = {$TKID}"                                        .
+            " and `action` = 3 ;"                                            ;
+  $qq    = $DB -> Query           ( $QQ                                    ) ;
+  if                              ( $DB -> hasResult ( $qq )               ) {
+    $rr = $qq -> fetch_array      ( MYSQLI_BOTH                            ) ;
+    $this -> SkipQuotas = $rr     [ 0                                      ] ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function JoinClass($DB,$TABLE,$CLASSID)
-{
-  $RI    = new RelationItem (                          ) ;
-  $RI   -> set              ( "first"  , $CLASSID      ) ;
-  $RI   -> set              ( "second" , $this -> Uuid ) ;
-  $RI   -> setT1            ( "Class"                  ) ;
-  $RI   -> setT2            ( "Token"                  ) ;
-  $RI   -> setRelation      ( "Subordination"          ) ;
-  $RI   -> Join             ( $DB , $TABLE             ) ;
-  unset                     ( $RI                      ) ;
+public function JoinClass ( $DB , $TABLE , $CLASSID                        ) {
+  $RI    = new Relation   (                                                ) ;
+  $RI   -> set            ( "first"  , $CLASSID                            ) ;
+  $RI   -> set            ( "second" , $this -> Uuid                       ) ;
+  $RI   -> setT1          ( "Class"                                        ) ;
+  $RI   -> setT2          ( "Token"                                        ) ;
+  $RI   -> setRelation    ( "Subordination"                                ) ;
+  $RI   -> Join           ( $DB , $TABLE                                   ) ;
+  unset                   ( $RI                                            ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function RemoveWithClass($DB,$TABLE,$CLASSID)
-{
-  //////////////////////////////////////////////////////
-  $RI  = new RelationItem (                          ) ;
-  //////////////////////////////////////////////////////
-  $RI -> set              ( "first"  , $CLASSID      ) ;
-  $RI -> set              ( "second" , $this -> Uuid ) ;
-  $RI -> setT1            ( "Class"                  ) ;
-  $RI -> setT2            ( "Token"                  ) ;
-  $RI -> setRelation      ( "Subordination"          ) ;
-  //////////////////////////////////////////////////////
-  $QQ  = $RI -> Delete    ( $TABLE                   ) ;
-  $DB -> Query            ( $QQ                      ) ;
-  //////////////////////////////////////////////////////
-  unset                   ( $RI                      ) ;
-  //////////////////////////////////////////////////////
+public function RemoveWithClass ( $DB , $TABLE , $CLASSID                  ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $RI  = new Relation           (                                          ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RI -> set                    ( "first"  , $CLASSID                      ) ;
+  $RI -> set                    ( "second" , $this -> Uuid                 ) ;
+  $RI -> setT1                  ( "Class"                                  ) ;
+  $RI -> setT2                  ( "Token"                                  ) ;
+  $RI -> setRelation            ( "Subordination"                          ) ;
+  $DB -> Query                  ( $RI -> Delete ( $TABLE )                 ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  unset                         ( $RI                                      ) ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 public function CalculateTokens ( $DB , $TOKENS , $UU                      ) {
   ////////////////////////////////////////////////////////////////////////////
-  $TOTAL = 0                                                                 ;
-  ////////////////////////////////////////////////////////////////////////////
-  foreach                       ( $UU as $uu                               ) {
-    $this -> Uuid = $uu                                                      ;
-    if                          ( $this -> ObtainsByUuid ( $DB , $TOKENS ) ) {
-      $TOTAL = $TOTAL + $this -> Tokens                                      ;
-    }                                                                        ;
+  if                            ( count ( $UU ) <= 0                       ) {
+    return 0                                                                 ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  return $TOTAL                                                              ;
+  $UUIDs = implode              ( " , " , $UU                              ) ;
+  $QQ    = "select sum(`tokens`) from {$TOKENS}"                             .
+           " where ( `uuid` in ( {$UUIDs} ) ) ;"                             ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> FetchOne        ( $QQ                                      ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function GetEarnedTokens        ( $DB , $TABLE , $PUID , $ITEM      ) {
+public function GetEarnedListings   ( $DB , $TABLE , $PUID , $ITEM         ) {
+  $QQ = "select `uuid` from {$TABLE}"                                        .
+        " where ( `owner` = {$PUID} )"                                       .
+        " and ( `action` in ( 1 , 3 ) )"                                     .
+        " and ( `states` in ( 1 ) )"                                         .
+        " and ( `item` = {$ITEM} ) ;"                                        ;
+  return $DB -> ObtainUuids         ( $QQ                                  ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetArrangedListings ( $DB , $TABLE , $PUID , $ITEM         ) {
+  $QQ = "select `uuid` from {$TABLE}"                                        .
+        " where ( `owner` = {$PUID} )"                                       .
+        " and ( `action` in ( 2 ) )"                                         .
+        " and ( `states` in ( 1 , 2 , 3 ) )"                                 .
+        " and ( `item` = {$ITEM} ) ;"                                        ;
+  return $DB -> ObtainUuids         ( $QQ                                  ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetConsumedListings ( $DB , $TABLE , $PUID , $ITEM         ) {
+  $QQ = "select `uuid` from {$TABLE}"                                        .
+        " where ( `owner` = {$PUID} )"                                       .
+        " and ( `action` in ( 2 ) )"                                         .
+        " and ( `states` in ( 1 ) )"                                         .
+        " and ( `item` = {$ITEM} ) ;"                                        ;
+  return $DB -> ObtainUuids         ( $QQ                                  ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetTokensByFunction    ( $DB                                 ,
+                                         $TABLE                              ,
+                                         $PUID                               ,
+                                         $ITEM                               ,
+                                         $FUNC                             ) {
   ////////////////////////////////////////////////////////////////////////////
   $EMPTY    = true                                                           ;
   $TOTAL    = 0                                                              ;
   ////////////////////////////////////////////////////////////////////////////
-  $QQ       = "select `uuid` from {$TABLE}"                                  .
-              " where ( `owner` = {$PUID} )"                                 .
-              " and ( `action` in ( 1 , 3 ) )"                               .
-              " and ( `states` in ( 1 ) )"                                   .
-              " and ( `item` = {$ITEM} ) ;"                                  ;
-  $EARNS    = $DB -> ObtainUuids       ( $QQ                               ) ;
+  $ITEMS    = $this -> $FUNC           ( $DB , $TABLE , $PUID , $ITEM      ) ;
   ////////////////////////////////////////////////////////////////////////////
-  if                                   ( count ( $EARNS ) > 0              ) {
+  if                                   ( count ( $ITEMS ) > 0              ) {
     //////////////////////////////////////////////////////////////////////////
     $EMPTY  = false                                                          ;
-    $TOTAL  = $this -> CalculateTokens ( $DB , $TABLE , $EARNS             ) ;
+    $TOTAL  = $this -> CalculateTokens ( $DB , $TABLE , $ITEMS             ) ;
     //////////////////////////////////////////////////////////////////////////
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   return array                                                               (
-    "Empty"     =>   $EMPTY                                                  ,
-    "Total"     =>   $TOTAL                                                  ,
+    "Empty" => $EMPTY                                                        ,
+    "Total" => $TOTAL                                                        ,
   )                                                                          ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function GetArrangedTokens      ( $DB , $TABLE , $PUID , $ITEM      ) {
-  ////////////////////////////////////////////////////////////////////////////
-  $EMPTY    = true                                                           ;
-  $TOTAL    = 0                                                              ;
-  ////////////////////////////////////////////////////////////////////////////
-  $QQ       = "select `uuid` from {$TABLE}"                                  .
-              " where ( `owner` = {$PUID} )"                                 .
-              " and ( `action` in ( 2 ) )"                                   .
-              " and ( `states` in ( 1 , 2 , 3 ) )"                           .
-              " and ( `item` = {$ITEM} ) ;"                                  ;
-  $EARNS    = $DB -> ObtainUuids       ( $QQ                               ) ;
-  ////////////////////////////////////////////////////////////////////////////
-  if                                   ( count ( $EARNS ) > 0              ) {
-    //////////////////////////////////////////////////////////////////////////
-    $EMPTY  = false                                                          ;
-    $TOTAL  = $this -> CalculateTokens ( $DB , $TABLE , $EARNS             ) ;
-    //////////////////////////////////////////////////////////////////////////
+public function GetEarnedTokens          ( $DB , $TABLE , $PUID , $ITEM    ) {
+  return $this -> GetTokensByFunction    ( $DB                               ,
+                                           $TABLE                            ,
+                                           $PUID                             ,
+                                           $ITEM                             ,
+                                           "GetEarnedListings"             ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetArrangedTokens        ( $DB , $TABLE , $PUID , $ITEM    ) {
+  return $this -> GetTokensByFunction    ( $DB                               ,
+                                           $TABLE                            ,
+                                           $PUID                             ,
+                                           $ITEM                             ,
+                                           "GetArrangedListings"           ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetConsumedTokens        ( $DB , $TABLE , $PUID , $ITEM    ) {
+  return $this -> GetTokensByFunction    ( $DB                               ,
+                                           $TABLE                            ,
+                                           $PUID                             ,
+                                           $ITEM                             ,
+                                           "GetConsumedListings"           ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function ClassPoints ( $POINTS                                      ) {
+  $PT   = intval            ( $POINTS , 10                                 ) ;
+  $SG   =                   ( $PT < 0                                      ) ;
+  if                        ( $SG                                          ) {
+    $PT = - $PT                                                              ;
   }                                                                          ;
-  ////////////////////////////////////////////////////////////////////////////
-  return array                                                               (
-    "Empty"     =>   $EMPTY                                                  ,
-    "Total"     =>   $TOTAL                                                  ,
-  )                                                                          ;
-}
-//////////////////////////////////////////////////////////////////////////////
-public function GetConsumedTokens      ( $DB , $TABLE , $PUID , $ITEM      ) {
-  ////////////////////////////////////////////////////////////////////////////
-  $EMPTY    = true                                                           ;
-  $TOTAL    = 0                                                              ;
-  ////////////////////////////////////////////////////////////////////////////
-  $QQ       = "select `uuid` from {$TABLE}"                                  .
-              " where ( `owner` = {$PUID} )"                                 .
-              " and ( `action` in ( 2 ) )"                                   .
-              " and ( `states` in ( 1 ) )"                                   .
-              " and ( `item` = {$ITEM} ) ;"                                  ;
-  $EARNS    = $DB -> ObtainUuids       ( $QQ                               ) ;
-  ////////////////////////////////////////////////////////////////////////////
-  if                                   ( count ( $EARNS ) > 0              ) {
-    //////////////////////////////////////////////////////////////////////////
-    $EMPTY  = false                                                          ;
-    $TOTAL  = $this -> CalculateTokens ( $DB , $TABLE , $EARNS             ) ;
-    //////////////////////////////////////////////////////////////////////////
+  $PD   = intval            ( $PT / 10 , 10                                ) ;
+  $PR   = intval            ( $PT % 10 , 10                                ) ;
+  $PP   = "{$PD}.{$PR}"                                                      ;
+  if                        ( $SG                                          ) {
+    $PP = "-{$PP}"                                                           ;
   }                                                                          ;
-  ////////////////////////////////////////////////////////////////////////////
-  return array                                                               (
-    "Empty"     =>   $EMPTY                                                  ,
-    "Total"     =>   $TOTAL                                                  ,
-  )                                                                          ;
+  return $PP                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ClassPoints($POINTS)
-{
-  $PT = intval ( $POINTS  , 10 ) ;
-  $SG = ( $PT < 0 )              ;
-  if ( $SG ) $PT = - $PT         ;
-  $PD = intval ( $PT / 10 , 10 ) ;
-  $PR = intval ( $PT % 10 , 10 ) ;
-  $PP = "{$PD}.{$PR}"            ;
-  if ( $SG ) $PP = "-{$PP}"      ;
-  return $PP                     ;
-}
+// 此處需要修改
 //////////////////////////////////////////////////////////////////////////////
 public function StudentSummary ( $DB , $PUID )
 {
@@ -625,88 +614,87 @@ public function StudentSummary ( $DB , $PUID )
   return $SUMMARY                                                            ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ActionString()
-{
-  global $TokenActions                     ;
-  return $TokenActions [ $this -> Action ] ;
+public function ActionString ( )                                             {
+  global $TokenActions                                                       ;
+  return $TokenActions [ $this -> Action ]                                   ;
 }
 //////////////////////////////////////////////////////////////////////////////
-// to be obsoleted
-//////////////////////////////////////////////////////////////////////////////
-public function ActionListing()
-{
-  global $TokenActions                              ;
-  $JTA = "TokenActions(this.value,'$this->Uuid') ;" ;
-  $SS  = $this -> Action                            ;
-  $HS  = new HtmlTag (                      )       ;
-  $HS -> setTag      ( "select"             )       ;
-  $HS -> setSplitter ( "\n"                 )       ;
-  $HS -> addOptions  ( $TokenActions , $SS  )       ;
-  $HS -> AddPair     ( "onchange"    , $JTA )       ;
-  return $HS                                        ;
+public function ActionListing ( $JAVAFUNC = "TokenActions"                 ) {
+  ////////////////////////////////////////////////////////////////////////////
+  global $TokenActions                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TUID   = $this -> Uuid                                                    ;
+  $JSC    = "{$JAVAFUNC}(this.value,'{$TUID}');"                             ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HT     = new Html          (                                            ) ;
+  $HT    -> setTag            ( "select"                                   ) ;
+  $HT    -> setSplitter       ( "\n"                                       ) ;
+  $HT    -> addOptions        ( $TokenActions , $this -> Action            ) ;
+  $HT    -> AddPair           ( "onchange"    , $JSC                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HT                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-// to be obsoleted
-//////////////////////////////////////////////////////////////////////////////
-public function ActionTD($HD,$editable=false)
-{
-  if ( $editable )                                {
-    $HD -> AddTag  ( $this -> ActionListing ( ) ) ;
-  } else                                          {
-    $HD -> AddText ( $this -> ActionString  ( ) ) ;
-  }                                               ;
+public function ActionTD ( $HD                                               ,
+                           $editable = false                                 ,
+                           $JAVAFUNC = "TokenActions"                      ) {
+  if                     ( $editable                                       ) {
+    $HD -> AddTag        ( $this -> ActionListing ( $JAVAFUNC            ) ) ;
+  } else                                                                     {
+    $HD -> AddText       ( $this -> ActionString  (                      ) ) ;
+  }                                                                          ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function StatesString()
-{
-  global $TokenStates                     ;
-  return $TokenStates [ $this -> States ] ;
+public function StatesString ( )                                             {
+  global $TokenStates                                                        ;
+  return $TokenStates [ $this -> States ]                                    ;
 }
 //////////////////////////////////////////////////////////////////////////////
-// to be obsoleted
-//////////////////////////////////////////////////////////////////////////////
-public function StatesListing()
-{
-  //////////////////////////////////////////////////
-  global $TokenStates                              ;
-  //////////////////////////////////////////////////
-  $JTS = "TokenStates(this.value,'$this->Uuid') ;" ;
-  $SS  = $this -> States                           ;
-  //////////////////////////////////////////////////
-  $HS  = new HtmlTag (                     )       ;
-  $HS -> setTag      ( "select"            )       ;
-  $HS -> setSplitter ( "\n"                )       ;
-  $HS -> addOptions  ( $TokenStates , $SS  )       ;
-  $HS -> AddPair     ( "onchange"   , $JTS )       ;
-  //////////////////////////////////////////////////
-  return $HS                                       ;
+public function StatesListing ( $JAVAFUNC = "TokenStates"                  ) {
+  ////////////////////////////////////////////////////////////////////////////
+  global $TokenStates                                                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TUID = $this -> Uuid                                                      ;
+  $JTS  = "{$JAVAFUNC}(this.value,'{$TUID}');"                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HT   = new Html            (                                            ) ;
+  $HT  -> setTag              ( "select"                                   ) ;
+  $HT  -> setSplitter         ( "\n"                                       ) ;
+  $HT  -> addOptions          ( $TokenStates , $this -> States             ) ;
+  $HT  -> AddPair             ( "onchange"   , $JTS                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HT                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-// to be obsoleted
-//////////////////////////////////////////////////////////////////////////////
-public function StatesTD($HD,$editable=false)
-{
-  if ( $editable )                                {
-    $HD -> AddTag  ( $this -> StatesListing ( ) ) ;
-  } else                                          {
-    $HD -> AddText ( $this -> StatesString  ( ) ) ;
-  }                                               ;
+public function StatesTD ( $HD                                               ,
+                           $editable = false                                 ,
+                           $JAVAFUNC = "TokenStates"                       ) {
+  if                     ( $editable                                       ) {
+    $HD -> AddTag        ( $this -> StatesListing ( $JAVAFUNC            ) ) ;
+  } else                                                                     {
+    $HD -> AddText       ( $this -> StatesString  (                      ) ) ;
+  }                                                                          ;
 }
 //////////////////////////////////////////////////////////////////////////////
-// to be obsoleted
-//////////////////////////////////////////////////////////////////////////////
-public function addDateTimeInput($ITEM,$TZ)
-{
-  $TDT  = $this -> toDateTimeString ( $ITEM,$TZ,"T","Y-m-d","H:i:s" ) ;
-  $JSC  = "TokenTimeChanged(this.value,'{$ITEM}','{$this->Uuid}') ;"  ;
-  $INP  = new HtmlTag (                               )               ;
-  $INP -> setInput    (                               )               ;
-  $INP -> AddPair     ( "type"     , "datetime-local" )               ;
-  $INP -> AddPair     ( "class"    , "DateTimeInput"  )               ;
-  $INP -> AddPair     ( "step"     , "1"              )               ;
-  $INP -> AddPair     ( "value"    , $TDT             )               ;
-  $INP -> AddPair     ( "onchange" , $JSC             )               ;
-  return $INP                                                         ;
+public function addDateTimeInput      ( $ITEM                                ,
+                                        $TZ                                  ,
+                                        $JAVAFUNC = "TokenTimeChanged"       ,
+                                        $CLASSID  = "DateTimeInput" ) {
+  $TUID   = $this -> Uuid                                                    ;
+  $TDT    = $this -> toDateTimeString ( $ITEM                                ,
+                                        $TZ                                  ,
+                                        "T"                                  ,
+                                        "Y-m-d"                              ,
+                                        "H:i:s"                            ) ;
+  $JSC    = "TokenTimeChanged(this.value,'{$ITEM}','{$TUID}') ;"             ;
+  $INP    = new Html                  (                                    ) ;
+  $INP   -> setInput                  (                                    ) ;
+  $INP   -> AddPair                   ( "type"     , "datetime-local"      ) ;
+  $INP   -> SafePair                  ( "class"    , $CLASSID              ) ;
+  $INP   -> AddPair                   ( "step"     , "1"                   ) ;
+  $INP   -> AddPair                   ( "value"    , $TDT                  ) ;
+  $INP   -> AddPair                   ( "onchange" , $JSC                  ) ;
+  return $INP                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // to be obsoleted
