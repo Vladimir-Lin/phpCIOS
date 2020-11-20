@@ -1,371 +1,320 @@
 <?php
-
-namespace CIOS ;
-
-class Token extends Columns
-{
-
-public $Id          ;
-public $Uuid        ;
-public $Owner       ;
-public $Tokens      ;
-public $Action      ;
-public $Reason      ;
-public $rType       ;
-public $Item        ;
-public $Description ;
-public $States      ;
-public $Creation    ;
-public $Modify      ;
-public $Update      ;
-public $SkipQuotas  ;
-
 //////////////////////////////////////////////////////////////////////////////
-
-function __construct()
-{
-  $this -> Clear ( ) ;
-}
-
+// 代幣管理元件
 //////////////////////////////////////////////////////////////////////////////
-
-function __destruct()
-{
-}
-
+namespace CIOS                                                               ;
 //////////////////////////////////////////////////////////////////////////////
-
-public function Clear()
-{
-  $this -> Id          = -1 ;
-  $this -> Uuid        =  0 ;
-  $this -> Owner       =  0 ;
-  $this -> Tokens      =  0 ;
-  $this -> Action      =  0 ;
-  $this -> Reason      =  0 ;
-  $this -> rType       =  0 ;
-  $this -> Item        =  0 ;
-  $this -> Description =  0 ;
-  $this -> States      =  0 ;
-  $this -> Creation    =  0 ;
-  $this -> Modify      =  0 ;
-  $this -> Update      =  0 ;
-  $this -> SkipQuotas  =  0 ;
-}
-
-public function assign($Item)
-{
-  $this -> Id          = $Item -> Id          ;
-  $this -> Uuid        = $Item -> Uuid        ;
-  $this -> Owner       = $Item -> Owner       ;
-  $this -> Tokens      = $Item -> Tokens      ;
-  $this -> Action      = $Item -> Action      ;
-  $this -> Reason      = $Item -> Reason      ;
-  $this -> rType       = $Item -> rType       ;
-  $this -> Name        = $Item -> Name        ;
-  $this -> Item        = $Item -> Item        ;
-  $this -> Description = $Item -> Description ;
-  $this -> States      = $Item -> States      ;
-  $this -> Creation    = $Item -> Creation    ;
-  $this -> Modify      = $Item -> Modify      ;
-  $this -> Update      = $Item -> Update      ;
-  $this -> SkipQuotas  = $Item -> SkipQuotas  ;
-}
-
-public function tableItems()
-{
-  $S = array (                    ) ;
-  array_push ( $S , "id"          ) ;
-  array_push ( $S , "uuid"        ) ;
-  array_push ( $S , "owner"       ) ;
-  array_push ( $S , "tokens"      ) ;
-  array_push ( $S , "action"      ) ;
-  array_push ( $S , "reason"      ) ;
-  array_push ( $S , "rtype"       ) ;
-  array_push ( $S , "item"        ) ;
-  array_push ( $S , "description" ) ;
-  array_push ( $S , "states"      ) ;
-  array_push ( $S , "creation"    ) ;
-  array_push ( $S , "modify"      ) ;
-  array_push ( $S , "ltime"       ) ;
-  return $S                         ;
-}
-
-public function ItemPair ( $item )
-{
-  $a = strtolower ( $item )                            ;
-  if ( "id"        == $a )                             {
-    return "`{$a}` = " . (string) $this -> Id          ;
-  }                                                    ;
-  if ( "uuid"      == $a )                             {
-    return "`{$a}` = " . (string) $this -> Uuid        ;
-  }                                                    ;
-  if ( "owner"     == $a )                             {
-    return "`{$a}` = " . (string) $this -> Owner       ;
-  }                                                    ;
-  if ( "tokens"    == $a )                             {
-    return "`{$a}` = " . (string) $this -> Tokens      ;
-  }                                                    ;
-  if ( "action"    == $a )                             {
-    return "`{$a}` = " . (string) $this -> Action      ;
-  }                                                    ;
-  if ( "reason"    == $a )                             {
-    return "`{$a}` = " . (string) $this -> Reason      ;
-  }                                                    ;
-  if ( "rtype"     == $a )                             {
-    return "`{$a}` = " . (string) $this -> rType       ;
-  }                                                    ;
-  if ( "item"      == $a )                             {
-    return "`{$a}` = " . (string) $this -> Item        ;
-  }                                                    ;
-  if ( "description" == $a )                           {
-    return "`{$a}` = " . (string) $this -> Description ;
-  }                                                    ;
-  if ( "states"    == $a )                             {
-    return "`{$a}` = " . (string) $this -> States      ;
-  }                                                    ;
-  if ( "creation"  == $a )                             {
-    return "`{$a}` = " . (string) $this -> Creation    ;
-  }                                                    ;
-  if ( "modify"    == $a )                             {
-    return "`{$a}` = " . (string) $this -> Modify      ;
-  }                                                    ;
-  if ( "ltime"     == $a )                             {
-    return "`{$a}` = " . (string) $this -> Update      ;
-  }                                                    ;
-  if ( "skipquotas" == $a )                            {
-    return "`{$a}` = " . (string) $this -> SkipQuotas  ;
-  }                                                    ;
-  return ""                                            ;
-}
-
-public function valueItems()
-{
-  $S = array (                    ) ;
-  array_push ( $S , "owner"       ) ;
-  array_push ( $S , "tokens"      ) ;
-  array_push ( $S , "action"      ) ;
-  array_push ( $S , "reason"      ) ;
-  array_push ( $S , "rtype"       ) ;
-  array_push ( $S , "item"        ) ;
-  array_push ( $S , "description" ) ;
-  array_push ( $S , "states"      ) ;
-  array_push ( $S , "creation"    ) ;
-  array_push ( $S , "modify"      ) ;
-  return $S                         ;
-}
-
+class Token extends Columns                                                  {
 //////////////////////////////////////////////////////////////////////////////
-
-public function set($item,$V)
-{
-  $a = strtolower ( $item )                            ;
-  if ( "id"          == $a ) $this -> Id          = $V ;
-  if ( "uuid"        == $a ) $this -> Uuid        = $V ;
-  if ( "owner"       == $a ) $this -> Owner       = $V ;
-  if ( "tokens"      == $a ) $this -> Tokens      = $V ;
-  if ( "action"      == $a ) $this -> Action      = $V ;
-  if ( "reason"      == $a ) $this -> Reason      = $V ;
-  if ( "rtype"       == $a ) $this -> rType       = $V ;
-  if ( "item"        == $a ) $this -> Item        = $V ;
-  if ( "description" == $a ) $this -> Description = $V ;
-  if ( "states"      == $a ) $this -> States      = $V ;
-  if ( "creation"    == $a ) $this -> Creation    = $V ;
-  if ( "modify"      == $a ) $this -> Modify      = $V ;
-  if ( "ltime"       == $a ) $this -> Update      = $V ;
-}
-
+public $Id                                                                   ;
+public $Uuid                                                                 ;
+public $Owner                                                                ;
+public $Tokens                                                               ;
+public $Action                                                               ;
+public $Reason                                                               ;
+public $rType                                                                ;
+public $Item                                                                 ;
+public $Description                                                          ;
+public $States                                                               ;
+public $Creation                                                             ;
+public $Modify                                                               ;
+public $Updated                                                              ;
+public $SkipQuotas                                                           ;
 //////////////////////////////////////////////////////////////////////////////
-
-public function get($item)
-{
-  $a = strtolower ( $item )                                       ;
-  if ( "id"          == $a ) return (string) $this -> Id          ;
-  if ( "uuid"        == $a ) return (string) $this -> Uuid        ;
-  if ( "owner"       == $a ) return (string) $this -> Owner       ;
-  if ( "tokens"      == $a ) return (string) $this -> Tokens      ;
-  if ( "action"      == $a ) return (string) $this -> Action      ;
-  if ( "reason"      == $a ) return (string) $this -> Reason      ;
-  if ( "rtype"       == $a ) return (string) $this -> rType       ;
-  if ( "item"        == $a ) return (string) $this -> Item        ;
-  if ( "description" == $a ) return (string) $this -> Description ;
-  if ( "states"      == $a ) return (string) $this -> States      ;
-  if ( "creation"    == $a ) return (string) $this -> Creation    ;
-  if ( "modify"      == $a ) return (string) $this -> Modify      ;
-  if ( "ltime"       == $a ) return (string) $this -> Update      ;
-  return ""                                                       ;
+function __construct ( )                                                     {
+  $this -> Clear     ( )                                                     ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function Pair($item)
-{
-  return "`" . $item . "` = " . $this -> get ( $item ) ;
+function __destruct ( )                                                      {
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function Pairs ( $Items )
-{
-  $P = array ( )                                ;
-  foreach ( $Items as $item )                   {
-    array_push ( $P , $this -> Pair ( $item ) ) ;
-  }                                             ;
-  $Q = implode ( " , " , $P )                   ;
-  unset        ( $P         )                   ;
-  return $Q                                     ;
+public function Clear ( )                                                    {
+  $this -> Id          = -1                                                  ;
+  $this -> Uuid        =  0                                                  ;
+  $this -> Owner       =  0                                                  ;
+  $this -> Tokens      =  0                                                  ;
+  $this -> Action      =  0                                                  ;
+  $this -> Reason      =  0                                                  ;
+  $this -> rType       =  0                                                  ;
+  $this -> Item        =  0                                                  ;
+  $this -> Description =  0                                                  ;
+  $this -> States      =  0                                                  ;
+  $this -> Creation    =  0                                                  ;
+  $this -> Modify      =  0                                                  ;
+  $this -> Updated     =  0                                                  ;
+  $this -> SkipQuotas  =  0                                                  ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function toString ( )
-{
-  return sprintf ( "tkn6%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
+public function assign ( $Item )                                             {
+  $this -> Id          = $Item -> Id                                         ;
+  $this -> Uuid        = $Item -> Uuid                                       ;
+  $this -> Owner       = $Item -> Owner                                      ;
+  $this -> Tokens      = $Item -> Tokens                                     ;
+  $this -> Action      = $Item -> Action                                     ;
+  $this -> Reason      = $Item -> Reason                                     ;
+  $this -> rType       = $Item -> rType                                      ;
+  $this -> Name        = $Item -> Name                                       ;
+  $this -> Item        = $Item -> Item                                       ;
+  $this -> Description = $Item -> Description                                ;
+  $this -> States      = $Item -> States                                     ;
+  $this -> Creation    = $Item -> Creation                                   ;
+  $this -> Modify      = $Item -> Modify                                     ;
+  $this -> Updated     = $Item -> Updated                                    ;
+  $this -> SkipQuotas  = $Item -> SkipQuotas                                 ;
 }
-
-/////////////////////////////////////////////////////////
-
-public function fromString ( $S )
-{
-  if               ( 12 != strlen ( $S )     ) {
-    $this -> Uuid = 0                          ;
-    return 0                                   ;
-  }                                            ;
-  $X = strtolower  ( $S                      ) ;
-  $C = substr      ( $X , 0 , 4              ) ;
-  if               ( $C != "tkn6"            ) {
-    $this -> Uuid = 0                          ;
-    return 0                                   ;
-  }                                            ;
-  $C = substr      ( $S , 0 , 4              ) ;
-  $U = str_replace ( $C , "34000000000" , $S ) ;
-  $this -> Uuid = $U                           ;
-  return $U                                    ;
-}
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function ValueString ( $X )
-{
-  if ( $X < 0 ) $X = - $X                               ;
-  $T  = intval ( $X      , 10 )                         ;
-  $M  = intval ( $T % 10 , 10 )                         ;
-  $R  = intval ( $T / 10 , 10 )                         ;
-  return number_format ( $R , 0 , "" , "," ) . "." . $M ;
+public function tableItems ( )                                               {
+  return [ "id"                                                              ,
+           "uuid"                                                            ,
+           "owner"                                                           ,
+           "tokens"                                                          ,
+           "action"                                                          ,
+           "reason"                                                          ,
+           "rtype"                                                           ,
+           "item"                                                            ,
+           "description"                                                     ,
+           "states"                                                          ,
+           "creation"                                                        ,
+           "modify"                                                          ,
+           "ltime"                                                         ] ;
 }
-
-public function TokenValue()
-{
-  return $this -> ValueString ( $this -> Tokens ) ;
-}
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function obtain($R)
-{
-  $this -> Id          = $R [ "id"          ] ;
-  $this -> Uuid        = $R [ "uuid"        ] ;
-  $this -> Owner       = $R [ "owner"       ] ;
-  $this -> Tokens      = $R [ "tokens"      ] ;
-  $this -> Action      = $R [ "action"      ] ;
-  $this -> Reason      = $R [ "reason"      ] ;
-  $this -> rType       = $R [ "rtype"       ] ;
-  $this -> Item        = $R [ "item"        ] ;
-  $this -> Description = $R [ "description" ] ;
-  $this -> States      = $R [ "states"      ] ;
-  $this -> Creation    = $R [ "creation"    ] ;
-  $this -> Modify      = $R [ "modify"      ] ;
-  $this -> Update      = $R [ "ltime"       ] ;
+public function ItemPair ( $item )                                           {
+  $a = strtolower ( $item )                                                  ;
+  if ( "id"        == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Id                                ;
+  }                                                                          ;
+  if ( "uuid"      == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Uuid                              ;
+  }                                                                          ;
+  if ( "owner"     == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Owner                             ;
+  }                                                                          ;
+  if ( "tokens"    == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Tokens                            ;
+  }                                                                          ;
+  if ( "action"    == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Action                            ;
+  }                                                                          ;
+  if ( "reason"    == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Reason                            ;
+  }                                                                          ;
+  if ( "rtype"     == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> rType                             ;
+  }                                                                          ;
+  if ( "item"      == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Item                              ;
+  }                                                                          ;
+  if ( "description" == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Description                       ;
+  }                                                                          ;
+  if ( "states"    == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> States                            ;
+  }                                                                          ;
+  if ( "creation"  == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Creation                          ;
+  }                                                                          ;
+  if ( "modify"    == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Modify                            ;
+  }                                                                          ;
+  if ( "ltime"     == $a )                                                   {
+    return "`{$a}` = " . (string) $this -> Updated                           ;
+  }                                                                          ;
+  if ( "skipquotas" == $a )                                                  {
+    return "`{$a}` = " . (string) $this -> SkipQuotas                        ;
+  }                                                                          ;
+  return ""                                                                  ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function toDateTimeString($ITEM,$TZ,$JOIN="T",$DateFormat="Y-m-d",$TimeFormat="H:i:s")
-{
+public function valueItems ( )                                               {
+  return [ "owner"                                                           ,
+           "tokens"                                                          ,
+           "action"                                                          ,
+           "reason"                                                          ,
+           "rtype"                                                           ,
+           "item"                                                            ,
+           "description"                                                     ,
+           "states"                                                          ,
+           "creation"                                                        ,
+           "modify"                                                        ] ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function set ( $item , $V )                                           {
+  $a = strtolower ( $item )                                                  ;
+  if ( "id"          == $a ) $this -> Id          = $V                       ;
+  if ( "uuid"        == $a ) $this -> Uuid        = $V                       ;
+  if ( "owner"       == $a ) $this -> Owner       = $V                       ;
+  if ( "tokens"      == $a ) $this -> Tokens      = $V                       ;
+  if ( "action"      == $a ) $this -> Action      = $V                       ;
+  if ( "reason"      == $a ) $this -> Reason      = $V                       ;
+  if ( "rtype"       == $a ) $this -> rType       = $V                       ;
+  if ( "item"        == $a ) $this -> Item        = $V                       ;
+  if ( "description" == $a ) $this -> Description = $V                       ;
+  if ( "states"      == $a ) $this -> States      = $V                       ;
+  if ( "creation"    == $a ) $this -> Creation    = $V                       ;
+  if ( "modify"      == $a ) $this -> Modify      = $V                       ;
+  if ( "ltime"       == $a ) $this -> Updated     = $V                       ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function get ( $item )                                                {
+  $a = strtolower ( $item )                                                  ;
+  if ( "id"          == $a ) return (string) $this -> Id                     ;
+  if ( "uuid"        == $a ) return (string) $this -> Uuid                   ;
+  if ( "owner"       == $a ) return (string) $this -> Owner                  ;
+  if ( "tokens"      == $a ) return (string) $this -> Tokens                 ;
+  if ( "action"      == $a ) return (string) $this -> Action                 ;
+  if ( "reason"      == $a ) return (string) $this -> Reason                 ;
+  if ( "rtype"       == $a ) return (string) $this -> rType                  ;
+  if ( "item"        == $a ) return (string) $this -> Item                   ;
+  if ( "description" == $a ) return (string) $this -> Description            ;
+  if ( "states"      == $a ) return (string) $this -> States                 ;
+  if ( "creation"    == $a ) return (string) $this -> Creation               ;
+  if ( "modify"      == $a ) return (string) $this -> Modify                 ;
+  if ( "ltime"       == $a ) return (string) $this -> Updated                ;
+  return ""                                                                  ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function Pair ( $item )                                               {
+  $V  = $this -> get ( $item )                                               ;
+  return "`{$item}` = {$V}"                                                  ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function Pairs ( $Items                                             ) {
+  $P = array          (                                                    ) ;
+  foreach             ( $Items as $item                                    ) {
+    array_push        ( $P , $this -> Pair ( $item )                       ) ;
+  }                                                                          ;
+  $Q = implode        ( " , " , $P                                         ) ;
+  unset               ( $P                                                 ) ;
+  return $Q                                                                  ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function toString ( )                                                 {
+  return sprintf ( "tkn6%08d" , gmp_mod ( $this -> Uuid , 100000000 ) )      ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function fromString ( $S                                            ) {
+  if                       ( 12 != strlen ( $S )                           ) {
+    $this -> Uuid = 0                                                        ;
+    return 0                                                                 ;
+  }                                                                          ;
+  $X = strtolower          ( $S                                            ) ;
+  $C = substr              ( $X , 0 , 4                                    ) ;
+  if                       ( $C != "tkn6"                                  ) {
+    $this -> Uuid = 0                                                        ;
+    return 0                                                                 ;
+  }                                                                          ;
+  $C = substr              ( $S , 0 , 4                                    ) ;
+  $U = str_replace         ( $C , "34000000000" , $S                       ) ;
+  $this -> Uuid = $U                                                         ;
+  return $U                                                                  ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function ValueString ( $X                                           ) {
+  if                        ( $X < 0                                       ) {
+    $X = - $X                                                                ;
+  }                                                                          ;
+  $T   = intval             ( $X      , 10                                 ) ;
+  $M   = intval             ( $T % 10 , 10                                 ) ;
+  $R   = intval             ( $T / 10 , 10                                 ) ;
+  $D   = number_format      ( $R , 0 , "" , ","                            ) ;
+  return "{$D}.{$M}"                                                         ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function TokenValue ( )                                               {
+  return $this -> ValueString ( $this -> Tokens )                            ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function obtain ( $R )                                                {
+  $this -> Id          = $R [ "id"          ]                                ;
+  $this -> Uuid        = $R [ "uuid"        ]                                ;
+  $this -> Owner       = $R [ "owner"       ]                                ;
+  $this -> Tokens      = $R [ "tokens"      ]                                ;
+  $this -> Action      = $R [ "action"      ]                                ;
+  $this -> Reason      = $R [ "reason"      ]                                ;
+  $this -> rType       = $R [ "rtype"       ]                                ;
+  $this -> Item        = $R [ "item"        ]                                ;
+  $this -> Description = $R [ "description" ]                                ;
+  $this -> States      = $R [ "states"      ]                                ;
+  $this -> Creation    = $R [ "creation"    ]                                ;
+  $this -> Modify      = $R [ "modify"      ]                                ;
+  $this -> Updated     = $R [ "ltime"       ]                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function toDateTimeString ( $ITEM                                     ,
+                                   $TZ                                       ,
+                                   $JOIN="T"                                 ,
+                                   $DateFormat="Y-m-d"                       ,
+                                   $TimeFormat="H:i:s"                     ) {
   $SD             = new StarDate (                                         ) ;
   $SD -> Stardate = $this -> get ( $ITEM                                   ) ;
   return $SD -> toDateTimeString ( $TZ , $JOIN , $DateFormat , $TimeFormat ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function InsertInto($Table)
-{
-  return "insert into {$Table} "                   .
-         "(`uuid`,`owner`,`tokens`,`action`,"      .
-          "`reason`,`rtype`,`item`,`description`," .
-          "`states`,`creation`,`modify`)"          .
-          " values ("                              .
-          (string) $this -> Uuid        . ","      .
-          (string) $this -> Owner       . ","      .
-          (string) $this -> Tokens      . ","      .
-          (string) $this -> Action      . ","      .
-          (string) $this -> Reason      . ","      .
-          (string) $this -> rType       . ","      .
-          (string) $this -> Item        . ","      .
-          (string) $this -> Description . ","      .
-          (string) $this -> States      . ","      .
-          (string) $this -> Creation    . ","      .
-          (string) $this -> Modify      . ") ;"    ;
+public function InsertInto ( $Table )                                        {
+  return "insert into {$Table} "                                             .
+         "(`uuid`,`owner`,`tokens`,`action`,"                                .
+          "`reason`,`rtype`,`item`,`description`,"                           .
+          "`states`,`creation`,`modify`)"                                    .
+          " values ("                                                        .
+          (string) $this -> Uuid        . ","                                .
+          (string) $this -> Owner       . ","                                .
+          (string) $this -> Tokens      . ","                                .
+          (string) $this -> Action      . ","                                .
+          (string) $this -> Reason      . ","                                .
+          (string) $this -> rType       . ","                                .
+          (string) $this -> Item        . ","                                .
+          (string) $this -> Description . ","                                .
+          (string) $this -> States      . ","                                .
+          (string) $this -> Creation    . ","                                .
+          (string) $this -> Modify      . ") ;"                              ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function GetUuid ( $DB , $Table , $Main )
-{
-  $BASE         = "3400000000000000000"                      ;
-  $RI           = new Relation ( )                           ;
-  $TYPE         = $RI -> Types [ "Token" ]                   ;
-  $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE ) ;
-  if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false   ;
-  $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
-  return $this -> Uuid                                       ;
+public function GetUuid          ( $DB , $Table , $Main                    ) {
+  $BASE         = "3400000000000000000"                                      ;
+  $RI           = new Relation   (                                         ) ;
+  $TYPE         = $RI -> Types [ "Token" ]                                   ;
+  $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE                 ) ;
+  if                             ( gmp_cmp ( $this -> Uuid , "0" ) <= 0    ) {
+    return false                                                             ;
+  }                                                                          ;
+  $DB   -> AddUuid               ( $Main , $this -> Uuid , $TYPE           ) ;
+  return $this -> Uuid                                                       ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function UpdateItems ( $DB , $TABLE , $ITEMS )
-{
-  $PRX   = $this -> Pairs ( $ITEMS )                 ;
-  $QQ    = "update {$TABLE} set {$PRX} "             .
-           $DB -> WhereUuid ( $this -> Uuid , true ) ;
-  return $DB -> Query ( $QQ )                        ;
+public function UpdateItems ( $DB , $TABLE , $ITEMS                        ) {
+  $PRX   = $this -> Pairs   ( $ITEMS                                       ) ;
+  $WHZ   = $DB -> WhereUuid ( $this -> Uuid , true                         ) ;
+  $QQ    = "update {$TABLE} set {$PRX} {$WHZ}"                               ;
+  return $DB -> Query       ( $QQ                                          ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function Update ( $DB , $TABLE )
-{
-  $ITEMS = $this -> valueItems (        )            ;
-  $PRX   = $this -> Pairs      ( $ITEMS )            ;
-  $QQ    = "update {$TABLE} set {$PRX} "             .
-           $DB -> WhereUuid ( $this -> Uuid , true ) ;
-  unset ( $ITEMS )                                   ;
-  return $DB -> Query ( $QQ )                        ;
+public function Update         ( $DB , $TABLE                              ) {
+  $ITEMS = $this -> valueItems (                                           ) ;
+  $PRX   = $this -> Pairs      ( $ITEMS                                    ) ;
+  $WHZ   = $DB   -> WhereUuid  ( $this -> Uuid , true                      ) ;
+  $QQ    = "update {$TABLE} set {$PRX} {$WHZ}"                               ;
+  unset                        ( $ITEMS                                    ) ;
+  return $DB -> Query          ( $QQ                                       ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function ObtainsByQuery($DB,$QQ)
-{
-  $qq = $DB -> Query ( $QQ )                 ;
-  if ( $DB -> hasResult ( $qq ) )            {
-    $rr = $qq -> fetch_array ( MYSQLI_BOTH ) ;
-    $this     -> obtain      ( $rr         ) ;
-    return true                              ;
-  }                                          ;
-  return false                               ;
+public function ObtainsByQuery ( $DB , $QQ                                 ) {
+  $qq   = $DB -> Query         ( $QQ                                       ) ;
+  if                           ( $DB -> hasResult ( $qq )                  ) {
+    $rr = $qq -> fetch_array   ( MYSQLI_BOTH                               ) ;
+    $this     -> obtain        ( $rr                                       ) ;
+    return true                                                              ;
+  }                                                                          ;
+  return false                                                               ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
-public function ObtainsByUuid($DB,$TABLE)
-{
-  $QQ = "select " . $this -> Items ( ) . " from " . $TABLE .
-        $DB -> WhereUuid ( $this -> Uuid , true )          ;
-  return $this -> ObtainsByQuery ( $DB , $QQ )             ;
+public function ObtainsByUuid    ( $DB , $TABLE                            ) {
+  $ITEMS = $this -> Items        (                                         ) ;
+  $WHZ   = $DB -> WhereUuid      ( $this -> Uuid , true                    ) ;
+  $QQ    = "select {$ITEMS} from {$TABLE} {$WHZ}"                            ;
+  return $this -> ObtainsByQuery ( $DB , $QQ                               ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsByReason($DB,$TABLE,$REASON)
 {
   $QQ = "select `uuid` from {$TABLE}" .
@@ -373,7 +322,7 @@ public function ObtainsByReason($DB,$TABLE,$REASON)
         " order by `creation` desc ;" ;
   return $DB -> ObtainUuids ( $QQ )   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainRelated($DB,$RELATIONS,$CLASSID)
 {
   $RI     = new Relation         (                    ) ;
@@ -385,7 +334,7 @@ public function ObtainRelated($DB,$RELATIONS,$CLASSID)
   unset                          ( $RI                ) ;
   return $TOKENS                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsByClass($DB,$TABLE,$RELATIONS,$CLASSID)
 {
   $TOKENS = $this -> ObtainsByReason ( $DB , $TABLE     , $CLASSID ) ;
@@ -572,7 +521,7 @@ public function ClassPoints($POINTS)
   if ( $SG ) $PP = "-{$PP}"      ;
   return $PP                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentSummary ( $DB , $PUID )
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -675,15 +624,15 @@ public function StudentSummary ( $DB , $PUID )
   ////////////////////////////////////////////////////////////////////////////
   return $SUMMARY                                                            ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function ActionString()
 {
   global $TokenActions                     ;
   return $TokenActions [ $this -> Action ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function ActionListing()
 {
   global $TokenActions                              ;
@@ -696,7 +645,9 @@ public function ActionListing()
   $HS -> AddPair     ( "onchange"    , $JTA )       ;
   return $HS                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function ActionTD($HD,$editable=false)
 {
   if ( $editable )                                {
@@ -705,13 +656,15 @@ public function ActionTD($HD,$editable=false)
     $HD -> AddText ( $this -> ActionString  ( ) ) ;
   }                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StatesString()
 {
   global $TokenStates                     ;
   return $TokenStates [ $this -> States ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function StatesListing()
 {
   //////////////////////////////////////////////////
@@ -728,7 +681,9 @@ public function StatesListing()
   //////////////////////////////////////////////////
   return $HS                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function StatesTD($HD,$editable=false)
 {
   if ( $editable )                                {
@@ -737,7 +692,9 @@ public function StatesTD($HD,$editable=false)
     $HD -> AddText ( $this -> StatesString  ( ) ) ;
   }                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function addDateTimeInput($ITEM,$TZ)
 {
   $TDT  = $this -> toDateTimeString ( $ITEM,$TZ,"T","Y-m-d","H:i:s" ) ;
@@ -751,7 +708,9 @@ public function addDateTimeInput($ITEM,$TZ)
   $INP -> AddPair     ( "onchange" , $JSC             )               ;
   return $INP                                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function addDateTime($HD,$ITEM,$TZ,$editable=false)
 {
   ////////////////////////////////////////////////////
@@ -778,7 +737,9 @@ public function addDateTime($HD,$ITEM,$TZ,$editable=false)
     $HD -> AddText ( $DTI                          ) ;
   }                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function tokenInput($TKNCLASS="NameInput")
 {
   $TJS  = "TokensChanged(this.value,'{$this->Uuid}') ;" ;
@@ -796,7 +757,9 @@ public function tokenInput($TKNCLASS="NameInput")
   ///////////////////////////////////////////////////////
   return $TIP                                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function addTokens($HD,$TKNCLASS="NameInput",$editable=false)
 {
   if                           ( $editable ) {
@@ -807,7 +770,9 @@ public function addTokens($HD,$TKNCLASS="NameInput",$editable=false)
     $HD -> AddText             ( $DTV      ) ;
   }                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function skipsInput($TKNCLASS="NameInput")
 {
   $TJS  = "SkipsChanged(this.value,'{$this->Owner}','{$this->Uuid}') ;" ;
@@ -825,7 +790,9 @@ public function skipsInput($TKNCLASS="NameInput")
   ///////////////////////////////////////////////////////////////////////
   return $TIP                                                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function addSkips($HD,$TKNCLASS="NameInput",$editable=false)
 {
   if                           ( $editable ) {
@@ -836,7 +803,9 @@ public function addSkips($HD,$TKNCLASS="NameInput",$editable=false)
     $HD -> AddText             ( $DTV      ) ;
   }                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function ownerInput($IDV,$INPCLASS="NameInput")
 {
   $JSC  = "changeOwner(this.value,'{$this->Uuid}') ;" ;
@@ -850,7 +819,9 @@ public function ownerInput($IDV,$INPCLASS="NameInput")
   /////////////////////////////////////////////////////
   return $INP                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
 public function addOwner($HD,$INPCLASS="NameInput",$editable=false)
 {
   $HH    = new Parameters      (                  ) ;
@@ -865,9 +836,10 @@ public function addOwner($HD,$INPCLASS="NameInput",$editable=false)
   }                                                 ;
   unset                        ( $HH              ) ;
 }
-
-public function addRemoveToken($CLASSID,$BTNCLASS="SelectionButton")
-{
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
+public function addRemoveToken ( $CLASSID , $BTNCLASS = "SelectionButton" )  {
   ////////////////////////////////////////////////////////////
   global $Translations                                       ;
   ////////////////////////////////////////////////////////////
@@ -881,9 +853,10 @@ public function addRemoveToken($CLASSID,$BTNCLASS="SelectionButton")
   ////////////////////////////////////////////////////////////
   return $BTN                                                ;
 }
-
-public function addAppendButton($CLASSID,$BTNCLASS="SelectionButton")
-{
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
+public function addAppendButton ( $CLASSID , $BTNCLASS = "SelectionButton" ) {
   ////////////////////////////////////////////////////////////
   global $Translations                                       ;
   ////////////////////////////////////////////////////////////
@@ -897,23 +870,23 @@ public function addAppendButton($CLASSID,$BTNCLASS="SelectionButton")
   ////////////////////////////////////////////////////////////
   return $BTN                                                ;
 }
-
-public function addSettlement($CLASSID,$BTNCLASS="SelectionButton")
-{
-  ////////////////////////////////////////////////////////////////
-  global $Translations                                           ;
-  ////////////////////////////////////////////////////////////////
-  $JSC  = "ClassSettlement('$CLASSID') ;"                        ;
-  ////////////////////////////////////////////////////////////////
-  $BTN  = new HtmlTag (                                        ) ;
-  $BTN -> setTag      ( "button"                               ) ;
-  $BTN -> AddPair     ( "class"   , $BTNCLASS                  ) ;
-  $BTN -> AddPair     ( "onclick" , $JSC                       ) ;
-  $BTN -> AddText     ( $Translations [ "Tokens::Settlement" ] ) ;
-  ////////////////////////////////////////////////////////////////
-  return $BTN                                                    ;
+//////////////////////////////////////////////////////////////////////////////
+// to be obsoleted
+//////////////////////////////////////////////////////////////////////////////
+public function addSettlement ( $CLASSID , $BTNCLASS = "SelectionButton" )   {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $JSC    = "ClassSettlement('$CLASSID') ;"                                  ;
+  ////////////////////////////////////////////////////////////////////////////
+  $BTN    = new Html          (                                            ) ;
+  $BTN   -> setTag            ( "button"                                   ) ;
+  $BTN   -> AddPair           ( "class"   , $BTNCLASS                      ) ;
+  $BTN   -> AddPair           ( "onclick" , $JSC                           ) ;
+  $BTN   -> AddText           ( $Translations [ "Tokens::Settlement" ]     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $BTN                                                                ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
