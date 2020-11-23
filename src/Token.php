@@ -603,29 +603,30 @@ public function ClassPoints ( $POINTS                                      ) {
 //////////////////////////////////////////////////////////////////////////////
 // 此處需要修改
 //////////////////////////////////////////////////////////////////////////////
-public function StudentSummary ( $DB , $PUID )
-{
+public function StudentSummary ( $DB , $PUID                               ) {
   ////////////////////////////////////////////////////////////////////////////
-  $HH      = new Parameters ( )                                              ;
-  $RI      = new Relation   ( )                                              ;
-  $NOW     = new StarDate   ( )                                              ;
-  $SUMMARY = array          ( )                                              ;
+  $TKNTAB  = $GLOBALS [ "TableMapping" ] [ "Tokens" ]                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HH      = new Parameters    (                                           ) ;
+  $RI      = new Relation      (                                           ) ;
+  $NOW     = new StarDate      (                                           ) ;
+  $SUMMARY = array             (                                           ) ;
   $PTS     = 0                                                               ;
   $UTS     = 0                                                               ;
   $RTS     = 0                                                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $NOW  -> Now ( )                                                           ;
-  $SDT   = $NOW -> Stardate                                                  ;
+  $NOW    -> Now               (                                           ) ;
+  $SDT     = $NOW -> Stardate                                                ;
   ////////////////////////////////////////////////////////////////////////////
   // 新增/交易完成
   ////////////////////////////////////////////////////////////////////////////
-  $this -> Owner  = $PUID                                                    ;
-  $this -> Action = 1                                                        ;
-  $this -> States = 1                                                        ;
-  $this -> rType  = $RI -> Types [ "Trade" ]                                 ;
+  $this   -> Owner  = $PUID                                                  ;
+  $this   -> Action = 1                                                      ;
+  $this   -> States = 1                                                      ;
+  $this   -> rType  = $RI -> Types [ "Trade" ]                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $UU    = $this -> ObtainsTrades   ( $DB , "`erp`.`tokens`"               ) ;
-  $TOTAL = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
+  $UU      = $this -> ObtainsTrades   ( $DB , $TKNTAB                      ) ;
+  $TOTAL   = $this -> CalculateTokens ( $DB , $TKNTAB , $UU                ) ;
   ////////////////////////////////////////////////////////////////////////////
   // 賺取/交易完成 人物 => 其他人轉堂數給自己
   ////////////////////////////////////////////////////////////////////////////
@@ -634,8 +635,8 @@ public function StudentSummary ( $DB , $PUID )
   $this -> States = 1                                                        ;
   $this -> rType  = $RI -> Types [ "People" ]                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $UU    = $this -> ObtainsTrades   ( $DB , "`erp`.`tokens`"               ) ;
-  $PIT   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
+  $UU    = $this -> ObtainsTrades   ( $DB , $TKNTAB                        ) ;
+  $PIT   = $this -> CalculateTokens ( $DB , $TKNTAB , $UU                  ) ;
   $TOTAL = $TOTAL + $PIT                                                     ;
   ////////////////////////////////////////////////////////////////////////////
   // 消費/商議中 人物 => 轉堂數給其他人
@@ -645,8 +646,8 @@ public function StudentSummary ( $DB , $PUID )
   $this -> States = 3                                                        ;
   $this -> rType  = $RI -> Types [ "People" ]                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $UU    = $this -> ObtainsTrades   ( $DB , "`erp`.`tokens`"               ) ;
-  $PIZ   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
+  $UU    = $this -> ObtainsTrades   ( $DB , $TKNTAB                        ) ;
+  $PIZ   = $this -> CalculateTokens ( $DB , $TKNTAB , $UU                  ) ;
   $TOTAL = $TOTAL + $PIZ                                                     ;
   ////////////////////////////////////////////////////////////////////////////
   // 賺取/交易完成 組織 => 從公司取得堂數
@@ -656,8 +657,8 @@ public function StudentSummary ( $DB , $PUID )
   $this -> States = 1                                                        ;
   $this -> rType  = $RI -> Types [ "Organization" ]                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $UU    = $this -> ObtainsTrades   ( $DB , "`erp`.`tokens`"               ) ;
-  $OIT   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
+  $UU    = $this -> ObtainsTrades   ( $DB , $TKNTAB                        ) ;
+  $OIT   = $this -> CalculateTokens ( $DB , $TKNTAB , $UU                  ) ;
   $TOTAL = $TOTAL + $OIT                                                     ;
   ////////////////////////////////////////////////////////////////////////////
   $PTS   = $this -> ClassPoints     ( $TOTAL                               ) ;
@@ -667,8 +668,8 @@ public function StudentSummary ( $DB , $PUID )
   $this -> States = 1                                                        ;
   $this -> rType  = $RI -> Types [ "Class" ]                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $UU    = $this -> ObtainsConsumed ( $DB , "`erp`.`tokens`" , $SDT        ) ;
-  $USED  = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
+  $UU    = $this -> ObtainsConsumed ( $DB , $TKNTAB , $SDT                 ) ;
+  $USED  = $this -> CalculateTokens ( $DB , $TKNTAB , $UU                  ) ;
   ////////////////////////////////////////////////////////////////////////////
   // 消費/交易完成 人物 => 轉堂數給其他人成功
   ////////////////////////////////////////////////////////////////////////////
@@ -677,8 +678,8 @@ public function StudentSummary ( $DB , $PUID )
   $this -> States = 1                                                        ;
   $this -> rType  = $RI -> Types [ "People" ]                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $UU    = $this -> ObtainsConsumed ( $DB , "`erp`.`tokens`" , $SDT        ) ;
-  $OUD   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
+  $UU    = $this -> ObtainsConsumed ( $DB , $TKNTAB , $SDT                 ) ;
+  $OUD   = $this -> CalculateTokens ( $DB , $TKNTAB , $UU                  ) ;
   $USED  = $USED + $OUD                                                      ;
   ////////////////////////////////////////////////////////////////////////////
   $this -> Owner  = $PUID                                                    ;
@@ -686,8 +687,8 @@ public function StudentSummary ( $DB , $PUID )
   $this -> States = 1                                                        ;
   $this -> rType  = $RI -> Types [ "Organization" ]                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $UU    = $this -> ObtainsConsumed ( $DB , "`erp`.`tokens`" , $SDT        ) ;
-  $OUD   = $this -> CalculateTokens ( $DB , "`erp`.`tokens`" , $UU         ) ;
+  $UU    = $this -> ObtainsConsumed ( $DB , $TKNTAB , $SDT                 ) ;
+  $OUD   = $this -> CalculateTokens ( $DB , $TKNTAB , $UU                  ) ;
   $USED  = $USED + $OUD                                                      ;
   ////////////////////////////////////////////////////////////////////////////
   $UTS   = $this -> ClassPoints     ( $USED                                ) ;
