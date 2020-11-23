@@ -572,6 +572,20 @@ public function UpdateTransferSkips     ( $DB , $TABLE , $STATE , $NOW     ) {
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
+public function GetOwnerTokenListings ( $DB , $TABLE , $ENDTIME            ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PUID = $this -> Owner                                                     ;
+  $ITEM = $this -> Item                                                      ;
+  $QQ   = "select `uuid` from {$TABLE}"                                      .
+          " where ( `creation` < {$ENDTIME} )"                               .
+          " and ( `owner` = {$PUID} )"                                       .
+          " and ( `item` = {$ITEM} )"                                        .
+          " and ( `states` in ( 1 , 3 , 4 ) )"                               .
+          " and ( `action` in ( 1 , 2 , 3 , 4 ) )"                           .
+          " order by `creation` asc ;"                                       ;
+  return $DB -> ObtainUuids           ( $QQ                                ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function ClassPoints ( $POINTS                                      ) {
   $PT   = intval            ( $POINTS , 10                                 ) ;
   $SG   =                   ( $PT < 0                                      ) ;
