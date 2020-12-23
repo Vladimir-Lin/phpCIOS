@@ -186,7 +186,7 @@ public static function GetStudentClasses ( $DB                               ,
            " where ( `used` = 1 )"                                           .
              " and ( `trainee` = {$PUID} )"                                  .
              " and ( `item` = {$ITEM} )"                                     .
-             " and ( `type` in ( 1 , 2 , 4 , 6 , 8 , 9 ) )"                  .
+             " and ( `type` in ( 1 , 2 , 4 , 6 , 7 , 8 ) )"                  .
              " and ( `start` >= {$START} )"                                  .
                " and ( `end` <= {$ENDST} )"                                  .
              " order by `start` asc ;"                                       ;
