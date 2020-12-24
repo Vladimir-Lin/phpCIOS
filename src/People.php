@@ -615,6 +615,19 @@ public function JoinMeAs    ( $DB , $TUID , $ACTION                        ) {
   $this -> JoinMeByRelation ( $DB , $this -> Uuid , $TUID , $ACTION        ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function GetTeamMembers ( $DB , $PUID , $RELATION = "Subordination" ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $RELTAB     = $GLOBALS [ "TableMapping" ] [ "PeopleRelation" ]             ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RI         = new Relation   (                                           ) ;
+  $RI        -> set            ( "first" , $PUID                           ) ;
+  $RI        -> setT1          ( "People"                                  ) ;
+  $RI        -> setT2          ( "People"                                  ) ;
+  $RI        -> setRelation    ( $RELATION                                 ) ;
+  return $RI -> Subordination  ( $DB , $RELTAB                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
 public function SkipClasses($DB,$TABLE)
 {
   //////////////////////////////////////////////////////
@@ -839,18 +852,20 @@ public function GetNameByParameter ( $KEY )
   return $NI                                             ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function GetMembers($DB,$TABLE,$ORDER="desc",$RELATION="Subordination")
-{
-  $RI  = new RelationItem     (                                ) ;
-  $RI -> set                  ( "first" , $this -> Uuid        ) ;
-  $RI -> setT1                ( "People"                       ) ;
-  $RI -> setT2                ( "People"                       ) ;
-  $RI -> setRelation          ( $RELATION                      ) ;
-  $LX  = $RI -> Subordination ( $DB                              ,
-                                $TABLE                           ,
-                                "order by `position` {$ORDER}" ) ;
-  unset                       ( $RI                            ) ;
-  return $LX                                                     ;
+public function GetMembers    ( $DB                                          ,
+                                $TABLE                                       ,
+                                $ORDER    = "desc"                           ,
+                                $RELATION = "Subordination"                ) {
+  $RI  = new Relation         (                                            ) ;
+  $RI -> set                  ( "first" , $this -> Uuid                    ) ;
+  $RI -> setT1                ( "People"                                   ) ;
+  $RI -> setT2                ( "People"                                   ) ;
+  $RI -> setRelation          ( $RELATION                                  ) ;
+  $LX  = $RI -> Subordination ( $DB                                          ,
+                                $TABLE                                       ,
+                                "order by `position` {$ORDER}"             ) ;
+  unset                       ( $RI                                        ) ;
+  return $LX                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function GetOwners($DB,$TABLE,$ORDER="desc",$RELATION="Subordination")
