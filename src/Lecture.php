@@ -118,147 +118,146 @@ public function valueItems ( )                                               {
 //////////////////////////////////////////////////////////////////////////////
 // +| set |+
 //////////////////////////////////////////////////////////////////////////////
-public function set($item,$V)
-{
-  $a = strtolower ( $item )                              ;
-  if ( "id"           == $a ) $this -> Id           = $V ;
-  if ( "uuid"         == $a ) $this -> Uuid         = $V ;
-  if ( "trainee"      == $a ) $this -> Trainee      = $V ;
-  if ( "tutor"        == $a ) $this -> Tutor        = $V ;
-  if ( "manager"      == $a ) $this -> Manager      = $V ;
-  if ( "payer"        == $a ) $this -> Payer        = $V ;
-  if ( "receptionist" == $a ) $this -> Receptionist = $V ;
-  if ( "item"         == $a ) $this -> Item         = $V ;
-  if ( "states"       == $a ) $this -> States       = $V ;
-  if ( "register"     == $a ) $this -> Register     = $V ;
-  if ( "openday"      == $a ) $this -> OpenDay      = $V ;
-  if ( "closeday"     == $a ) $this -> CloseDay     = $V ;
-  if ( "log"          == $a ) $this -> Log          = $V ;
-  if ( "ltime"        == $a ) $this -> Update       = $V ;
+public function set ( $item , $V )                                           {
+  ////////////////////////////////////////////////////////////////////////////
+  $a = strtolower ( $item )                                                  ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( "id"           == $a ) $this -> Id           = $V                     ;
+  if ( "uuid"         == $a ) $this -> Uuid         = $V                     ;
+  if ( "trainee"      == $a ) $this -> Trainee      = $V                     ;
+  if ( "tutor"        == $a ) $this -> Tutor        = $V                     ;
+  if ( "manager"      == $a ) $this -> Manager      = $V                     ;
+  if ( "payer"        == $a ) $this -> Payer        = $V                     ;
+  if ( "receptionist" == $a ) $this -> Receptionist = $V                     ;
+  if ( "item"         == $a ) $this -> Item         = $V                     ;
+  if ( "states"       == $a ) $this -> States       = $V                     ;
+  if ( "register"     == $a ) $this -> Register     = $V                     ;
+  if ( "openday"      == $a ) $this -> OpenDay      = $V                     ;
+  if ( "closeday"     == $a ) $this -> CloseDay     = $V                     ;
+  if ( "log"          == $a ) $this -> Log          = $V                     ;
+  if ( "ltime"        == $a ) $this -> Update       = $V                     ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 // -| set |-
 //////////////////////////////////////////////////////////////////////////////
 // +| get |+
 //////////////////////////////////////////////////////////////////////////////
-public function get($item)
-{
-  $a = strtolower ( $item )                                         ;
-  if ( "id"           == $a ) return (string) $this -> Id           ;
-  if ( "uuid"         == $a ) return (string) $this -> Uuid         ;
-  if ( "trainee"      == $a ) return (string) $this -> Trainee      ;
-  if ( "tutor"        == $a ) return (string) $this -> Tutor        ;
-  if ( "manager"      == $a ) return (string) $this -> Manager      ;
-  if ( "payer"        == $a ) return (string) $this -> Payer        ;
-  if ( "receptionist" == $a ) return (string) $this -> Receptionist ;
-  if ( "item"         == $a ) return (string) $this -> Item         ;
-  if ( "states"       == $a ) return (string) $this -> States       ;
-  if ( "register"     == $a ) return (string) $this -> Register     ;
-  if ( "openday"      == $a ) return (string) $this -> OpenDay      ;
-  if ( "closeday"     == $a ) return (string) $this -> CloseDay     ;
-  if ( "log"          == $a ) return (string) $this -> Log          ;
-  if ( "ltime"        == $a ) return (string) $this -> Update       ;
-  return ""                                                         ;
+public function get ( $item )                                                {
+  ////////////////////////////////////////////////////////////////////////////
+  $a = strtolower   ( $item )                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( "id"           == $a ) return (string) $this -> Id                    ;
+  if ( "uuid"         == $a ) return (string) $this -> Uuid                  ;
+  if ( "trainee"      == $a ) return (string) $this -> Trainee               ;
+  if ( "tutor"        == $a ) return (string) $this -> Tutor                 ;
+  if ( "manager"      == $a ) return (string) $this -> Manager               ;
+  if ( "payer"        == $a ) return (string) $this -> Payer                 ;
+  if ( "receptionist" == $a ) return (string) $this -> Receptionist          ;
+  if ( "item"         == $a ) return (string) $this -> Item                  ;
+  if ( "states"       == $a ) return (string) $this -> States                ;
+  if ( "register"     == $a ) return (string) $this -> Register              ;
+  if ( "openday"      == $a ) return (string) $this -> OpenDay               ;
+  if ( "closeday"     == $a ) return (string) $this -> CloseDay              ;
+  if ( "log"          == $a ) return (string) $this -> Log                   ;
+  if ( "ltime"        == $a ) return (string) $this -> Update                ;
+  ////////////////////////////////////////////////////////////////////////////
+  return ""                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // -| get |-
 //////////////////////////////////////////////////////////////////////////////
 // +| Pair |+
 //////////////////////////////////////////////////////////////////////////////
-public function Pair($item)
-{
-  return "`{$item}` = " . $this -> get ( $item ) ;
+public function Pair ( $item )                                               {
+  return "`{$item}` = " . $this -> get ( $item )                             ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // -| Pair |-
 //////////////////////////////////////////////////////////////////////////////
-public function Pairs($Items)
-{
-  $P = array ( )                                ;
-  foreach ( $Items as $item )                   {
-    array_push ( $P , $this -> Pair ( $item ) ) ;
-  }                                             ;
-  $Q = implode ( " , " , $P )                   ;
-  unset        ( $P         )                   ;
-  return $Q                                     ;
+public function Pairs ( $Items )                                             {
+  $P = array ( )                                                             ;
+  foreach ( $Items as $item )                                                {
+    array_push ( $P , $this -> Pair ( $item ) )                              ;
+  }                                                                          ;
+  $Q = implode ( " , " , $P )                                                ;
+  unset        ( $P         )                                                ;
+  return $Q                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ItemPair($item)
-{
-  $a = strtolower ( $item )                             ;
-  if ( "id"           == $a )                           {
-    return "`{$a}` = " . (string) $this -> Id           ;
-  }                                                     ;
-  if ( "uuid"         == $a )                           {
-    return "`{$a}` = " . (string) $this -> Uuid         ;
-  }                                                     ;
-  if ( "trainee"      == $a )                           {
-    return "`{$a}` = " . (string) $this -> Trainee      ;
-  }                                                     ;
-  if ( "tutor"        == $a )                           {
-    return "`{$a}` = " . (string) $this -> Tutor        ;
-  }                                                     ;
-  if ( "manager"      == $a )                           {
-    return "`{$a}` = " . (string) $this -> Manager      ;
-  }                                                     ;
-  if ( "payer"        == $a )                           {
-    return "`{$a}` = " . (string) $this -> Payer        ;
-  }                                                     ;
-  if ( "receptionist" == $a )                           {
-    return "`{$a}` = " . (string) $this -> Receptionist ;
-  }                                                     ;
-  if ( "item"         == $a )                           {
-    return "`{$a}` = " . (string) $this -> Item         ;
-  }                                                     ;
-  if ( "states"       == $a )                           {
-    return "`{$a}` = " . (string) $this -> States       ;
-  }                                                     ;
-  if ( "register"     == $a )                           {
-    return "`{$a}` = " . (string) $this -> Register     ;
-  }                                                     ;
-  if ( "openday"      == $a )                           {
-    return "`{$a}` = " . (string) $this -> OpenDay      ;
-  }                                                     ;
-  if ( "closeday"     == $a )                           {
-    return "`{$a}` = " . (string) $this -> CloseDay     ;
-  }                                                     ;
-  if ( "log"          == $a )                           {
-    return "`{$a}` = " . (string) $this -> Log          ;
-  }                                                     ;
-  if ( "ltime"        == $a )                           {
-    return "`{$a}` = " . (string) $this -> Update       ;
-  }                                                     ;
-  if ( "sections"     == $a )                           {
-    return "`{$a}` = " . (string) $this -> Sections     ;
-  }                                                     ;
-  return ""                                             ;
+public function ItemPair ( $item )                                           {
+  $a = strtolower ( $item )                                                  ;
+  if ( "id"           == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Id                                ;
+  }                                                                          ;
+  if ( "uuid"         == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Uuid                              ;
+  }                                                                          ;
+  if ( "trainee"      == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Trainee                           ;
+  }                                                                          ;
+  if ( "tutor"        == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Tutor                             ;
+  }                                                                          ;
+  if ( "manager"      == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Manager                           ;
+  }                                                                          ;
+  if ( "payer"        == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Payer                             ;
+  }                                                                          ;
+  if ( "receptionist" == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Receptionist                      ;
+  }                                                                          ;
+  if ( "item"         == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Item                              ;
+  }                                                                          ;
+  if ( "states"       == $a )                                                {
+    return "`{$a}` = " . (string) $this -> States                            ;
+  }                                                                          ;
+  if ( "register"     == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Register                          ;
+  }                                                                          ;
+  if ( "openday"      == $a )                                                {
+    return "`{$a}` = " . (string) $this -> OpenDay                           ;
+  }                                                                          ;
+  if ( "closeday"     == $a )                                                {
+    return "`{$a}` = " . (string) $this -> CloseDay                          ;
+  }                                                                          ;
+  if ( "log"          == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Log                               ;
+  }                                                                          ;
+  if ( "ltime"        == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Update                            ;
+  }                                                                          ;
+  if ( "sections"     == $a )                                                {
+    return "`{$a}` = " . (string) $this -> Sections                          ;
+  }                                                                          ;
+  return ""                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function toString()
-{
-  return sprintf ( "lec2%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
+public function toString ( )                                                 {
+  return sprintf ( "lec2%08d" , gmp_mod ( $this -> Uuid , 100000000 ) )      ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function fromString ( $LXID )
-{
-  /////////////////////////////////////////////////
-  if               ( 12 != strlen ( $LXID )     ) {
-    $this -> Uuid = 0                             ;
-    return 0                                      ;
-  }                                               ;
-  /////////////////////////////////////////////////
-  $X = strtolower  ( $LXID                      ) ;
-  $C = substr      ( $X , 0 , 4                 ) ;
-  if               ( $C != "lec2"               ) {
-    $this -> Uuid = 0                             ;
-    return 0                                      ;
-  }                                               ;
-  /////////////////////////////////////////////////
-  $C = substr      ( $LXID , 0 , 4              ) ;
-  $U = str_replace ( $C , "29000000000" , $LXID ) ;
-  $this -> Uuid = $U                              ;
-  /////////////////////////////////////////////////
-  return $U                                       ;
+public function fromString ( $LXID )                                         {
+  ////////////////////////////////////////////////////////////////////////////
+  if               ( 12 != strlen ( $LXID )     )                            {
+    $this -> Uuid = 0                                                        ;
+    return 0                                                                 ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $X = strtolower  ( $LXID                      )                            ;
+  $C = substr      ( $X , 0 , 4                 )                            ;
+  if               ( $C != "lec2"               )                            {
+    $this -> Uuid = 0                                                        ;
+    return 0                                                                 ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $C = substr      ( $LXID , 0 , 4              )                            ;
+  $U = str_replace ( $C , "29000000000" , $LXID )                            ;
+  $this -> Uuid = $U                                                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $U                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // +| toJsonWithTimestamp |+
@@ -279,57 +278,53 @@ public function toJsonWithTimestamp      (                                 ) {
 //////////////////////////////////////////////////////////////////////////////
 // -| toJsonWithTimestamp |-
 //////////////////////////////////////////////////////////////////////////////
-public function TimeItem($item,$TZ)
-{
-  $ZZ = "0"                                       ;
-  $a = strtolower ( $item )                       ;
-  if ( "register" == $a ) $ZZ = $this -> Register ;
-  if ( "openday"  == $a ) $ZZ = $this -> OpenDay  ;
-  if ( "closeday" == $a ) $ZZ = $this -> CloseDay ;
-  if ( "log"      == $a ) $ZZ = $this -> Log      ;
-  if ( strlen  ( $ZZ       ) <= 0 ) return false  ;
-  if ( gmp_cmp ( $ZZ , "0" ) <= 0 ) return false  ;
-  $SD             = new StarDate      (     )     ;
-  $SD -> Stardate = $ZZ                           ;
-  $DD             = $SD -> toDateTime ( $TZ )     ;
-  unset                               ( $SD )     ;
-  return $DD                                      ;
+public function TimeItem ( $item , $TZ )                                     {
+  $ZZ = "0"                                                                  ;
+  $a = strtolower ( $item )                                                  ;
+  if ( "register" == $a ) $ZZ = $this -> Register                            ;
+  if ( "openday"  == $a ) $ZZ = $this -> OpenDay                             ;
+  if ( "closeday" == $a ) $ZZ = $this -> CloseDay                            ;
+  if ( "log"      == $a ) $ZZ = $this -> Log                                 ;
+  if ( strlen  ( $ZZ       ) <= 0 ) return false                             ;
+  if ( gmp_cmp ( $ZZ , "0" ) <= 0 ) return false                             ;
+  $SD             = new StarDate      (     )                                ;
+  $SD -> Stardate = $ZZ                                                      ;
+  $DD             = $SD -> toDateTime ( $TZ )                                ;
+  unset                               ( $SD )                                ;
+  return $DD                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function TimeFormat($fmt,$item,$TZ)
-{
-  $DD = $this -> TimeItem ( $item , $TZ ) ;
-  if ( ! $DD ) return ""                  ;
-  $FMT = $DD  -> format   ( $fmt        ) ;
-  unset                   ( $DD         ) ;
-  return $FMT                             ;
+public function TimeFormat ( $fmt , $item , $TZ )                            {
+  $DD = $this -> TimeItem  ( $item , $TZ        )                            ;
+  if ( ! $DD ) return ""                                                     ;
+  $FMT = $DD  -> format    ( $fmt               )                            ;
+  unset                    ( $DD                )                            ;
+  return $FMT                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function toPeriod()
-{
-  $PERIODE  = new Periode ( )           ;
-  $PERIODE -> Uuid  = $this -> Uuid     ;
-  $PERIODE -> Start = $this -> OpenDay  ;
-  $PERIODE -> End   = $this -> CloseDay ;
-  return $PERIODE                       ;
+public function toPeriod ( )                                                 {
+  $PERIODE  = new Periode ( )                                                ;
+  $PERIODE -> Uuid  = $this -> Uuid                                          ;
+  $PERIODE -> Start = $this -> OpenDay                                       ;
+  $PERIODE -> End   = $this -> CloseDay                                      ;
+  return $PERIODE                                                            ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function obtain($R)
-{
-  $this -> Id           = $R [ "id"           ] ;
-  $this -> Uuid         = $R [ "uuid"         ] ;
-  $this -> Trainee      = $R [ "trainee"      ] ;
-  $this -> Tutor        = $R [ "tutor"        ] ;
-  $this -> Manager      = $R [ "manager"      ] ;
-  $this -> Payer        = $R [ "payer"        ] ;
-  $this -> Receptionist = $R [ "receptionist" ] ;
-  $this -> Item         = $R [ "item"         ] ;
-  $this -> States       = $R [ "states"       ] ;
-  $this -> Register     = $R [ "register"     ] ;
-  $this -> OpenDay      = $R [ "openday"      ] ;
-  $this -> CloseDay     = $R [ "closeday"     ] ;
-  $this -> Log          = $R [ "log"          ] ;
-  $this -> Update       = $R [ "ltime"        ] ;
+public function obtain ( $R )                                                {
+  $this -> Id           = $R [ "id"           ]                              ;
+  $this -> Uuid         = $R [ "uuid"         ]                              ;
+  $this -> Trainee      = $R [ "trainee"      ]                              ;
+  $this -> Tutor        = $R [ "tutor"        ]                              ;
+  $this -> Manager      = $R [ "manager"      ]                              ;
+  $this -> Payer        = $R [ "payer"        ]                              ;
+  $this -> Receptionist = $R [ "receptionist" ]                              ;
+  $this -> Item         = $R [ "item"         ]                              ;
+  $this -> States       = $R [ "states"       ]                              ;
+  $this -> Register     = $R [ "register"     ]                              ;
+  $this -> OpenDay      = $R [ "openday"      ]                              ;
+  $this -> CloseDay     = $R [ "closeday"     ]                              ;
+  $this -> Log          = $R [ "log"          ]                              ;
+  $this -> Update       = $R [ "ltime"        ]                              ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function RegisterTime($TZ,$JOIN=" ",$DateFormat="Y/m/d D A",$TimeFormat="H:i:s")
@@ -519,6 +514,34 @@ public function ObtainLessons($DB,$RELATIONS)
   $LESSONS = $RI -> Subordination ( $DB , $RELATIONS        ) ;
   unset                           ( $RI                     ) ;
   return $LESSONS                                             ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function ObtainUuidsByPayer ( $DB , $TABLE , $ORDER = "desc"        ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PUID = $this -> Payer                                                     ;
+  $UUID = $this -> Trainee                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "select `uuid` from {$TABLE}"                                      .
+          " where ( `payer` = {$PUID} )"                                     .
+          " and ( `trainee` = {$UUID} )"                                     .
+          " order by `closeday` {$ORDER} ;"                                  ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> ObtainUuids        ( $QQ                                   ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function ObtainLecturesByPayer   ( $DB , $TABLE , $ORDER = "desc"   ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PUIDs  = $this -> ObtainUuidsByPayer ( $DB , $TABLE , $ORDER            ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LUIDs  = array                       (                                  ) ;
+  foreach                               ( $PUIDs as $P                     ) {
+    $L    = new Lecture                 (                                  ) ;
+    $L -> Uuid = $P                                                          ;
+    $L -> ObtainsByUuid                 ( $DB    , $TABLE                  ) ;
+    array_push                          ( $LUIDs , $L                      ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $LUIDs                                                              ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function ObtainSections            ( $DB , $TABLE                   ) {
