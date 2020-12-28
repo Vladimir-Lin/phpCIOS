@@ -446,6 +446,16 @@ public function GetConsumedListings ( $DB , $TABLE , $PUID , $ITEM         ) {
   return $DB -> ObtainUuids         ( $QQ                                  ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function GetAllocatedListings ( $DB , $TABLE , $PUID , $ITEM , $SDT ) {
+  $QQ = "select `uuid` from {$TABLE}"                                        .
+        " where ( `owner` = {$PUID} )"                                       .
+        " and ( `action` in ( 2 ) )"                                         .
+        " and ( `states` in ( 2 , 3 ) )"                                     .
+        " and ( `item` = {$ITEM} )"                                          .
+        " and ( `creation` >= {$SDT} ) ;"                                    ;
+  return $DB -> ObtainUuids         ( $QQ                                  ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function GetSpentListings    ( $DB , $TABLE , $PUID , $ITEM         ) {
   $QQ = "select `uuid` from {$TABLE}"                                        .
         " where ( `owner` = {$PUID} )"                                       .
