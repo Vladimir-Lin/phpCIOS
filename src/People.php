@@ -882,13 +882,41 @@ public function GetOwners($DB,$TABLE,$ORDER="desc",$RELATION="Subordination")
   return $LX                                              ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function JoinMoment($DB,$RI,$TABLE)
-{
-  $RI -> set                ( "second"  , $this -> Uuid )              ;
-  $QQ  = "select `ltime` from {$TABLE} " . $RI -> ExactItem ( ) . " ;" ;
-  $qq  = $DB -> Query       ( $QQ                       )              ;
-  $rr  = $qq -> fetch_array ( MYSQLI_BOTH               )              ;
-  return $rr [ 0 ]                                                     ;
+public function JoinMoment  ( $DB , $RI , $TABLE                           ) {
+  $RI -> set                ( "second"  , $this -> Uuid                    ) ;
+  $EIT = $RI -> ExactItem   (                                              ) ;
+  $QQ  = "select `ltime` from {$TABLE} {$EIT} ;"                             ;
+  $qq  = $DB -> Query       ( $QQ                                          ) ;
+  $rr  = $qq -> fetch_array ( MYSQLI_BOTH                                  ) ;
+  return $rr [ 0 ]                                                           ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetPartners      ( $DB                                     ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PRLTAB   = $GLOBALS [ "TableMapping" ] [ "PeopleRelation" ]               ;
+  $PQATAB   = $GLOBALS [ "TableMapping" ] [ "PartnerQuotas"  ]               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PUID     = $this -> Uuid                                                  ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RI       = new Relation       (                                         ) ;
+  $RI      -> set                ( "second" , $PUID                        ) ;
+  $RI      -> setT1              ( "People"                                ) ;
+  $RI      -> setT2              ( "People"                                ) ;
+  $RI      -> setRelation        ( "Subordination"                         ) ;
+  $PARTNERs = $RI -> GetOwners   ( $DB , $PRLTAB                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ       = "select `partner` from {$PQATAB}"                              .
+               " where ( `people` = {$PUID} ) "                              .
+               " group by `partner` ;"                                       ;
+  $HISTORY  = $DB -> ObtainUuids ( $QQ                                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  foreach                        ( $HISTORY as $H                          ) {
+    if                           ( ! in_array ( $H , $PARTNERs )           ) {
+      array_push                 ( $PARTNERs , $H                          ) ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $PARTNERs                                                           ;
 }
 //////////////////////////////////////////////////////////////////////////////
 }
