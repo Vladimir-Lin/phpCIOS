@@ -504,16 +504,15 @@ public function RemoveCourse ( $DB , $RELATION , $COURSE                   ) {
 }
 
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainLessons($DB,$RELATIONS)
-{
-  $RI      = new Relation         (                         ) ;
-  $RI     -> set                  ( "first" , $this -> Uuid ) ;
-  $RI     -> setT1                ( "Lecture"               ) ;
-  $RI     -> setT2                ( "Lesson"                ) ;
-  $RI     -> setRelation          ( "Contains"              ) ;
-  $LESSONS = $RI -> Subordination ( $DB , $RELATIONS        ) ;
-  unset                           ( $RI                     ) ;
-  return $LESSONS                                             ;
+public function ObtainLessons     ( $DB , $RELATIONS                       ) {
+  $RI      = new Relation         (                                        ) ;
+  $RI     -> set                  ( "first" , $this -> Uuid                ) ;
+  $RI     -> setT1                ( "Lecture"                              ) ;
+  $RI     -> setT2                ( "Lesson"                               ) ;
+  $RI     -> setRelation          ( "Contains"                             ) ;
+  $LESSONS = $RI -> Subordination ( $DB , $RELATIONS                       ) ;
+  unset                           ( $RI                                    ) ;
+  return $LESSONS                                                            ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function ObtainUuidsByPayer ( $DB , $TABLE , $ORDER = "desc"        ) {
@@ -542,6 +541,26 @@ public function ObtainLecturesByPayer   ( $DB , $TABLE , $ORDER = "desc"   ) {
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   return $LUIDs                                                              ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function ObtainClassesByPayer ( $DB                                 ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $LECTAB = $GLOBALS [ "TableMapping" ] [ "Lectures" ]                       ;
+  $CLSTAB = $GLOBALS [ "TableMapping" ] [ "Classes"  ]                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PUID   = $this -> Payer                                                   ;
+  $TUID   = $this -> Trainee                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LECQQ  = "select `uuid` from {$LECTAB}"                                   .
+            " where ( `trainee` = {$TUID} )"                                 .
+            " and ( `payer` = {$PUID} )"                                     ;
+  $QQ     = "select `uuid` from {$CLSTAB}"                                   .
+            " where ( `used` = 1 )"                                          .
+            " and ( `trainee` = {$TUID} )"                                   .
+            " and ( `lecture` in ( {$LECQQ} ) )"                             .
+            " order by `start` desc ;"                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> ObtainUuids          ( $QQ                                 ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function ObtainSections            ( $DB , $TABLE                   ) {
