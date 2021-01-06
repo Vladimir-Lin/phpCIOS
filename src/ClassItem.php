@@ -690,7 +690,25 @@ public function SearchClasses($DB,$TABLE,$PUID,$TYPE,$ITEM,$STARTTIME,$ENDTIME)
   //////////////////////////////////////////////////////
   return $AR                                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+public function GetClassesByTutorForLeave ( $DB                              ,
+                                            $TABLE                           ,
+                                            $TUID                            ,
+                                            $LASTEST                         ,
+                                            $END                           ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ       = "select `uuid` from {$TABLE}"                                  .
+              " where ( `used` > 0 )"                                        .
+              " and ( `type` in ( 1 , 6 , 7 ) )"                             .
+              " and ( `states` in ( 2002 , 7006 , 8007 ) )"                  .
+              " and ( `tutor` = {$TUID} )"                                   .
+              " and ( `start` > {$LASTEST} )"                                .
+              " and ( `start` < {$END} )"                                    .
+              " order by `start` asc ;"                                      ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> ObtainUuids               ( $QQ                            ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function CalendarRenderScript()
 {
   $F1   = "$(element).on({\n"                                                .
