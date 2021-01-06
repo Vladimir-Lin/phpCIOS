@@ -121,7 +121,7 @@ public function Background ( $COLOR                                        ) {
 //////////////////////////////////////////////////////////////////////////////
 public function TimeField          ( $TZ     , $FIELD , $PERIOD            ) {
   $TSTR  = $PERIOD -> toTimeString ( $TZ     , $FIELD                      ) ;
-  $this -> AddDqPair               (           $FIELD  , $TSTR             ) ;
+  $this -> AddDqPair               (           $FIELD , $TSTR              ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // 新增時間欄位
