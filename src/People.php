@@ -870,7 +870,7 @@ public function GetMembers    ( $DB                                          ,
 //////////////////////////////////////////////////////////////////////////////
 public function GetOwners($DB,$TABLE,$ORDER="desc",$RELATION="Subordination")
 {
-  $RI  = new RelationItem (                             ) ;
+  $RI  = new Relation     (                             ) ;
   $RI -> set              ( "second" , $this -> Uuid    ) ;
   $RI -> setT1            ( "People"                    ) ;
   $RI -> setT2            ( "People"                    ) ;
@@ -917,6 +917,21 @@ public function GetPartners      ( $DB                                     ) {
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   return $PARTNERs                                                           ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetTeamLeaders ( $DB                                       ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PRLTAB = $GLOBALS [ "TableMapping" ] [ "PeopleRelation" ]                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PUID   = $this -> Uuid                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RI     = new Relation       (                                           ) ;
+  $RI    -> set                ( "second" , $PUID                          ) ;
+  $RI    -> setT1              ( "People"                                  ) ;
+  $RI    -> setT2              ( "People"                                  ) ;
+  $RI    -> setRelation        ( "Subordination"                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $RI -> GetOwners      ( $DB , $PRLTAB                             ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 }
