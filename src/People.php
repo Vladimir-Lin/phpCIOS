@@ -647,45 +647,111 @@ public function SkipClasses($DB,$TABLE)
   return $CLASSES                                      ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function SkipQuotas($DB,$ITEMX)
-{
-  $HH    = new Parameters ( )                                                ;
-  $NOW   = new StarDate   ( )                                                ;
-  $SUMS  = array          ( )                                                ;
-  $PUID  = $this -> Uuid                                                     ;
-  $PTS   = 0                                                                 ;
-  $UTS   = 0                                                                 ;
-  $RTS   = 0                                                                 ;
+public function SkipQuotas     ( $DB , $ITEMX                              ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $SKPTAB    = $GLOBALS [ "TableMapping" ] [ "Skips"    ]                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NOW       = new StarDate    (                                           ) ;
+  $SUMS      = array           (                                           ) ;
+  $PUID      = $this -> Uuid                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PTS       = 0                                                             ;
+  $UTS       = 0                                                             ;
+  $RTS       = 0                                                             ;
   ////////////////////////////////////////////////////////////////////////////
   // 新增
   ////////////////////////////////////////////////////////////////////////////
-  $QQ     = "select `amount` from `erp`.`skipquotas`"                        .
-            " where ( `owner` = {$PUID} )"                                   .
-               " and ( `item` = {$ITEMX} )"                                  .
-             " and ( `states` = 7 )"                                         .
-             " and ( `action` = 3 ) ;"                                       ;
-  $qq  = $DB -> Query ( $QQ )                                                ;
-  if ( $DB -> hasResult ( $qq ) )                                            {
-    while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                       {
-      $PTS = $PTS + $rr [ 0 ]                                                ;
-    }                                                                        ;
+  $QQ        = "select sum(`amount`) from {$SKPTAB}"                         .
+               " where ( `owner` = {$PUID} )"                                .
+                 " and ( `item` = {$ITEMX} )"                                .
+                 " and ( `states` = 7 )"                                     .
+                 " and ( `action` = 3 ) ;"                                   ;
+  $PTS       = $DB -> FetchOne ( $QQ                                       ) ;
+  $PTS       = intval          ( $PTS , 10                                 ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  // 消費
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ        = "select sum(`amount`) from {$SKPTAB}"                         .
+               " where ( `owner` = {$PUID} )"                                .
+                 " and ( `item` = {$ITEMX} )"                                .
+                 " and ( `states` = 7 )"                                     .
+                 " and ( `action` = 5 ) ;"                                   ;
+  $UTS       = $DB -> FetchOne ( $QQ                                       ) ;
+  $UTS       = intval          ( $UTS , 10                                 ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RTS                = intval ( $PTS - $UTS , 10                          ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $SUMS [ "Total"   ] = $PTS                                                 ;
+  $SUMS [ "Consume" ] = $UTS                                                 ;
+  $SUMS [ "Remain"  ] = $RTS                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $SUMS                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function PartnerSkipQuotas ( $DB , $PARTNER , $PUID , $ITEMX        ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $LECTAB    = $GLOBALS [ "TableMapping" ] [ "Lectures"      ]               ;
+  $CLSTAB    = $GLOBALS [ "TableMapping" ] [ "Classes"       ]               ;
+  $SKPTAB    = $GLOBALS [ "TableMapping" ] [ "Skips"         ]               ;
+  $PRQTAB    = $GLOBALS [ "TableMapping" ] [ "PartnerQuotas" ]               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NOW       = new StarDate       (                                        ) ;
+  $SUMS      = array              (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PTS       = 0                                                             ;
+  $UTS       = 0                                                             ;
+  $RTS       = 0                                                             ;
+  ////////////////////////////////////////////////////////////////////////////
+  // 配額
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ        = "select `active`,`skips` from {$PRQTAB}"                      .
+               " where ( `partner` = {$PARTNER} )"                           .
+               " and ( `people` = {$PUID} )"                                 .
+               " and ( `item` = {$ITEMX} ) ;"                                ;
+  $qq        = $DB -> Query       ( $QQ                                    ) ;
+  if                              ( ! $DB -> hasResult ( $qq )             ) {
+    //////////////////////////////////////////////////////////////////////////
+    $SUMS [ "Total"   ] = 0                                                  ;
+    $SUMS [ "Consume" ] = 0                                                  ;
+    $SUMS [ "Remain"  ] = 0                                                  ;
+    //////////////////////////////////////////////////////////////////////////
+    return $SUMS                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $rr        = $qq -> fetch_array ( MYSQLI_BOTH                            ) ;
+  $ACTIVE    = $rr                [ 0                                      ] ;
+  $PTS       = $rr                [ 1                                      ] ;
+  $ACTIVE    = intval             ( $ACTIVE , 10                           ) ;
+  $PTS       = intval             ( $PTS    , 10                           ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                              ( ( $ACTIVE == 0 ) or ( $PTS <= 0 )      ) {
+    //////////////////////////////////////////////////////////////////////////
+    $SUMS [ "Total"   ] = 0                                                  ;
+    $SUMS [ "Consume" ] = 0                                                  ;
+    $SUMS [ "Remain"  ] = 0                                                  ;
+    //////////////////////////////////////////////////////////////////////////
+    return $SUMS                                                             ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   // 消費
   ////////////////////////////////////////////////////////////////////////////
-  $QQ     = "select `amount` from `erp`.`skipquotas`"                        .
-            " where ( `owner` = {$PUID} )"                                   .
-               " and ( `item` = {$ITEMX} )"                                  .
-             " and ( `states` = 7 )"                                         .
-             " and ( `action` = 5 ) ;"                                       ;
-  $qq  = $DB -> Query ( $QQ )                                                ;
-  if ( $DB -> hasResult ( $qq ) )                                            {
-    while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                       {
-      $UTS = $UTS + $rr [ 0 ]                                                ;
-    }                                                                        ;
-  }                                                                          ;
+  $LECQQ     = "select `uuid` from {$LECTAB}"                                .
+               " where ( `trainee` = {$PUID} )"                              .
+               " and ( `payer` = {$PARTNER} )"                               .
+               " and ( `item` = {$ITEMX} )"                                  ;
+  $REASON    = "select `uuid` from {$CLSTAB}"                                .
+               "where ( `lecture` in ( $LECQQ ) )"                           .
+               " and ( `item` = {$ITEMX} )"                                  ;
+  $QQ        = "select sum(`amount`) from {$SKPTAB}"                         .
+               " where ( `owner` = {$PARTNER} )"                             .
+                 " and ( `item` = {$ITEMX} )"                                .
+                 " and ( `states` = 7 )"                                     .
+                 " and ( `action` = 5 )"                                     .
+                 " and ( `reason` in ( {$REASON} ) ) ;"                      ;
+  $UTS       = $DB -> FetchOne ( $QQ                                       ) ;
+  $UTS       = intval          ( $UTS , 10                                 ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $RTS                = $PTS - $UTS                                          ;
+  $RTS                = intval ( $PTS - $UTS , 10                          ) ;
   ////////////////////////////////////////////////////////////////////////////
   $SUMS [ "Total"   ] = $PTS                                                 ;
   $SUMS [ "Consume" ] = $UTS                                                 ;
