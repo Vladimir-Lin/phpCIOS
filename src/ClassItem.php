@@ -699,12 +699,22 @@ public function GetClassesByTutorForLeave ( $DB                              ,
   ////////////////////////////////////////////////////////////////////////////
   $QQ       = "select `uuid` from {$TABLE}"                                  .
               " where ( `used` > 0 )"                                        .
+              " and ( `type` in ( 1 ) )"                                     .
+              " and ( `states` in ( 1001 , 2002 ) )"                         .
+              " and ( `tutor` = {$TUID} )"                                   .
+              " and ( `start` > {$LASTEST} )"                                .
+              " and ( `start` < {$END} )"                                    .
+              " order by `start` asc ;"                                      ;
+/*
+  $QQ       = "select `uuid` from {$TABLE}"                                  .
+              " where ( `used` > 0 )"                                        .
               " and ( `type` in ( 1 , 6 , 7 ) )"                             .
               " and ( `states` in ( 2002 , 7006 , 8007 ) )"                  .
               " and ( `tutor` = {$TUID} )"                                   .
               " and ( `start` > {$LASTEST} )"                                .
               " and ( `start` < {$END} )"                                    .
               " order by `start` asc ;"                                      ;
+*/
   ////////////////////////////////////////////////////////////////////////////
   return $DB -> ObtainUuids               ( $QQ                            ) ;
 }
