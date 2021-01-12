@@ -437,6 +437,23 @@ public function GetArrangedListings ( $DB , $TABLE , $PUID , $ITEM         ) {
   return $DB -> ObtainUuids         ( $QQ                                  ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function GetArrangedListingsByOwner ( $DB , $PUID , $ITEM           ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $TKNTAB = $GLOBALS [ "TableMapping" ] [ "Tokens"  ]                        ;
+  $CLSTAB = $GLOBALS [ "TableMapping" ] [ "Classes" ]                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CLSQQ  = "select `uuid` from {$CLSTAB} where ( `trainee` = {$PUID} )"     ;
+  $QQ     = "select `uuid` from {$TKNTAB}"                                   .
+            " where ( `owner` = {$PUID} )"                                   .
+              " and ( `action` in ( 2 ) )"                                   .
+              " and ( `states` in ( 1 , 2 , 3 ) )"                           .
+              " and ( `item` = {$ITEM} )"                                    .
+              " and ( `rtype` = 126 )"                                       .
+              " and ( `reason` in ( $CLSQQ ) ) ;"                            ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> ObtainUuids                ( $QQ                           ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function GetConsumedListings ( $DB , $TABLE , $PUID , $ITEM         ) {
   $QQ = "select `uuid` from {$TABLE}"                                        .
         " where ( `owner` = {$PUID} )"                                       .
@@ -473,6 +490,16 @@ public function GetTransferListings ( $DB , $TABLE , $PUID                 ) {
         " and ( `tokens` > 0 )"                                              .
         " order by `ltime` asc ;"                                            ;
   return $DB -> ObtainUuids         ( $QQ                                  ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetTransferOutListings ( $DB , $TABLE , $PUID , $ITEM      ) {
+  $QQ = "select `uuid` from {$TABLE}"                                        .
+        " where ( `owner` = {$PUID} )"                                       .
+          " and ( `action` in ( 2 ) )"                                       .
+          " and ( `states` in ( 1 , 2 , 3 ) )"                               .
+          " and ( `item` = {$ITEM} )"                                        .
+          " and ( `rtype` in ( 103 , 105 ) ) ;"                              ;
+  return $DB -> ObtainUuids            ( $QQ                               ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function GetTokensByFunction    ( $DB                                 ,
