@@ -412,11 +412,18 @@ public function CalculateTokens ( $DB , $TOKENS , $UU                      ) {
     return 0                                                                 ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $UUIDs = implode              ( " , " , $UU                              ) ;
-  $QQ    = "select sum(`tokens`) from {$TOKENS}"                             .
-           " where ( `uuid` in ( {$UUIDs} ) ) ;"                             ;
+  $UUIDs  = implode             ( " , " , $UU                              ) ;
+  $QQ     = "select sum(`tokens`) from {$TOKENS}"                            .
+            " where ( `uuid` in ( {$UUIDs} ) ) ;"                            ;
   ////////////////////////////////////////////////////////////////////////////
-  return $DB -> FetchOne        ( $QQ                                      ) ;
+  $TKNS   = $DB -> FetchOne     ( $QQ                                      ) ;
+  if                            ( strlen ( $TKNS ) <= 0                    ) {
+    $TKNS = 0                                                                ;
+  } else                                                                     {
+    $TKNS = intval              ( $TKNS , 10                               ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $TKNS                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function GetEarnedListings   ( $DB , $TABLE , $PUID , $ITEM         ) {
