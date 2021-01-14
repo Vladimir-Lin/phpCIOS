@@ -245,7 +245,7 @@ public static function GetStudentOff ( $DB                                   ,
            " where ( `used` = 1 )"                                           .
              " and ( `trainee` = {$PUID} )"                                  .
              " and ( `item` = {$ITEM} )"                                     .
-             " and ( `type` in ( 3 , 5 ) )"                                  .
+             " and ( `type` in ( 3 , 9 ) )"                                  .
              " and ( `start` >= {$START} )"                                  .
                " and ( `end` <= {$ENDST} )"                                  .
              " order by `start` asc ;"                                       ;
