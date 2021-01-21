@@ -42,6 +42,10 @@ public function setSecret ( $USERNAME , $PASSWORD )                          {
   $this -> Password = $PASSWORD                                              ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function ManagerURL ( )                                               {
+  return $this -> Management                                                 ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function Login ( )                                                    {
   ////////////////////////////////////////////////////////////////////////////
   // 登入Every8d帳戶
