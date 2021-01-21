@@ -1,40 +1,33 @@
 <?php
-
-namespace CIOS ;
-
-class MMS
-{
-
-/////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+namespace CIOS                                                               ;
+//////////////////////////////////////////////////////////////////////////////
+class MMS                                                                    {
+//////////////////////////////////////////////////////////////////////////////
 // Every8D 帳號密碼
-/////////////////////////////////////////////////////////
-
-protected $Management ;
-protected $LoginURL   ;
-protected $SmsURL     ;
-protected $Username   ;
-protected $Password   ;
-protected $Cust       ;
-protected $XML        ;
-
-public    $Phone      ;
-public    $Sender     ;
-public    $Title      ;
-public    $Message    ;
-public    $Credits    ;
-
-/////////////////////////////////////////////////////////
-function __construct()
-{
-  $this -> Clear ( ) ;
+//////////////////////////////////////////////////////////////////////////////
+protected $Management                                                        ;
+protected $LoginURL                                                          ;
+protected $SmsURL                                                            ;
+protected $Username                                                          ;
+protected $Password                                                          ;
+protected $Cust                                                              ;
+protected $XML                                                               ;
+//////////////////////////////////////////////////////////////////////////////
+public    $Phone                                                             ;
+public    $Sender                                                            ;
+public    $Title                                                             ;
+public    $Message                                                           ;
+public    $Credits                                                           ;
+//////////////////////////////////////////////////////////////////////////////
+function __construct( )                                                      {
+  $this -> Clear ( )                                                         ;
 }
-
-function __destruct()
-{
+//////////////////////////////////////////////////////////////////////////////
+function __destruct( )                                                       {
 }
-
-public function Clear()
-{
+//////////////////////////////////////////////////////////////////////////////
+public function Clear ( )                                                    {
   $this -> Management = "https://tw.every8d.com/every8d30/sms/SendMessage.aspx" ;
   $this -> LoginURL   = "http://tw.every8d.com/API20/Security.asmx?wsdl"     ;
   $this -> SmsURL     = "http://tw.every8d.com/API20/Message.asmx?wsdl"      ;
@@ -43,40 +36,42 @@ public function Clear()
   $this -> Cust       = "av8d20"                                             ;
   $this -> Credits    = 0                                                    ;
 }
-
-public function setSecret($USERNAME,$PASSWORD)
-{
-  $this -> Username = $USERNAME ;
-  $this -> Password = $PASSWORD ;
+//////////////////////////////////////////////////////////////////////////////
+public function setSecret ( $USERNAME , $PASSWORD )                          {
+  $this -> Username = $USERNAME                                              ;
+  $this -> Password = $PASSWORD                                              ;
 }
-
-public function Login()
-{
-  ///////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+public function Login ( )                                                    {
+  ////////////////////////////////////////////////////////////////////////////
   // 登入Every8d帳戶
-  ///////////////////////////////////////////////////////////
-  $PARAMS = array                                           (
-    "custID"   => $this -> Cust                             ,
-    "userID"   => $this -> Username                         ,
-    "password" => $this -> Password                         ,
-    "APIType"  => ""                                        ,
-    "version"  => ""                                      ) ;
-  ///////////////////////////////////////////////////////////
-  $CLIENT      = new SoapClient       ( $this -> LoginURL ) ;
-  $RESULT      = $CLIENT -> Login     ( $PARAMS           ) ;
-  $XMLSTR      = $RESULT -> LoginResult                     ;
-  ///////////////////////////////////////////////////////////
-  // 取得登入結果
-  ///////////////////////////////////////////////////////////
-  $this -> XML = new SimpleXMLElement ( $XMLSTR           ) ;
-  if ( $this -> XML -> ERROR_CODE == "0000" )               {
-    $this -> Credits = $this -> XML -> CREDIT               ;
-    return true                                             ;
-  }                                                         ;
-  ///////////////////////////////////////////////////////////
-  return false                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PARAMS = array                                                            (
+    "custID"   => $this -> Cust                                              ,
+    "userID"   => $this -> Username                                          ,
+    "password" => $this -> Password                                          ,
+    "APIType"  => ""                                                         ,
+    "version"  => ""                                                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  try                                                                        {
+    $CLIENT      = new \SoapClient      ( $this -> LoginURL )                ;
+    $RESULT      = $CLIENT -> Login     ( $PARAMS           )                ;
+    $XMLSTR      = $RESULT -> LoginResult                                    ;
+    //////////////////////////////////////////////////////////////////////////
+    // 取得登入結果
+    //////////////////////////////////////////////////////////////////////////
+    $this -> XML = new \SimpleXMLElement ( $XMLSTR           )               ;
+    if ( $this -> XML -> ERROR_CODE == "0000" )                              {
+      $this -> Credits = $this -> XML -> CREDIT                              ;
+      return true                                                            ;
+    }                                                                        ;
+  } catch ( Exception $e )                                                   {
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return false                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Send($NUMBER,$SUBJECT,$CONTENT,$NAME="",$EMAIL="",$DATETIME="",$PARAMS="",$MR="")
 {
 //////////////////////////////////////////////////////////////////////////////
@@ -120,85 +115,75 @@ public function Send($NUMBER,$SUBJECT,$CONTENT,$NAME="",$EMAIL="",$DATETIME="",$
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
 }
-
-public function CompactTd($HD)
-{
-  $HD -> AddPair ( "nowrap" , "nowrap" ) ;
-  $HD -> AddPair ( "width"  , "3%"     ) ;
+//////////////////////////////////////////////////////////////////////////////
+public function CompactTd ( $HD                                            ) {
+  $HD -> AddPair          ( "nowrap" , "nowrap"                            ) ;
+  $HD -> AddPair          ( "width"  , "3%"                                ) ;
 }
-
-public function appendInput($HD,$VALUE="",$ID="",$CLASSID="NameInput")
-{
-  $HI  = $HD -> addInput ( $VALUE             ) ;
-  $HI -> SafePair        ( "id"    , $ID      ) ;
-  $HI -> SafePair        ( "class" , $CLASSID ) ;
+//////////////////////////////////////////////////////////////////////////////
+public function appendInput ( $HD,$VALUE="",$ID="",$CLASSID="NameInput"    ) {
+  $HI  = $HD -> addInput    ( $VALUE                                       ) ;
+  $HI -> SafePair           ( "id"    , $ID                                ) ;
+  $HI -> SafePair           ( "class" , $CLASSID                           ) ;
 }
-
-public function appendArea($HD,$VALUE="",$ID="",$CLASSID="MmsArea")
-{
-  $TA  = $HD -> addHtml ( "textarea"         ) ;
-  $TA -> SafePair       ( "id"    , $ID      ) ;
-  $TA -> SafePair       ( "class" , $CLASSID ) ;
-  $TA -> AddPair        ( "rows"  , "5"      ) ;
-  $TA -> AddPair        ( "cols"  , "120"    ) ;
+//////////////////////////////////////////////////////////////////////////////
+public function appendArea ( $HD,$VALUE="",$ID="",$CLASSID="MmsArea"       ) {
+  $TA  = $HD -> addHtml    ( "textarea"                                    ) ;
+  $TA -> SafePair          ( "id"    , $ID                                 ) ;
+  $TA -> SafePair          ( "class" , $CLASSID                            ) ;
+  $TA -> AddPair           ( "rows"  , "5"                                 ) ;
+  $TA -> AddPair           ( "cols"  , "120"                               ) ;
 }
-
-public function appendPhone($HR,$ID="PhoneNumber",$CLASSID="NameInput")
-{
-  global $Translations                                               ;
-  $HD    = $HR    -> addTd ( $Translations [ "MMS::Phone" ]        ) ;
-  $HD    = $HR    -> addTd (                                       ) ;
-  $this -> appendInput     ( $HD , $this -> Phone , $ID , $CLASSID ) ;
+//////////////////////////////////////////////////////////////////////////////
+public function appendPhone ( $HR,$ID="PhoneNumber",$CLASSID="NameInput"   ) {
+  global $Translations                                                       ;
+  $HD    = $HR    -> addTd  ( $Translations [ "MMS::Phone" ]               ) ;
+  $HD    = $HR    -> addTd  (                                              ) ;
+  $this -> appendInput      ( $HD , $this -> Phone , $ID , $CLASSID        ) ;
 }
-
-public function appendSender($HR,$ID="Name",$CLASSID="NameInput")
-{
-  global $Translations                                                ;
-  $HD    = $HR    -> addTd ( $Translations [ "MMS::Sender" ]        ) ;
-  $HD    = $HR    -> addTd (                                        ) ;
-  $this -> appendInput     ( $HD , $this -> Sender , $ID , $CLASSID ) ;
+//////////////////////////////////////////////////////////////////////////////
+public function appendSender ( $HR,$ID="Name",$CLASSID="NameInput"         ) {
+  global $Translations                                                       ;
+  $HD    = $HR    -> addTd   ( $Translations [ "MMS::Sender" ]             ) ;
+  $HD    = $HR    -> addTd   (                                             ) ;
+  $this -> appendInput       ( $HD , $this -> Sender , $ID , $CLASSID      ) ;
 }
-
-public function appendTitle($HR,$ID="Subject",$CLASSID="NameInput")
-{
-  global $Translations                                               ;
-  $HD    = $HR    -> addTd ( $Translations [ "MMS::Subject" ]      ) ;
-  $HD    = $HR    -> addTd (                                       ) ;
-  $this -> appendInput     ( $HD , $this -> Title , $ID , $CLASSID ) ;
+//////////////////////////////////////////////////////////////////////////////
+public function appendTitle ( $HR,$ID="Subject",$CLASSID="NameInput"       ) {
+  global $Translations                                                       ;
+  $HD    = $HR    -> addTd  ( $Translations [ "MMS::Subject" ]             ) ;
+  $HD    = $HR    -> addTd  (                                              ) ;
+  $this -> appendInput      ( $HD , $this -> Title , $ID , $CLASSID        ) ;
 }
-
-public function appendContent($HR,$ID="Content",$CLASSID="MmsArea")
-{
-  global $Translations                                               ;
-  $HD    = $HR    -> addTd ( $Translations [ "MMS::Content" ]      ) ;
-  $HD    = $HR    -> addTd (                                       ) ;
-  $this -> appendArea      ( $HD , $this -> Message , $ID , $CLASSID ) ;
+//////////////////////////////////////////////////////////////////////////////
+public function appendContent ( $HR,$ID="Content",$CLASSID="MmsArea"       ) {
+  global $Translations                                                       ;
+  $HD    = $HR    -> addTd    ( $Translations [ "MMS::Content" ]           ) ;
+  $HD    = $HR    -> addTd    (                                            ) ;
+  $this -> appendArea         ( $HD , $this -> Message , $ID , $CLASSID    ) ;
 }
-
-public function ClearButton()
-{
-  global $Translations                                   ;
-  $BTN  = new HtmlTag (                                ) ;
-  $BTN -> setTag      ( "button"                       ) ;
-  $BTN -> AddPair     ( "class"   , "SelectionButton"  ) ;
-  $BTN -> AddPair     ( "onclick" , "ClearSMS() ;"     ) ;
-  $BTN -> AddText     ( $Translations [ "MMS::Clear" ] ) ;
-  return $BTN                                            ;
+//////////////////////////////////////////////////////////////////////////////
+public function ClearButton (                                              ) {
+  global $Translations                                                       ;
+  $BTN  = new HtmlTag       (                                              ) ;
+  $BTN -> setTag            ( "button"                                     ) ;
+  $BTN -> AddPair           ( "class"   , "SelectionButton"                ) ;
+  $BTN -> AddPair           ( "onclick" , "ClearSMS() ;"                   ) ;
+  $BTN -> AddText           ( $Translations [ "MMS::Clear" ]               ) ;
+  return $BTN                                                                ;
 }
-
-public function SendButton()
-{
-  global $Translations                                  ;
-  $BTN  = new HtmlTag (                               ) ;
-  $BTN -> setTag      ( "button"                      ) ;
-  $BTN -> AddPair     ( "class"   , "SelectionButton" ) ;
-  $BTN -> AddPair     ( "onclick" , "SendSMS() ;"     ) ;
-  $BTN -> AddText     ( $Translations [ "MMS::Send" ] ) ;
-  return $BTN                                           ;
+//////////////////////////////////////////////////////////////////////////////
+public function SendButton (                                               ) {
+  global $Translations                                                       ;
+  $BTN  = new HtmlTag      (                                               ) ;
+  $BTN -> setTag           ( "button"                                      ) ;
+  $BTN -> AddPair          ( "class"   , "SelectionButton"                 ) ;
+  $BTN -> AddPair          ( "onclick" , "SendSMS() ;"                     ) ;
+  $BTN -> AddText          ( $Translations [ "MMS::Send" ]                 ) ;
+  return $BTN                                                                ;
 }
-
-public function SmsTable()
-{
+//////////////////////////////////////////////////////////////////////////////
+public function SmsTable               (                                   ) {
   ////////////////////////////////////////////////////////////////////////////
   $HT     = new HtmlTag                (                                   ) ;
   $TBODY  = $HT      -> ConfigureTable (                                   ) ;
@@ -235,9 +220,8 @@ public function SmsTable()
   ////////////////////////////////////////////////////////////////////////////
   return $HT                                                                 ;
 }
-
-public function InformationTable()
-{
+//////////////////////////////////////////////////////////////////////////////
+public function InformationTable     (                                     ) {
   $TABLE  = new HtmlTag              (                                     ) ;
   $TBODY  = $TABLE -> ConfigureTable ( 1 , 0 , 0                           ) ;
   ////////////////////////////////////////////////////////////////////////////
@@ -288,7 +272,7 @@ public function InformationTable()
   ////////////////////////////////////////////////////////////////////////////
   return $TABLE                                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>
