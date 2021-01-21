@@ -137,6 +137,22 @@ public function fromInput($inpString,$TZ="")
   return $this -> fromFormat ( $dtxString , $TZ        ) ;
 }
 
+public function TryDecodeDateTime        ( $TZ                               ,
+                                           $dtString                         ,
+                                           $FMT = "Y-m-d H:i:s"            ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $this   -> Stardate = 0                                                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  try                                                                        {
+    $TX    = new \DateTimeZone           ( $TZ                             ) ;
+    $DT    = \DateTime::createFromFormat ( $FMT , $dtString , $TX          ) ;
+    $this -> fromDateTime                ( $DT                             ) ;
+  } catch                                ( Exception $e                    ) {
+    return 0                                                                 ;
+  }                                                                          ;
+  return $this -> Stardate                                                   ;
+}
+
 public function ShrinkMinute()
 {
   $TS = $this -> Timestamp ( ) ;
