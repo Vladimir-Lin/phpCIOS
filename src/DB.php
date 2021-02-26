@@ -385,32 +385,28 @@ public function Naming ( $Table , $U , $Locality , $Usage = "Default" )
 }
 
 //////////////////////////////////////////////////////////////////////////////
-
-public function SearchByNameAndType ( $NAME , $TYPE , $NAMETAB , $UUIDTAB )
-{
+public function SearchByNameAndType ( $NAME , $TYPE , $NAMETAB , $UUIDTAB  ) {
   ////////////////////////////////////////////////////////////////////////////
-  // $NAMK  = strtolower ( $NAME )                                              ;
-  $NAMK  = $NAME                                                             ;
+  $UU    = array                    (                                      ) ;
+  $NAMK  = mb_strtolower            ( $NAME , 'UTF-8'                      ) ;
   $GNAM  = "%{$NAMK}%"                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
   $QQ    = "select `n`.`uuid` from {$NAMETAB} as `n`"                        .
            " inner join {$UUIDTAB} as `u`"                                   .
-           " where ( `n`.`uuid` = `u`.`uuid` )"                              .
+           " where ( `n`.`name` like ? )"                                    .
+           " and ( `n`.`uuid` = `u`.`uuid` )"                                .
            " and ( `u`.`type` = {$TYPE} )"                                   .
-           " and ( `n`.`name` like ? )"                                      .
            " group by `n`.`uuid` asc"                                        .
            " order by `n`.`id` asc ;"                                        ;
-  $qq    = $this -> Prepare  ( $QQ         )                                 ;
-  $qq   -> bind_param        ( 's' , $GNAM )                                 ;
-  $qq   -> execute           (             )                                 ;
+  $qq    = $this -> Prepare         ( $QQ                                  ) ;
+  $qq   -> bind_param               ( 's' , $GNAM                          ) ;
+  if                                ( ! $qq -> execute ( )                 ) {
+    return $UU                                                               ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $kk    = $qq -> get_result (             )                                 ;
-  $UU    = array             (             )                                 ;
-    echo $GNAM ;
-    echo "\n" ;
-    echo $QQ ;
-    echo "\n" ;
+  $kk    = $qq -> get_result        (                                      ) ;
   ////////////////////////////////////////////////////////////////////////////
-  return $this -> FetchUuids ( $kk , $UU   )                                 ;
+  return $this -> FetchUuids        ( $kk , $UU                            ) ;
 }
 
 //////////////////////////////////////////////////////////////////////////////
