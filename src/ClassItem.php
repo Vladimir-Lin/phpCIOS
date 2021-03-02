@@ -50,7 +50,7 @@ public function Clear ( )                                                    {
   $this -> End          =  0 ;
   $this -> Update       =  0 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assign($Item)
 {
   $this -> Id           = $Item -> Id           ;
@@ -70,7 +70,7 @@ public function assign($Item)
   $this -> End          = $Item -> End          ;
   $this -> Update       = $Item -> Update       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function tableItems()
 {
   $S = array (                     ) ;
@@ -92,7 +92,7 @@ public function tableItems()
   array_push ( $S , "ltime"        ) ;
   return $S                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function JoinItems ( $X , $S = "," )
 {
   $U = array ( )               ;
@@ -104,7 +104,7 @@ public function JoinItems ( $X , $S = "," )
   unset ( $U )                 ;
   return $L                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Items( $S = "," )
 {
   $X = $this -> tableItems (         ) ;
@@ -112,7 +112,7 @@ public function Items( $S = "," )
   unset                    ( $X      ) ;
   return $L                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function valueItems()
 {
   $S = array (                     ) ;
@@ -131,7 +131,7 @@ public function valueItems()
   array_push ( $S , "end"          ) ;
   return $S                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function set($item,$V)
 {
   $a = strtolower ( $item )                              ;
@@ -152,7 +152,7 @@ public function set($item,$V)
   if ( "end"          == $a ) $this -> End          = $V ;
   if ( "ltime"        == $a ) $this -> Update       = $V ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function get($item)
 {
   $a = strtolower ( $item )                                         ;
@@ -174,8 +174,7 @@ public function get($item)
   if ( "ltime"        == $a ) return (string) $this -> Update       ;
   return ""                                                         ;
 }
-
-
+//////////////////////////////////////////////////////////////////////////////
 public function ItemPair($item)
 {
   $a = strtolower ( $item )                             ;
@@ -229,7 +228,7 @@ public function ItemPair($item)
   }                                                     ;
   return ""                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function fromLecture($Lecture)
 {
   $this -> set ( "Trainee"      , $Lecture -> Trainee      ) ;
@@ -239,12 +238,12 @@ public function fromLecture($Lecture)
   $this -> set ( "Item"         , $Lecture -> Item         ) ;
   $this -> set ( "Lecture"      , $Lecture -> Uuid         ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Pair($item)
 {
   return "`" . $item . "` = " . $this -> get ( $item ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Pairs($Items)
 {
   $P = array ( )                                ;
@@ -255,12 +254,12 @@ public function Pairs($Items)
   unset        ( $P         )                   ;
   return $Q                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isCancelled()
 {
   return ( $this -> Type == 3 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isAbsent($ROLE)
 {
   $r = strtolower ( $ROLE )         ;
@@ -289,33 +288,33 @@ public function isAbsent($ROLE)
   }                                 ;
   return false                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ClassTypeString()
 {
   global $ClassTypeIDs                   ;
   return $ClassTypeIDs [ $this -> Type ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setStudent($ST)
 {
   if ( $ST < 0 ) return                                  ;
   $TS    = $this -> TutorStates ( )                      ;
   $this -> States = intval ( ( $TS * 1000 ) + $ST , 10 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentStates()
 {
   $ST = $this -> States             ;
   return intval ( $ST % 1000 , 10 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentString()
 {
   global $StudentWeekly            ;
   $SS = $this -> StudentStates ( ) ;
   return $StudentWeekly [ $SS ]    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentListing()
 {
   global $StudentWeekly                                      ;
@@ -327,27 +326,27 @@ public function StudentListing()
   $HS -> AddPair                ( "onchange"     , $JSC )    ;
   return $HS                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setTutor($ST)
 {
   if ( $ST < 0 ) return                                  ;
   $SS    = $this -> StudentStates ( )                    ;
   $this -> States = intval ( ( $ST * 1000 ) + $SS , 10 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TutorStates()
 {
   $ST = $this -> States             ;
   return intval ( $ST / 1000 , 10 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TutorString()
 {
   global $TutorWeekly            ;
   $TS = $this -> TutorStates ( ) ;
   return $TutorWeekly [ $TS ]    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TutorListing()
 {
   global $TutorWeekly                                      ;
@@ -359,14 +358,14 @@ public function TutorListing()
   $HS -> AddPair              ( "onchange"   , $JSC )      ;
   return $HS                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setPeriod($PERIODE)
 {
   $this -> Period = $PERIODE -> Uuid  ;
   $this -> Start  = $PERIODE -> Start ;
   $this -> End    = $PERIODE -> End   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toPeriod()
 {
   $PERIODE  = new Periode ( )         ;
@@ -375,7 +374,7 @@ public function toPeriod()
   $PERIODE -> End   = $this -> End    ;
   return $PERIODE                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toString()
 {
   $U = $this -> Uuid                                         ;
@@ -383,7 +382,7 @@ public function toString()
   if ( $H != "36000000000" ) return ""                       ;
   return sprintf ( "cls3%08d" , gmp_mod ( $U , 100000000 ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function fromString ( $CLASSID )
 {
   ////////////////////////////////////////////////////
@@ -443,7 +442,7 @@ public function ClassTime($TZ)
   //////////////////////////////////////////
   return $SDS . " - " . $EDS               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function obtain($R)
 {
   $this -> Id           = $R [ "id"           ] ;
@@ -463,7 +462,7 @@ public function obtain($R)
   $this -> End          = $R [ "end"          ] ;
   $this -> Update       = $R [ "ltime"        ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetUuid ( $DB , $Table , $Main )
 {
   global $DataTypes                                          ;
@@ -474,14 +473,14 @@ public function GetUuid ( $DB , $Table , $Main )
   $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
   return $this -> Uuid                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function UpdateItems($DB,$TABLE,$ITEMS)
 {
   $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
            $DB -> WhereUuid ( $this -> Uuid , true )                ;
   return $DB -> Query ( $QQ )                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Update($DB,$TABLE)
 {
   $ITEMS = $this -> valueItems ( )                                  ;
@@ -490,7 +489,7 @@ public function Update($DB,$TABLE)
   unset ( $ITEMS )                                                  ;
   return $DB -> Query ( $QQ )                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsByQuery($DB,$QQ)
 {
   $qq = $DB -> Query ( $QQ )                 ;
@@ -501,14 +500,14 @@ public function ObtainsByQuery($DB,$QQ)
   }                                          ;
   return false                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsByUuid($DB,$TABLE)
 {
   $QQ = "select " . $this -> Items ( ) . " from " . $TABLE .
         $DB -> WhereUuid ( $this -> Uuid , true )          ;
   return $this -> ObtainsByQuery ( $DB , $QQ )             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsByLectures($DB,$TABLE,$LECTURES,$NOW,$ORDER="desc")
 {
   $UU  = array ( )                              ;
@@ -524,7 +523,7 @@ public function ObtainsByLectures($DB,$TABLE,$LECTURES,$NOW,$ORDER="desc")
   ///////////////////////////////////////////////
   return $UU                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsClasses($DB,$CLASSES,$ITEM,$ORDER="asc")
 {
   $VV = $this -> get ( $ITEM )          ;
@@ -533,7 +532,7 @@ public function ObtainsClasses($DB,$CLASSES,$ITEM,$ORDER="asc")
         " order by `start` {$ORDER} ;"  ;
   return $DB -> ObtainUuids ( $QQ )     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainItems($DB,$TABLE,$ITEM,$ORDER="desc",$LIMITS="")
 {
   $DOCS = array ( )                                    ;
@@ -551,7 +550,7 @@ public function ObtainItems($DB,$TABLE,$ITEM,$ORDER="desc",$LIMITS="")
   }                                                    ;
   return $DOCS                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainAge($DB,$TABLE,$TZ)
 {
   $PQ     = NewParameter ( 1 , 17 , "Ages" )                             ;
@@ -581,7 +580,7 @@ public function ObtainAge($DB,$TABLE,$TZ)
   ////////////////////////////////////////////////////////////////////////
   return $HST                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainCourses($DB,$RELATIONS)
 {
   $RI      = new Relation         (                         ) ;
@@ -593,7 +592,7 @@ public function ObtainCourses($DB,$RELATIONS)
   unset                           ( $RI                     ) ;
   return $COURSES                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function JoinCourses ( $DB , $RELATIONS , $COURSES ) {
   ///////////////////////////////////////////////////////////
   $RI  = new Relation       (                             ) ;
@@ -608,7 +607,7 @@ public function JoinCourses ( $DB , $RELATIONS , $COURSES ) {
   ///////////////////////////////////////////////////////////
   return $COURSES                                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function RemoveCourse ( $DB , $RELATION , $COURSE                   ) {
   $RI   = new Relation       (                                             ) ;
   $RI  -> set                ( "first"  , $this -> Uuid                    ) ;
@@ -619,7 +618,7 @@ public function RemoveCourse ( $DB , $RELATION , $COURSE                   ) {
   $QQ   = $RI -> Delete      ( $RELATION                                   ) ;
   $DB  -> Query              ( $QQ                                         ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainLessons($DB,$RELATIONS)
 {
   $RI      = new Relation         (                         ) ;
@@ -631,7 +630,7 @@ public function ObtainLessons($DB,$RELATIONS)
   unset                           ( $RI                     ) ;
   return $LESSONS                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainIcon($DB,$RELATION,$ITEM,$Relevance="Using")
 {
   $DID = "3800000000000000041"                                     ;
@@ -647,7 +646,7 @@ public function ObtainIcon($DB,$RELATION,$ITEM,$Relevance="Using")
   //////////////////////////////////////////////////////////////////
   return $DID                                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function IconTag($PATH,$ID)
 {
   $SRC = "{$PATH}?ID={$ID}"           ;
@@ -656,7 +655,7 @@ public function IconTag($PATH,$ID)
   $HT -> AddPair     ( "src" , $SRC ) ;
   return $HT                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ClassInItem($DB,$TABLE,$CLASSES,$ITEM,$ORDER="desc")
 {
   if ( count ( $CLASSES ) <= 0 ) return array ( ) ;
@@ -667,7 +666,7 @@ public function ClassInItem($DB,$TABLE,$CLASSES,$ITEM,$ORDER="desc")
         " order by `start` {$ORDER} ;"            ;
   return $DB -> ObtainUuids ( $QQ )               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SearchClasses($DB,$TABLE,$PUID,$TYPE,$ITEM,$STARTTIME,$ENDTIME)
 {
   $STARTTIME = gmp_add ( $STARTTIME , -1 )             ;
@@ -741,7 +740,7 @@ public function CalendarRenderScript()
   $CDCF = "function ( event , element ) {\n{$F1}\n{$F2}\n{$F3} }"            ;
   return $CDCF                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SkypeID($DB,$TABLE,$CUID)
 {
   $IMP = "0"                                       ;
@@ -754,7 +753,7 @@ public function SkypeID($DB,$TABLE,$CUID)
   if ( count ( $UX ) > 0 ) $IMP = $UX [ 0 ]        ;
   return $IMP                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function IconID($DB,$TABLE,$CUID)
 {
   $DID = "3800000000000000041"                    ;
@@ -769,7 +768,7 @@ public function IconID($DB,$TABLE,$CUID)
   /////////////////////////////////////////////////
   return $DID                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function IconPath($ICONPATH,$DID,$WIDTH=128,$HEIGHT=128)
 {
   $SRC = "{$ICONPATH}?ID={$DID}"            ;
@@ -780,7 +779,7 @@ public function IconPath($ICONPATH,$DID,$WIDTH=128,$HEIGHT=128)
   $HI -> AddPair     ( "src"    , $SRC    ) ;
   return $HI                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentJson($DB,$TZ,$NAME,$CLASSID,$NOW)
 {
   ///////////////////////////////////////////////////////////////////////////
@@ -910,7 +909,7 @@ public function StudentJson($DB,$TZ,$NAME,$CLASSID,$NOW)
   ///////////////////////////////////////////////////////////////////////////
   return $JSC                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
 {
   $UU = $this -> ObtainsClasses ( $DB , $CLASSES , "trainee" ) ;
@@ -929,7 +928,7 @@ public function StudentClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
     }                                                          ;
   }                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TutorJson($DB,$TZ,$NAME,$CLASSID,$NOW)
 {
   ///////////////////////////////////////////////////////////////////////////
@@ -1058,7 +1057,7 @@ public function TutorJson($DB,$TZ,$NAME,$CLASSID,$NOW)
   ///////////////////////////////////////////////////////////////////////////
   return $JSC                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function OfficerJson($DB,$TZ,$NAME,$CLASSID,$NOW)
 {
   $HH   = new Parameters      (                        )                    ;
@@ -1106,7 +1105,7 @@ public function OfficerJson($DB,$TZ,$NAME,$CLASSID,$NOW)
   ///////////////////////////////////////////////////////////////////////////
   return $JSC                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TutorClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
 {
   $UU = $this -> ObtainsClasses ( $DB , $CLASSES , "tutor" ) ;
@@ -1123,7 +1122,7 @@ public function TutorClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
     }                                                        ;
   }                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function OfficerClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
 {
   $UU = $this -> ObtainsClasses ( $DB , $CLASSES , "manager" ) ;
@@ -1140,7 +1139,7 @@ public function OfficerClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
     }                                                          ;
   }                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function PartnerJson($DB,$TZ,$NAME,$CLASSID,$NOW)
 {
   $HH   = new Parameters      (                        )                    ;
@@ -1188,7 +1187,7 @@ public function PartnerJson($DB,$TZ,$NAME,$CLASSID,$NOW)
   ///////////////////////////////////////////////////////////////////////////
   return $JSC                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function PartnerClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
 {
   $UU = $this -> ObtainsClasses ( $DB , $CLASSES , "trainee" ) ;
@@ -1205,7 +1204,7 @@ public function PartnerClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
     }                                                          ;
   }                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ReceptionistClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
 {
   $UU = $this -> ObtainsClasses ( $DB , $CLASSES , "receptionist" ) ;
@@ -1222,7 +1221,7 @@ public function ReceptionistClasses($DB,$TZ,$JAVA,$CLASSES,$NAME,$CLASSID,$NOW)
     }                                                               ;
   }                                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addClassDetails($CLASSID="SelectionButton")
 {
   /////////////////////////////////////////////////////////////
@@ -1238,7 +1237,7 @@ public function addClassDetails($CLASSID="SelectionButton")
   /////////////////////////////////////////////////////////////
   return $HB                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addLectureDetails($CLASSID="SelectionButton")
 {
   //////////////////////////////////////////////////////////////
@@ -1259,7 +1258,7 @@ public function addLectureDetails($CLASSID="SelectionButton")
   //////////////////////////////////////////////////////////////
   return $HB                                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addBriefIndex($HB,$COLS=4)
 {
   $HR  = $HB -> addTr (                                ) ;
@@ -1270,7 +1269,7 @@ public function addBriefIndex($HB,$COLS=4)
   $HD -> AddTag       ( $this -> addClassDetails   ( ) ) ;
   $HD -> AddTag       ( $this -> addLectureDetails ( ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addDetails()
 {
   global $Translations                                                  ;
@@ -1290,7 +1289,7 @@ public function addDetails()
   ///////////////////////////////////////////////////////////////////////
   return $HB                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addEdit($CLASSID="")
 {
   global $Translations                                         ;
@@ -1309,7 +1308,7 @@ public function addEdit($CLASSID="")
   //////////////////////////////////////////////////////////////
   return $HBX                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCallOff($TZ,$CLASSID="ClassButton")
 {
   global $Translations                                               ;
@@ -1332,7 +1331,7 @@ public function addCallOff($TZ,$CLASSID="ClassButton")
   ////////////////////////////////////////////////////////////////////
   return $HB                                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addStarting()
 {
   global $Translations                                                ;
@@ -1352,7 +1351,7 @@ public function addStarting()
   /////////////////////////////////////////////////////////////////////
   return $HB                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addEnding()
 {
   global $Translations                                              ;
@@ -1372,7 +1371,7 @@ public function addEnding()
   ///////////////////////////////////////////////////////////////////
   return $HB                                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addEvaluation($URL)
 {
   global $Translations                                         ;
@@ -1387,7 +1386,7 @@ public function addEvaluation($URL)
   //////////////////////////////////////////////////////////////
   return $HB                                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addEnableEval()
 {
   global $Translations                                                ;
@@ -1411,7 +1410,7 @@ public function addEnableEval()
   /////////////////////////////////////////////////////////////////////
   return $HB                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addDisableEval()
 {
   //////////////////////////////////////////////////////////////////////
@@ -1436,7 +1435,7 @@ public function addDisableEval()
   //////////////////////////////////////////////////////////////////////
   return $HB                                                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCoursesRemove($CLASSID="SelectionButton")
 {
   ///////////////////////////////////////////////////
@@ -1452,7 +1451,7 @@ public function addCoursesRemove($CLASSID="SelectionButton")
   ///////////////////////////////////////////////////
   return $BTN                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addLessonsButton($CLASSID="SelectionButton")
 {
   ///////////////////////////////////////////////////
@@ -1468,7 +1467,7 @@ public function addLessonsButton($CLASSID="SelectionButton")
   ///////////////////////////////////////////////////
   return $BTN                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCoursesButton($CLASSID="SelectionButton")
 {
   ////////////////////////////////////////////////
@@ -1484,7 +1483,7 @@ public function addCoursesButton($CLASSID="SelectionButton")
   ////////////////////////////////////////////////
   return $BTN                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addEnableSelectCourse($CLASSID="ClassButton")
 {
   /////////////////////////////////////////////////
@@ -1500,7 +1499,7 @@ public function addEnableSelectCourse($CLASSID="ClassButton")
   /////////////////////////////////////////////////
   return $BTN                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addDisableSelectCourse($CLASSID="ClassButton")
 {
   /////////////////////////////////////////////////
@@ -1516,7 +1515,7 @@ public function addDisableSelectCourse($CLASSID="ClassButton")
   /////////////////////////////////////////////////
   return $BTN                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCourseSelection($DIV,$COURSES,$BTNCLASS="SelectionButton",$CLASSID="")
 {
   $BTN  = $this -> addCoursesRemove ( $BTNCLASS                      ) ;
@@ -1528,7 +1527,7 @@ public function addCourseSelection($DIV,$COURSES,$BTNCLASS="SelectionButton",$CL
   $HS  -> AddPair                   ( "id"       , "SelectedCourses" ) ;
   $HS  -> AddPair                   ( "onchange" , $CJS              ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addAppendLesson($DIV,$LESSONS,$BTNCLASS="SelectionButton",$CLASSID="")
 {
   $HS   = $DIV  -> addSelection     ( $LESSONS   , "" , $CLASSID ) ;
@@ -1538,7 +1537,7 @@ public function addAppendLesson($DIV,$LESSONS,$BTNCLASS="SelectionButton",$CLASS
   $BTN  = $this -> addLessonsButton ( $BTNCLASS                  ) ;
   $DIV -> AddTag                    ( $BTN                       ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addAppendCourse($DIV,$ALL,$BTNCLASS="SelectionButton",$CLASSID="")
 {
   $HS     = $DIV  -> addSelection     ( $ALL , "" , $CLASSID ) ;
@@ -1548,7 +1547,7 @@ public function addAppendCourse($DIV,$ALL,$BTNCLASS="SelectionButton",$CLASSID="
   $BTN    = $this -> addCoursesButton ( $BTNCLASS            ) ;
   $DIV   -> AddTag                    ( $BTN                 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CoursesEditor($COURSES,$LESSONS,$ALL,$BTNCLASS="SelectionButton",$CLASSID="")
 {
   //////////////////////////////////////////////////////////////////
@@ -1604,7 +1603,7 @@ public function CoursesEditor($COURSES,$LESSONS,$ALL,$BTNCLASS="SelectionButton"
   //////////////////////////////////////////////////////////////////
   return $MHT                                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function getCourseName          ( $DB , $LANG                       ) {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
@@ -1642,7 +1641,7 @@ public function getCourseName          ( $DB , $LANG                       ) {
   ////////////////////////////////////////////////////////////////////////////
   return "{$CNAME} {$HNAME} {$LNAME}"                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function EditCourses($DB,$LANG)
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -1710,7 +1709,7 @@ public function EditCourses($DB,$LANG)
   ////////////////////////////////////////////////////////////////////////////
   return $CET                                                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function LessonsTable($DB,$LANG,$showButton=true,$showURL=true,$showHref=true,$INPCLASS="DocumentInput")
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -1830,12 +1829,12 @@ public function LessonsTable($DB,$LANG,$showButton=true,$showURL=true,$showHref=
   ////////////////////////////////////////////////////////////////////////////
   return $MHT                                                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ClassTypeJS()
 {
   return "ClassTypes(this.value,'{$this->Uuid}') ;" ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addClassType($HR)
 {
   global $Translations                                       ;
@@ -1849,7 +1848,7 @@ public function addClassType($HR)
   $HD  = $HR -> addTd (                                    ) ;
   $HD -> AddText      ( $ClassTypeIDs [ $this -> Type ]    ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function editClassType($HR)
 {
   global $Translations                                               ;
@@ -1875,7 +1874,7 @@ public function editClassType($HR)
   ////////////////////////////////////////////////////////////////////
   return $HS                                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function getClassType($HR,$TYPE=0)
 {
   switch ( $TYPE )                                {
@@ -1884,12 +1883,12 @@ public function getClassType($HR,$TYPE=0)
   }                                               ;
   return false                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CourseItemJS()
 {
   return "ClassItem(this.value,'{$this->Uuid}') ;" ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCourse($HR,$LeftWidth="10%",$NameWidth="15%",$bgcolors="",$listing=false)
 {
   ////////////////////////////////////////////////////////////////////////
@@ -1912,7 +1911,7 @@ public function addCourse($HR,$LeftWidth="10%",$NameWidth="15%",$bgcolors="",$li
     $HD -> AddText               ( $CourseNames [ $this -> Item ]      ) ;
   }                                                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addStatus($HR,$LeftWidth="10%",$NameWidth="15%",$bgcolors="")
 {
   ////////////////////////////////////////////////////////////
@@ -1927,7 +1926,7 @@ public function addStatus($HR,$LeftWidth="10%",$NameWidth="15%",$bgcolors="")
   $HD -> SafePair     ( "width"   , $NameWidth             ) ;
   $HD -> SafePair     ( "bgcolor" , $bgcolors              ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addTutor($HR,$TUTOR,$LeftWidth="",$NameWidth="",$bgcolors="",$tutorId=0)
 {
   global $Translations                                         ;
@@ -1953,7 +1952,7 @@ public function addTutor($HR,$TUTOR,$LeftWidth="",$NameWidth="",$bgcolors="",$tu
     unset                      ( $HH                         ) ;
   }                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 學生人名
 public function addStudent($HR,$STUDENT,$LeftWidth="",$NameWidth="",$bgcolors="",$trainee=0)
 {
@@ -1978,7 +1977,7 @@ public function addStudent($HR,$STUDENT,$LeftWidth="",$NameWidth="",$bgcolors=""
     unset                      ( $HH                         ) ;
   }                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addManager($HR,$MANAGER,$LeftWidth="",$NameWidth="",$bgcolors="",$managerId=0)
 {
   global $Translations                                           ;
@@ -2004,7 +2003,7 @@ public function addManager($HR,$MANAGER,$LeftWidth="",$NameWidth="",$bgcolors=""
     unset                      ( $HH                           ) ;
   }                                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addReceptionist($HR,$RECEPTIONIST,$LeftWidth="",$NameWidth="",$bgcolors="",$receptionistId=0)
 {
   global $Translations                                                ;
@@ -2030,7 +2029,7 @@ public function addReceptionist($HR,$RECEPTIONIST,$LeftWidth="",$NameWidth="",$b
     unset                      ( $HH                                ) ;
   }                                                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addAge($HR,$AGE,$WIDTH="")
 {
   /////////////////////////////////////////////////////
@@ -2049,7 +2048,7 @@ public function addAge($HR,$AGE,$WIDTH="")
   /////////////////////////////////////////////////////
   return true                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addPrev($PREVID,$CLASSID="ClassButton")
 {
   global $Translations                                              ;
@@ -2071,7 +2070,7 @@ public function addPrev($PREVID,$CLASSID="ClassButton")
   ///////////////////////////////////////////////////////////////////
   return $HB                                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addNext($NEXTID,$CLASSID="ClassButton")
 {
   global $Translations                                              ;
@@ -2093,7 +2092,7 @@ public function addNext($NEXTID,$CLASSID="ClassButton")
   ///////////////////////////////////////////////////////////////////
   return $HB                                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addEval($HR,$NAMEID,$ID,$CLASSID="Rater")
 {
   ////////////////////////////////////////////////////
@@ -2109,7 +2108,7 @@ public function addEval($HR,$NAMEID,$ID,$CLASSID="Rater")
   ////////////////////////////////////////////////////
   return $RA                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addComment($HR,$COMMENT,$COLS)
 {
   ////////////////////////////////////////////////////////////////
@@ -2130,7 +2129,7 @@ public function addComment($HR,$COMMENT,$COLS)
   ////////////////////////////////////////////////////////////////
   $HD -> AddTag         ( $TA                                  ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentEvaluation($COMMENT)
 {
   $HT    = new HtmlTag           (                                ) ;
@@ -2143,7 +2142,7 @@ public function StudentEvaluation($COMMENT)
   $this -> addComment            ( $HR , $COMMENT , 6             ) ;
   return $HT                                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 打開文件
 public function addOpenDocument($PREFER,$BTNID="",$BTNCLASS="")
 {
@@ -2162,7 +2161,7 @@ public function addOpenDocument($PREFER,$BTNID="",$BTNCLASS="")
   ////////////////////////////////////////////////////
   return $BTN                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 打開文件在Frame裡面
 public function addOpenFrame($PREFER,$BTNID="",$BTNCLASS="")
 {
@@ -2181,7 +2180,7 @@ public function addOpenFrame($PREFER,$BTNID="",$BTNCLASS="")
   ////////////////////////////////////////////////////////
   return $BTN                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 關閉Frame裡面的文件
 public function addCloseFrame($PREFER,$BTNID="",$BTNCLASS="")
 {
@@ -2200,7 +2199,7 @@ public function addCloseFrame($PREFER,$BTNID="",$BTNCLASS="")
   ////////////////////////////////////////////////////////
   return $BTN                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 教材輸入欄
 // Replace : ListDocuments
 public function documentInput($PREFER=-1,$TEXT="",$PREFIX="ClassDocument",$INPUTCLASS="DocumentInput")
@@ -2229,7 +2228,7 @@ public function documentInput($PREFER=-1,$TEXT="",$PREFIX="ClassDocument",$INPUT
   }                                                                  ;
   return $HZX                                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 教材區塊
 public function DocumentsBlock                      (
                   $MAPs                             ,
@@ -2358,7 +2357,7 @@ public function DocumentsBlock                      (
   ////////////////////////////////////////////////////////////////////////////
   return $TABLE                                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 教材區塊
 public function LoadDocumentsBlock                  (
                   $DB                               ,
@@ -2390,7 +2389,7 @@ public function LoadDocumentsBlock                  (
   unset                       ( $NI                        ) ;
   return $DBT                                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function DocumentFrameBlock($MAPs,$PREFIX="MaterialFrame",$EMBED=false)
 {
   $HF     = new HtmlTag           (                    ) ;
@@ -2419,7 +2418,7 @@ public function DocumentFrameBlock($MAPs,$PREFIX="MaterialFrame",$EMBED=false)
   ////////////////////////////////////////////////////////
   return $HF                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FrameURL($ID,$URL)
 {
   //////////////////////////////////////////////////
@@ -2436,7 +2435,7 @@ public function FrameURL($ID,$URL)
   //////////////////////////////////////////////////
   return $HFRM                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FrameJS($CIDs)
 {
   $HS      = new HtmlTag (          )               ;
@@ -2452,7 +2451,7 @@ public function FrameJS($CIDs)
   ///////////////////////////////////////////////////
   return $HS                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 在另外一個視窗打開影片
 public function addOpenVideo($PREFER,$BTNID="",$BTNCLASS="")
 {
@@ -2471,7 +2470,7 @@ public function addOpenVideo($PREFER,$BTNID="",$BTNCLASS="")
   /////////////////////////////////////////////////
   return $BTN                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 打開文件在Frame裡面
 public function addVideoFrame($PREFER,$BTNID="",$BTNCLASS="")
 {
@@ -2490,7 +2489,7 @@ public function addVideoFrame($PREFER,$BTNID="",$BTNCLASS="")
   /////////////////////////////////////////////////////
   return $BTN                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 關閉Frame裡面的文件
 public function addCloseVideo($PREFER,$BTNID="",$BTNCLASS="")
 {
@@ -2509,7 +2508,7 @@ public function addCloseVideo($PREFER,$BTNID="",$BTNCLASS="")
   /////////////////////////////////////////////////////
   return $BTN                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 影片輸入欄
 // Replace : ListFilms
 public function filmInput($PREFER=-1,$TEXT="",$PREFIX="ClassFilm",$INPUTCLASS="FilmInput")
@@ -2538,7 +2537,7 @@ public function filmInput($PREFER=-1,$TEXT="",$PREFIX="ClassFilm",$INPUTCLASS="F
   }                                                              ;
   return $HZX                                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // 影片輸入區塊
 public function FilmsBlock                        (
                   $MAPs                           ,
@@ -2667,7 +2666,7 @@ public function FilmsBlock                        (
   ////////////////////////////////////////////////////////////////////////////
   return $TABLE                                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FilmFrameBlock($MAPs,$PREFIX="FilmFrame",$EMBED=false)
 {
   $HF     = new HtmlTag           (                    ) ;
@@ -2696,7 +2695,7 @@ public function FilmFrameBlock($MAPs,$PREFIX="FilmFrame",$EMBED=false)
   ////////////////////////////////////////////////////////
   return $HF                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function RawFilm($URL,$WIDTH="100%",$HEIGHT="100vh")
 {
   /////////////////////////////////////////////////////////
@@ -2725,7 +2724,7 @@ public function RawFilm($URL,$WIDTH="100%",$HEIGHT="100vh")
   /////////////////////////////////////////////////////////
   return $HFRM                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FilmURL($ID,$URL,$WIDTH="100%",$HEIGHT="100vh")
 {
   ///////////////////////////////////////////////////////
@@ -2736,7 +2735,7 @@ public function FilmURL($ID,$URL,$WIDTH="100%",$HEIGHT="100vh")
   ///////////////////////////////////////////////////////
   return $HFRM                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FilmJS($CIDs)
 {
   $HS      = new HtmlTag (          )               ;
@@ -2752,7 +2751,7 @@ public function FilmJS($CIDs)
   ///////////////////////////////////////////////////
   return $HS                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function scoreInput($SCORING="")
 {
   $SJS  = "RatingChanged('{$this->Uuid}','Score',this.value) ;" ;
@@ -2770,7 +2769,7 @@ public function scoreInput($SCORING="")
   ///////////////////////////////////////////////////////////////
   return $SIP                                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function aidInput($PID,$ROLEID,$UUID)
 {
   $HH   = new Parameters      (                            ) ;
@@ -2788,7 +2787,7 @@ public function aidInput($PID,$ROLEID,$UUID)
   ////////////////////////////////////////////////////////////
   return $INP                                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function JoinDIV($TAG,$IDTAG,$CLASSID)
 {
   $DIV  = new HtmlTag (                        ) ;
@@ -2799,7 +2798,7 @@ public function JoinDIV($TAG,$IDTAG,$CLASSID)
   ////////////////////////////////////////////////
   return $DIV                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addButton($HR,$TAG)
 {
   $HD    = $HR -> addTd (                           ) ;
@@ -2813,7 +2812,7 @@ public function addButton($HR,$TAG)
   }                                                   ;
   return $HD                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addClassID($HR)
 {
   $CID = $this -> toString ( )                      ;
@@ -2821,7 +2820,7 @@ public function addClassID($HR)
   $HD  = $this -> addButton ( $HR          , $CID ) ;
   $HD -> AddPair            ( "ondblclick" , $JSC ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CallOffItem($DB,$TZ,$CLASSID="")
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -2884,7 +2883,7 @@ public function CallOffItem($DB,$TZ,$CLASSID="")
   ////////////////////////////////////////////////////////////////////////////
   return $HT                                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CallOffTable($DB,$TZ,$HDIV,$CLASSES,$CLASSID="")
 {
   foreach ( $CLASSES as $cc )                                           {
@@ -2894,7 +2893,7 @@ public function CallOffTable($DB,$TZ,$HDIV,$CLASSES,$CLASSID="")
     }                                                                   ;
   }                                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function StudentVideo($DB,$TZ,$IDX,$NOID)
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -2990,7 +2989,7 @@ public function StudentVideo($DB,$TZ,$IDX,$NOID)
   ////////////////////////////////////////////////////////////////////////////
   return $HT                                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>

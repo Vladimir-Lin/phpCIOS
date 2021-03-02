@@ -1,33 +1,28 @@
 <?php
-
-namespace CIOS ;
-
-class Weekly
-{
-
-public $TimeSlots ;
-public $Minutes   ;
-
-function __construct()
-{
-  $this -> Clear ( )  ;
+//////////////////////////////////////////////////////////////////////////////
+namespace CIOS                                                               ;
+//////////////////////////////////////////////////////////////////////////////
+class Weekly                                                                 {
+//////////////////////////////////////////////////////////////////////////////
+public $TimeSlots                                                            ;
+public $Minutes                                                              ;
+//////////////////////////////////////////////////////////////////////////////
+function __construct ( )                                                     {
+  $this -> Clear     ( )                                                     ;
 }
-
-function __destruct()
-{
+//////////////////////////////////////////////////////////////////////////////
+function __destruct ( )                                                      {
 }
-
-public function Clear()
-{
-  $this -> TimeSlots = array ( )     ;
-  $this -> Minutes   = array ( )     ;
-  for ( $i = 0 ; $i < 10080 ; $i++ ) {
-    $this -> Minutes [ $i ] = 0      ;
-  }                                  ;
+//////////////////////////////////////////////////////////////////////////////
+public function Clear ( )                                                    {
+  $this -> TimeSlots = array ( )                                             ;
+  $this -> Minutes   = array ( )                                             ;
+  for ( $i = 0 ; $i < 10080 ; $i++ )                                         {
+    $this -> Minutes [ $i ] = 0                                              ;
+  }                                                                          ;
 }
-
-public function FillHours($HOURS,$STATES)
-{
+//////////////////////////////////////////////////////////////////////////////
+public function FillHours ( $HOURS , $STATES )                               {
   ////////////////////////////////////////////////////////////////////////////
   $HX = explode              ( "," , $HOURS             )                    ;
   unset                      ( $this -> TimeSlots       )                    ;
@@ -48,9 +43,8 @@ public function FillHours($HOURS,$STATES)
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
-public function DayCounts ( $DAY )
-{
+//////////////////////////////////////////////////////////////////////////////
+public function DayCounts ( $DAY )                                           {
   ////////////////////////////////////////////////////////////////////////////
   $DC = 0                                                                    ;
   ////////////////////////////////////////////////////////////////////////////
@@ -62,9 +56,8 @@ public function DayCounts ( $DAY )
   ////////////////////////////////////////////////////////////////////////////
   return $DC                                                                 ;
 }
-
-public function SlotCounts ( $DAY , $SLOTS )
-{
+//////////////////////////////////////////////////////////////////////////////
+public function SlotCounts ( $DAY , $SLOTS )                                 {
   ////////////////////////////////////////////////////////////////////////////
   $DC = 0                                                                    ;
   ////////////////////////////////////////////////////////////////////////////
@@ -77,44 +70,42 @@ public function SlotCounts ( $DAY , $SLOTS )
   ////////////////////////////////////////////////////////////////////////////
   return $DC                                                                 ;
 }
-
-public function toWeeklyJSON($DAY)
-{
+//////////////////////////////////////////////////////////////////////////////
+public function toWeeklyJSON  ( $DAY                                       ) {
   ////////////////////////////////////////////////////////////////////////////
-  $DL    = array              (                           )                  ;
+  $DL    = array              (                                            ) ;
   ////////////////////////////////////////////////////////////////////////////
-  foreach                     ( $this -> TimeSlots as $ts )                  {
-    if                        ( $DAY == $ts -> Day ( )    )                  {
-      $LINE = $ts -> toWeekly (                           )                  ;
-      array_push              ( $DL , $LINE               )                  ;
+  foreach                     ( $this -> TimeSlots as $ts                  ) {
+    if                        ( $DAY == $ts -> Day ( )                     ) {
+      $LINE = $ts -> toWeekly (                                            ) ;
+      array_push              ( $DL   , $LINE                              ) ;
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $LINEX = implode            ( ",\n" , $DL               )                  ;
+  $LINEX = implode            ( ",\n" , $DL                                ) ;
   ////////////////////////////////////////////////////////////////////////////
   $WJSL  = "{\n  \"day\":\"{$DAY}\",\n  \"periods\": [\n{$LINEX}\n  ]\n}"    ;
   ////////////////////////////////////////////////////////////////////////////
   return $WJSL                                                               ;
 }
-
-public function toWeekly()
-{
+//////////////////////////////////////////////////////////////////////////////
+public function toWeekly            (                                      ) {
   ////////////////////////////////////////////////////////////////////////////
-  $DL       = array                 (                        )               ;
+  $DL       = array                 (                                      ) ;
   ////////////////////////////////////////////////////////////////////////////
-  for                               ( $i = 0 ; $i < 7 ; $i++ )               {
-    $DC     = $this -> DayCounts    ( $i                     )               ;
-    if                              ( $DC > 0                )               {
-      $LINE = $this -> toWeeklyJSON ( $i                     )               ;
-      array_push                    ( $DL , $LINE            )               ;
+  for                               ( $i = 0 ; $i < 7 ; $i++               ) {
+    $DC     = $this -> DayCounts    ( $i                                   ) ;
+    if                              ( $DC > 0                              ) {
+      $LINE = $this -> toWeeklyJSON ( $i                                   ) ;
+      array_push                    ( $DL , $LINE                          ) ;
     }                                                                        ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $LINEX    = implode               ( ",\n" , $DL            )               ;
+  $LINEX    = implode               ( ",\n" , $DL                          ) ;
   ////////////////////////////////////////////////////////////////////////////
   return $LINEX                                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Obtains($DB,$TABLE,$PUID,$RUID)
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -135,17 +126,16 @@ public function Obtains($DB,$TABLE,$PUID,$RUID)
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
 }
-
-public function Update($DB,$TABLE,$PUID,$RUID)
-{
+//////////////////////////////////////////////////////////////////////////////
+public function Update  ( $DB , $TABLE , $PUID , $RUID                     ) {
   ////////////////////////////////////////////////////////////////////////////
-  $DB   -> LockWrite    ( $TABLE                    )                        ;
+  $DB      -> LockWrite ( $TABLE                                           ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $QQ    = "delete from {$TABLE}"                                            .
-           " where `uuid` = {$PUID} and `acting` = {$RUID} ;"                ;
-  $DB   -> Query        ( $QQ                       )                        ;
+  $QQ       = "delete from {$TABLE}"                                         .
+              " where `uuid` = {$PUID} and `acting` = {$RUID} ;"             ;
+  $DB      -> Query     ( $QQ                                              ) ;
   ////////////////////////////////////////////////////////////////////////////
-  foreach               ( $this -> TimeSlots as $ts )                        {
+  foreach               ( $this -> TimeSlots as $ts                        ) {
     $START  = $ts -> Start                                                   ;
     $END    = $ts -> End                                                     ;
     $STATES = $ts -> States                                                  ;
@@ -153,31 +143,29 @@ public function Update($DB,$TABLE,$PUID,$RUID)
               " (`uuid`,`acting`,`start`,`end`,`states`)"                    .
               " values"                                                      .
               " ( {$PUID} , {$RUID} , {$START} , {$END} , {$STATES} ) ;"     ;
-     $DB   -> Query     ( $QQ                       )                        ;
+     $DB   -> Query     ( $QQ                                              ) ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $DB -> UnlockTables   ( $TABLE                    )                        ;
+  $DB -> UnlockTables   ( $TABLE                                           ) ;
 }
-
-public function Occupied ( $T )
-{
-  foreach ( $this -> TimeSlots as $ts ) {
-    if ( $ts -> Between ( $T ) == 0 )   {
-      return true                       ;
-    }                                   ;
-  }                                     ;
-  return false                          ;
+//////////////////////////////////////////////////////////////////////////////
+public function Occupied ( $T                                              ) {
+  foreach                ( $this -> TimeSlots as $ts                       ) {
+    if                   ( $ts -> Between ( $T ) == 0                      ) {
+      return true                                                            ;
+    }                                                                        ;
+  }                                                                          ;
+  return false                                                               ;
 }
-
-public function toMinuteIndexes ( )
-{
-  $MI = array  (                              ) ;
-  foreach      ( $this -> TimeSlots as $ts    ) {
-    array_push ( $MI , $ts -> MinuteIndex ( ) ) ;
-  }                                             ;
-  return $MI                                    ;
+//////////////////////////////////////////////////////////////////////////////
+public function toMinuteIndexes (                                          ) {
+  $MI = array                   (                                          ) ;
+  foreach                       ( $this -> TimeSlots as $ts                ) {
+    array_push                  ( $MI , $ts -> MinuteIndex ( )             ) ;
+  }                                                                          ;
+  return $MI                                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 ?>
