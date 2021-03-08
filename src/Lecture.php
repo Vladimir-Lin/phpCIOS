@@ -515,6 +515,32 @@ public function ObtainLessons     ( $DB , $RELATIONS                       ) {
   return $LESSONS                                                            ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function ObtainUuidsByTrainee ( $DB , $TABLE , $ORDER = "desc"      ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $UUID = $this -> Trainee                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "select `uuid` from {$TABLE}"                                      .
+          " where ( `trainee` = {$UUID} )"                                   .
+          " order by `closeday` {$ORDER} ;"                                  ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB -> ObtainUuids        ( $QQ                                   ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function ObtainLecturesByTrainee   ( $DB , $TABLE , $ORDER = "desc" ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PUIDs  = $this -> ObtainUuidsByTrainee ( $DB , $TABLE , $ORDER          ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $LUIDs  = array                         (                                ) ;
+  foreach                                 ( $PUIDs as $P                   ) {
+    $L    = new Lecture                   (                                ) ;
+    $L -> Uuid = $P                                                          ;
+    $L -> ObtainsByUuid                   ( $DB    , $TABLE                ) ;
+    array_push                            ( $LUIDs , $L                    ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $LUIDs                                                              ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainUuidsByPayer ( $DB , $TABLE , $ORDER = "desc"        ) {
   ////////////////////////////////////////////////////////////////////////////
   $PUID = $this -> Payer                                                     ;
