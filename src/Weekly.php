@@ -22,7 +22,7 @@ public function Clear ( )                                                    {
   }                                                                          ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function FillHours ( $HOURS , $STATES )                               {
+public function FillHours    ( $HOURS , $STATES         )                    {
   ////////////////////////////////////////////////////////////////////////////
   $HX = explode              ( "," , $HOURS             )                    ;
   unset                      ( $this -> TimeSlots       )                    ;
