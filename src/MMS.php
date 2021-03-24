@@ -112,7 +112,7 @@ public function Send($NUMBER,$SUBJECT,$CONTENT,$NAME="",$EMAIL="",$DATETIME="",$
   ////////////////////////////////////////////////////////////////////////////
   // 發送簡訊
   ////////////////////////////////////////////////////////////////////////////
-  $SMS    = new SoapClient     ( $this -> SmsURL )                           ;
+  $SMS    = new \SoapClient    ( $this -> SmsURL )                           ;
   $RESULT = $SMS    -> QueueIn ( $PARAMS         )                           ;
   $STR    = $RESULT -> QueueInResult                                         ;
   if ( substr ( $STR , 0 , 1 ) == "-" ) return false                         ;
