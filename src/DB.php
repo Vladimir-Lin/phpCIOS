@@ -617,8 +617,7 @@ public function AssurePassword ( $Table , $Uuid , $Name , $Pwd )             {
 }
 //////////////////////////////////////////////////////////////////////////////
 
-public function SortByName ( $TABLE , $PUIDs )
-{
+public function SortByName ( $TABLE , $PUIDs )                               {
   ////////////////////////////////////////////////////////////////////////////
   if                                ( count ( $PUIDs ) <= 0                ) {
     return $PUIDs                                                            ;
@@ -629,6 +628,7 @@ public function SortByName ( $TABLE , $PUIDs )
   ////////////////////////////////////////////////////////////////////////////
   $QQ    = "select `uuid` from {$TABLE}"                                     .
            " where `uuid` in ( {$PINS} )"                                    .
+           " group by `uuid`"                                                .
            " order by `name` asc ;"                                          ;
   $qq    = $this -> Query           ( $QQ                                  ) ;
   ////////////////////////////////////////////////////////////////////////////
