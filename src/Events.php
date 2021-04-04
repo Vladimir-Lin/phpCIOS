@@ -880,6 +880,7 @@ public static function AuditionCounselorsClassEvent                          (
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   global $CourseListings                                                     ;
+  global $ClassTypeIDs                                                       ;
   ////////////////////////////////////////////////////////////////////////////
   $CLSID  = $CLASS -> toString (                                           ) ;
   $LUID   = $CLASS -> Lecture                                                ;
@@ -919,6 +920,13 @@ public static function AuditionCounselorsClassEvent                          (
   $CLZXZ  = "{$CLZ}{$TB}"                                                    ;
   ////////////////////////////////////////////////////////////////////////////
   $TN     = $Translations [ "Students::Booking" ]                            ;
+  switch                       ( $CLASS -> Type                            ) {
+    case 2                                                                   :
+    case 8                                                                   :
+    case 9                                                                   :
+      $TN = $CTMSG                                                           ;
+    break                                                                    ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $PE     = $CLASS -> toPeriod (                                           ) ;
   $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
@@ -996,8 +1004,10 @@ public static function AuditionCounselorsClassEvent                          (
   $CSMSG  = $Translations      [ "Classes::State"                          ] ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
+  $TXL    = $ClassTypeIDs      [ 6                                         ] ;
+  ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
-              "{$TN}\n"                                                      .
+              "{$TXL}\n"                                                     .
               "{$CRMSG}\n"                                                   .
               "{$CSMSG}\n"                                                   .
               "{$SSMSG}\n"                                                   .
@@ -1051,6 +1061,7 @@ public static function AuditionTutorsClassEvent                              (
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   global $CourseListings                                                     ;
+  global $ClassTypeIDs                                                       ;
   ////////////////////////////////////////////////////////////////////////////
   $CLSID  = $CLASS -> toString (                                           ) ;
   $LUID   = $CLASS -> Lecture                                                ;
@@ -1090,6 +1101,13 @@ public static function AuditionTutorsClassEvent                              (
   $CLZXZ  = "{$CLZ}{$TB}"                                                    ;
   ////////////////////////////////////////////////////////////////////////////
   $TN     = $Translations [ "Students::Booking" ]                            ;
+  switch                       ( $CLASS -> Type                            ) {
+    case 2                                                                   :
+    case 8                                                                   :
+    case 9                                                                   :
+      $TN = $CTMSG                                                           ;
+    break                                                                    ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $PE     = $CLASS -> toPeriod (                                           ) ;
   $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
@@ -1167,8 +1185,10 @@ public static function AuditionTutorsClassEvent                              (
   $CSMSG  = $Translations      [ "Classes::State"                          ] ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
+  $TXL    = $ClassTypeIDs      [ 6                                         ] ;
+  ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
-              "{$TN}\n"                                                      .
+              "{$TXL}\n"                                                     .
               "{$CRMSG}\n"                                                   .
               "{$CSMSG}\n"                                                   .
               "{$SSMSG}\n"                                                   .
@@ -1222,6 +1242,7 @@ public static function AuditionStudentsClassEvent                            (
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   global $CourseListings                                                     ;
+  global $ClassTypeIDs                                                       ;
   ////////////////////////////////////////////////////////////////////////////
   $CLSID  = $CLASS -> toString (                                           ) ;
   $LUID   = $CLASS -> Lecture                                                ;
@@ -1261,6 +1282,13 @@ public static function AuditionStudentsClassEvent                            (
   $CLZXZ  = "{$CLZ}{$TB}"                                                    ;
   ////////////////////////////////////////////////////////////////////////////
   $TN     = $Translations [ "Students::Booking" ]                            ;
+  switch                       ( $CLASS -> Type                            ) {
+    case 2                                                                   :
+    case 8                                                                   :
+    case 9                                                                   :
+      $TN = $CTMSG                                                           ;
+    break                                                                    ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $PE     = $CLASS -> toPeriod (                                           ) ;
   $PE    -> ObtainsByUuid      ( $DB , $PRDTAB                             ) ;
@@ -1338,8 +1366,10 @@ public static function AuditionStudentsClassEvent                            (
   $CSMSG  = $Translations      [ "Classes::State"                          ] ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
+  $TXL    = $ClassTypeIDs      [ 6                                         ] ;
+  ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
-              "{$TN}\n"                                                      .
+              "{$TXL}\n"                                                     .
               "{$CRMSG}\n"                                                   .
               "{$CSMSG}\n"                                                   .
               "{$SSMSG}\n"                                                   .
