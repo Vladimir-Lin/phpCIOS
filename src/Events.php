@@ -275,6 +275,7 @@ public static function GetTutorClasses ( $DB , $TABLE , $PEOPLE , $PERIOD )  {
   $QQ    = "select `uuid` from {$TABLE}"                                     .
            " where ( `used` = 1 )"                                           .
              " and ( `tutor` = {$PUID} )"                                    .
+             " and ( `type` in ( 1 , 2 , 3 , 4 , 6 , 8 , 9 ) )"              .
              " and ( `start` >= {$START} )"                                  .
                " and ( `end` <= {$ENDST} )"                                  .
              " order by `start` asc ;"                                       ;
@@ -293,6 +294,7 @@ public static function GetAuditionClasses ( $DB                              ,
   $QQ    = "select `uuid` from {$TABLE}"                                     .
            " where ( `used` = 1 )"                                           .
              " and ( `receptionist` = {$PUID} )"                             .
+             " and ( `type` in ( 6 , 8 , 9 ) )"                              .
              " and ( `start` >= {$START} )"                                  .
                " and ( `end` <= {$ENDST} )"                                  .
              " order by `start` asc ;"                                       ;
@@ -421,19 +423,19 @@ public static function StudentClassEvent                                     (
   $E     -> AddPair            ( "type"         , 126                      ) ;
   $E     -> AddPair            ( "language"     , $LANG                    ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $CXID   = $Translations   [ "ClassID"         ]                            ;
+  $CXID   = $Translations      [ "ClassID"                                 ] ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $STMSG  = $Translations   [ "StartTime"       ]                            ;
+  $STMSG  = $Translations      [ "StartTime"                               ] ;
   $STMSG  = "{$STMSG}{$STV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $ETMSG  = $Translations   [ "EndTime"         ]                            ;
+  $ETMSG  = $Translations      [ "EndTime"                                 ] ;
   $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $CRMSG  = $Translations   [ "Classes::Course" ]                            ;
+  $CRMSG  = $Translations      [ "Classes::Course:"                        ] ;
   $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $CSMSG  = $Translations   [ "Classes::State"  ]                            ;
+  $CSMSG  = $Translations      [ "Classes::State"                          ] ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
@@ -618,19 +620,19 @@ public static function PartnerClassEvent                                     (
   $E     -> AddPair            ( "type"         , 126                      ) ;
   $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $CXID   = $Translations   [ "ClassID"         ]                            ;
+  $CXID   = $Translations      [ "ClassID"                                 ] ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $STMSG  = $Translations   [ "StartTime"       ]                            ;
+  $STMSG  = $Translations      [ "StartTime"                               ] ;
   $STMSG  = "{$STMSG}{$STV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $ETMSG  = $Translations   [ "EndTime"         ]                            ;
+  $ETMSG  = $Translations      [ "EndTime"                                 ] ;
   $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $CRMSG  = $Translations   [ "Classes::Course" ]                            ;
+  $CRMSG  = $Translations      [ "Classes::Course:"                        ] ;
   $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $CSMSG  = $Translations   [ "Classes::State"  ]                            ;
+  $CSMSG  = $Translations      [ "Classes::State"                          ] ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
@@ -795,19 +797,19 @@ public static function TutorClassEvent                                       (
   $E     -> AddPair            ( "type"         , 126                      ) ;
   $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $CXID   = $Translations   [ "ClassID"         ]                            ;
+  $CXID   = $Translations      [ "ClassID"                                 ] ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $STMSG  = $Translations   [ "StartTime"       ]                            ;
+  $STMSG  = $Translations      [ "StartTime"                               ] ;
   $STMSG  = "{$STMSG}{$STV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $ETMSG  = $Translations   [ "EndTime"         ]                            ;
+  $ETMSG  = $Translations      [ "EndTime"                                 ] ;
   $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $CRMSG  = $Translations   [ "Classes::Course" ]                            ;
+  $CRMSG  = $Translations      [ "Classes::Course:"                        ] ;
   $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $CSMSG  = $Translations   [ "Classes::State"  ]                            ;
+  $CSMSG  = $Translations      [ "Classes::State"                          ] ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
@@ -979,19 +981,19 @@ public static function AuditionCounselorsClassEvent                          (
   $E     -> AddPair            ( "type"         , 126                      ) ;
   $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $CXID   = $Translations   [ "ClassID"          ]                           ;
+  $CXID   = $Translations      [ "ClassID"                                 ] ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $STMSG  = $Translations   [ "StartTime"        ]                           ;
+  $STMSG  = $Translations      [ "StartTime"                               ] ;
   $STMSG  = "{$STMSG}{$STV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $ETMSG  = $Translations   [ "EndTime"          ]                           ;
+  $ETMSG  = $Translations      [ "EndTime"                                 ] ;
   $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $CRMSG  = $Translations   [ "Classes::Course:" ]                           ;
+  $CRMSG  = $Translations      [ "Classes::Course:"                        ] ;
   $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $CSMSG  = $Translations   [ "Classes::State"   ]                           ;
+  $CSMSG  = $Translations      [ "Classes::State"                          ] ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
@@ -1150,19 +1152,19 @@ public static function AuditionTutorsClassEvent                              (
   $E     -> AddPair            ( "type"         , 126                      ) ;
   $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $CXID   = $Translations   [ "ClassID"          ]                           ;
+  $CXID   = $Translations      [ "ClassID"                                 ] ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $STMSG  = $Translations   [ "StartTime"        ]                           ;
+  $STMSG  = $Translations      [ "StartTime"                               ] ;
   $STMSG  = "{$STMSG}{$STV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $ETMSG  = $Translations   [ "EndTime"          ]                           ;
+  $ETMSG  = $Translations      [ "EndTime"                                 ] ;
   $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $CRMSG  = $Translations   [ "Classes::Course:" ]                           ;
+  $CRMSG  = $Translations      [ "Classes::Course:"                        ] ;
   $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $CSMSG  = $Translations   [ "Classes::State"   ]                           ;
+  $CSMSG  = $Translations      [ "Classes::State"                          ] ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
@@ -1321,19 +1323,19 @@ public static function AuditionStudentsClassEvent                            (
   $E     -> AddPair            ( "type"         , 126                      ) ;
   $E     -> AddPair            ( "language"     , $CLASS -> Item           ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $CXID   = $Translations   [ "ClassID"          ]                           ;
+  $CXID   = $Translations      [ "ClassID"                                 ] ;
   $CXID   = "{$CXID}{$CLSID}"                                                ;
   ////////////////////////////////////////////////////////////////////////////
-  $STMSG  = $Translations   [ "StartTime"        ]                           ;
+  $STMSG  = $Translations      [ "StartTime"                               ] ;
   $STMSG  = "{$STMSG}{$STV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $ETMSG  = $Translations   [ "EndTime"          ]                           ;
+  $ETMSG  = $Translations      [ "EndTime"                                 ] ;
   $ETMSG  = "{$ETMSG}{$ETV}"                                                 ;
   ////////////////////////////////////////////////////////////////////////////
-  $CRMSG  = $Translations   [ "Classes::Course:" ]                           ;
+  $CRMSG  = $Translations      [ "Classes::Course:"                        ] ;
   $CRMSG  = "{$CRMSG}{$LTYPE}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $CSMSG  = $Translations   [ "Classes::State"   ]                           ;
+  $CSMSG  = $Translations      [ "Classes::State"                          ] ;
   $CSMSG  = "{$CSMSG}{$CTMSG}"                                               ;
   ////////////////////////////////////////////////////////////////////////////
   $TOOLTIPS = "{$CXID}\n"                                                    .
