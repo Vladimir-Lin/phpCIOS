@@ -367,29 +367,28 @@ public function Editing($DB,$TABLE)
     }                                             ;
   }                                               ;
 }
-
-public function Ordering($DB,$TABLE,$IDs)
-{
-  if ( count ( $IDs ) <= 0 ) return false           ;
-  $CC  = 0                                          ;
-  foreach ( $IDs as $id )                           {
-    $QQ  = "update " . $TABLE                       .
-           " set `prefer` = " . (string) $CC        .
-             " where `id` = " . (string) $id . " ;" ;
-    $DB -> Query ( $QQ )                            ;
-    $CC  = $CC + 1                                  ;
-  }                                                 ;
+//////////////////////////////////////////////////////////////////////////////
+public function Ordering ( $DB , $TABLE , $IDs                             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                     ( count ( $IDs ) <= 0                             ) {
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CC    = 0                                                                 ;
+  foreach                ( $IDs as $id                                     ) {
+    $QQ  = "update {$TABLE} set `prefer` = {$CC} where `id` = {$id} ;"       ;
+    $DB -> Query         ( $QQ                                             ) ;
+    $CC  = $CC + 1                                                           ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
-
-public function Organize($DB,$TABLE)
-{
-  $IDs = $this -> ObtainIDs ( $DB , $TABLE        ) ;
-  $this        -> Ordering  ( $DB , $TABLE , $IDs ) ;
-  unset                     (                $IDs ) ;
+//////////////////////////////////////////////////////////////////////////////
+public function Organize    ( $DB , $TABLE                                 ) {
+  $IDs = $this -> ObtainIDs ( $DB , $TABLE                                 ) ;
+  $this        -> Ordering  ( $DB , $TABLE , $IDs                          ) ;
+  unset                     (                $IDs                          ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
 }
-
 //////////////////////////////////////////////////////////////////////////////
 ?>
