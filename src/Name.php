@@ -381,26 +381,28 @@ public function ObtainsForPriority($DB,$TABLE)
   }                                                     ;
   return $IDs                                           ;
 }
-
-public function FindByName($DB,$TABLE,$NAME)
-{
-  $TMP  = array ( )                        ;
-  //////////////////////////////////////////
-  $SPT  = "%{$NAME}%"                      ;
-  //////////////////////////////////////////
-  $QQ   = "select `uuid` from {$TABLE}"    .
-          " where `name` like ?"           .
-          " order by `ltime` desc ;"       ;
-  $qq   = $DB -> Prepare    ( $QQ        ) ;
-  $qq  -> bind_param        ( 's' , $SPT ) ;
-  $qq  -> execute           (            ) ;
-  $kk   = $qq -> get_result (            ) ;
-  //////////////////////////////////////////
-  $TMP  = $DB -> FetchUuids ( $kk , $TMP ) ;
-  //////////////////////////////////////////
-  return $TMP                              ;
+//////////////////////////////////////////////////////////////////////////////
+public function FindByName  ( $DB , $TABLE , $NAME                         ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $TMP  = array ( )                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NAMX = mb_strtolower     ( $NAME , "UTF-8"                              ) ;
+  $SPT  = "%{$NAMX}%"                                                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "select `uuid` from {$TABLE}"                                      .
+          " where ( lower ( convert ( `name` using utf8 ) ) like ? )"        .
+          " group by `uuid`"                                                 .
+          " order by `ltime` desc ;"                                         ;
+  $qq   = $DB -> Prepare    ( $QQ                                          ) ;
+  $qq  -> bind_param        ( 's' , $SPT                                   ) ;
+  $qq  -> execute           (                                              ) ;
+  $kk   = $qq -> get_result (                                              ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $TMP  = $DB -> FetchUuids ( $kk , $TMP                                   ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $TMP                                                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsIDs($DB,$TABLE)
 {
   $IDs = array ( )                                     ;

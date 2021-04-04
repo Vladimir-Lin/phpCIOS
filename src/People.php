@@ -760,34 +760,36 @@ public function PartnerSkipQuotas ( $DB , $PARTNER , $PUID , $ITEMX        ) {
   return $SUMS                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function SearchByKey ( $DB , $CANDIDATEs , $KEY )
-{
-  $RI  = new Relation     ( )                                                ;
-  $NI  = new Name         ( )                                                ;
-  $MB  = new MailBox      ( )                                                ;
-  $IM  = new ImApp        ( )                                                ;
-  $PN  = new Phone        ( )                                                ;
+public function SearchByKey ( $DB , $CANDIDATEs , $KEY                     ) {
   ////////////////////////////////////////////////////////////////////////////
-  $NXs = array            ( )                                                ;
-  $ELs = array            ( )                                                ;
-  $IMs = array            ( )                                                ;
-  $PNs = array            ( )                                                ;
-  $TMP = array            ( )                                                ;
+  $RI      = new Relation   (                                              ) ;
+  $NI      = new Name       (                                              ) ;
+  $MB      = new MailBox    (                                              ) ;
+  $IM      = new ImApp      (                                              ) ;
+  $PN      = new Phone      (                                              ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NXs     = array          (                                              ) ;
+  $ELs     = array          (                                              ) ;
+  $IMs     = array          (                                              ) ;
+  $PNs     = array          (                                              ) ;
+  $TMP     = array          (                                              ) ;
   ////////////////////////////////////////////////////////////////////////////
   // By People Name
   ////////////////////////////////////////////////////////////////////////////
-  $SPT  = "%{$KEY}%"                                                         ;
+  $NAMX    = mb_strtolower  ( $KEY , "UTF-8"                               ) ;
+  $SPT     = "%{$NAMX}%"                                                     ;
   ////////////////////////////////////////////////////////////////////////////
-  $QQ   = "select `uuid` from `erp`.`people`"                                .
-          " where ( `used` > 0 )"                                            .
-          " and ( `uuid` in"                                                 .
-          " ( select `uuid` from `erp`.`names` where `name` like ? ) ) ;"    ;
-  $qq   = $DB -> Prepare    ( $QQ        )                                   ;
-  $qq  -> bind_param        ( 's' , $SPT )                                   ;
-  $qq  -> execute           (            )                                   ;
-  $kk   = $qq -> get_result (            )                                   ;
-  ////////////////////////////////////////////////////////////////////////////
-  $NXs  = $DB -> FetchUuids ( $kk , $NXs )                                   ;
+  $QQ      = "select `uuid` from `erp`.`people`"                             .
+             " where ( `used` > 0 )"                                         .
+             " and ( `uuid` in"                                              .
+             " ( select `uuid` from `erp`.`names`"                           .
+             " where ( lower ( convert ( `name` using utf8 ) ) like ? )"     .
+             " group by `uuid` ) ) ;"                                        ;
+  $qq   = $DB -> Prepare    ( $QQ                                          ) ;
+  $qq  -> bind_param        ( 's' , $SPT                                   ) ;
+  $qq  -> execute           (                                              ) ;
+  $kk   = $qq -> get_result (                                              ) ;
+  $NXs  = $DB -> FetchUuids ( $kk , $NXs                                   ) ;
   ////////////////////////////////////////////////////////////////////////////
   if ( count ( $NXs ) > 0 )                                                  {
     if ( count ( $CANDIDATEs ) <= 0 ) $CANDIDATEs = $NXs ; else              {
