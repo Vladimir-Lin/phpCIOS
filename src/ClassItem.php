@@ -633,7 +633,7 @@ public function ObtainLessons($DB,$RELATIONS)
 //////////////////////////////////////////////////////////////////////////////
 public function ObtainIcon($DB,$RELATION,$ITEM,$Relevance="Using")
 {
-  $DID = "3800000000000000041"                                     ;
+  $DID = "3800000000000000319"                                     ;
   //////////////////////////////////////////////////////////////////
   $RI  = new RelationItem     (                                  ) ;
   $RI -> set                  ( "first" , $this -> get ( $ITEM ) ) ;
@@ -756,7 +756,7 @@ public function SkypeID($DB,$TABLE,$CUID)
 //////////////////////////////////////////////////////////////////////////////
 public function IconID($DB,$TABLE,$CUID)
 {
-  $DID = "3800000000000000041"                    ;
+  $DID = "3800000000000000319"                    ;
   /////////////////////////////////////////////////
   $RI  = new RelationItem     (                 ) ;
   $RI -> set                  ( "first" , $CUID ) ;
