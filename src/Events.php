@@ -1551,30 +1551,61 @@ public static function TeamTutorsClassEvent                                  (
               "{$STMSG}\n"                                                   .
               "{$ETMSG}"                                                     ;
   ////////////////////////////////////////////////////////////////////////////
-  if                           ( $CLASS -> Type == 9                       ) {
-    $E -> Classes              ( [ "BookingClassCancel" ]                  ) ;
-    $E -> TextColor            ( "#212165"                                 ) ;
-  } else                                                                     {
+  switch                       ( $CLASS -> Type                            ) {
     //////////////////////////////////////////////////////////////////////////
-    $BTID   = $PE -> Between   ( $NOW -> Stardate                          ) ;
-    switch                     ( $BTID                                     ) {
-      case  1                                                                :
-        $E -> Classes          ( [ "BookingClassArrange" ]                 ) ;
-        $E -> TextColor        ( "#652121"                                 ) ;
-      break                                                                  ;
-      case  0                                                                :
-        $E -> Classes          ( [ "BookingClassLecturing" ]               ) ;
-        $E -> TextColor        ( "#333333"                                 ) ;
-      break                                                                  ;
-      case -1                                                                :
-        $E -> Classes          ( [ "BookingClassComplete" ]                ) ;
-        $E -> TextColor        ( "#00008B"                                 ) ;
-        if                     ( $CLASS -> Type == 6                       ) {
-          $CNUMSG   = $Translations [ "Classes::NotUpdated" ]                ;
-          $TOOLTIPS = "{$TOOLTIPS}\n{$CNUMSG}"                               ;
-        }                                                                    ;
-      break                                                                  ;
-    }                                                                        ;
+    case 1                                                                   :
+      $E -> Classes            ( [ "StudentClassArrange" ]                 ) ;
+      $E -> TextColor          ( "#652121"                                 ) ;
+    break                                                                    ;
+    //////////////////////////////////////////////////////////////////////////
+    case 2                                                                   :
+      $E -> Classes            ( [ "StudentClassLecture" ]                 ) ;
+      $E -> TextColor          ( "#333333"                                 ) ;
+    break                                                                    ;
+    //////////////////////////////////////////////////////////////////////////
+    case 3                                                                   :
+      $E -> Classes            ( [ "StudentClassCancel" ]                  ) ;
+      $E -> TextColor          ( "#008B00"                                 ) ;
+    break                                                                    ;
+    //////////////////////////////////////////////////////////////////////////
+    case 4                                                                   :
+      $E -> Classes            ( [ "StudentClassComplete" ]                ) ;
+      $E -> TextColor          ( "#00008B"                                 ) ;
+    break                                                                    ;
+    //////////////////////////////////////////////////////////////////////////
+    case 9                                                                   :
+      $E -> Classes            ( [ "BookingClassCancel" ]                  ) ;
+      $E -> TextColor          ( "#212165"                                 ) ;
+    break                                                                    ;
+    //////////////////////////////////////////////////////////////////////////
+    default                                                                  :
+      ////////////////////////////////////////////////////////////////////////
+      $BTID   = $PE -> Between ( $NOW -> Stardate                          ) ;
+      ////////////////////////////////////////////////////////////////////////
+      switch                   ( $BTID                                     ) {
+        //////////////////////////////////////////////////////////////////////
+        case  1                                                              :
+          $E -> Classes        ( [ "BookingClassArrange" ]                 ) ;
+          $E -> TextColor      ( "#652121"                                 ) ;
+        break                                                                ;
+        //////////////////////////////////////////////////////////////////////
+        case  0                                                              :
+          $E -> Classes        ( [ "BookingClassLecturing" ]               ) ;
+          $E -> TextColor      ( "#333333"                                 ) ;
+        break                                                                ;
+        //////////////////////////////////////////////////////////////////////
+        case -1                                                              :
+          $E -> Classes        ( [ "BookingClassComplete" ]                ) ;
+          $E -> TextColor      ( "#00008B"                                 ) ;
+          if                   ( $CLASS -> Type == 6                       ) {
+            $CNUMSG   = $Translations [ "Classes::NotUpdated" ]              ;
+            $TOOLTIPS = "{$TOOLTIPS}\n{$CNUMSG}"                             ;
+          }                                                                  ;
+        break                                                                ;
+        //////////////////////////////////////////////////////////////////////
+      }                                                                      ;
+      ////////////////////////////////////////////////////////////////////////
+    break                                                                    ;
     //////////////////////////////////////////////////////////////////////////
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
