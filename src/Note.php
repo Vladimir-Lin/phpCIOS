@@ -169,7 +169,7 @@ public function setOwner($UUID,$NAME)
 public function WhereClause($PREFER="")
 {
   $W = ""                                            ;
-  if ( strlen ( $PREFER ) >= 0 )                     {
+  if ( strlen ( $PREFER ) > 0 )                      {
     $W =  " where `uuid` = "  . $this -> Uuid        .
             " and `name` = '" . $this -> Name . "'"  .
           " and `prefer` = "  . $PREFER       . " ;" ;
