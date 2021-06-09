@@ -33,6 +33,7 @@ public function Clear ( )                                                    {
   $this -> SmsURL     = "http://tw.every8d.com/API20/Message.asmx?wsdl"      ;
   $this -> Username   = "0918220677"                                         ;
   $this -> Password   = "1349ac0517s"                                        ;
+  // $this -> Password   = "007071"                                             ;
   $this -> Cust       = "av8d20"                                             ;
   $this -> Credits    = 0                                                    ;
 }
