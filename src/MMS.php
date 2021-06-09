@@ -50,6 +50,7 @@ public function Login ( )                                                    {
   ////////////////////////////////////////////////////////////////////////////
   // 登入Every8d帳戶
   ////////////////////////////////////////////////////////////////////////////
+      echo "MMS : Login\n" ;
   $PARAMS = array                                                            (
     "custID"   => $this -> Cust                                              ,
     "userID"   => $this -> Username                                          ,
@@ -67,17 +68,25 @@ public function Login ( )                                                    {
     $this -> XML = new \SimpleXMLElement ( $XMLSTR           )               ;
     if ( $this -> XML -> ERROR_CODE == "0000" )                              {
       $this -> Credits = $this -> XML -> CREDIT                              ;
+      echo "Credits : " . $this -> Credits . "\n" ;
       return true                                                            ;
     }                                                                        ;
   } catch ( Exception $e )                                                   {
+       echo "MMS : Can not login" ;
     return false                                                             ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Send($NUMBER,$SUBJECT,$CONTENT,$NAME="",$EMAIL="",$DATETIME="",$PARAMS="",$MR="")
-{
+public function Send ( $NUMBER                                               ,
+                       $SUBJECT                                              ,
+                       $CONTENT                                              ,
+                       $NAME     = ""                                        ,
+                       $EMAIL    = ""                                        ,
+                       $DATETIME = ""                                        ,
+                       $PARAMS   = ""                                        ,
+                       $MR       = ""                                      ) {
 //////////////////////////////////////////////////////////////////////////////
   $UserNo    = $this -> XML -> USER_NO                                       ; // 從登入結果取得UserNo
   $CompanyNo = $this -> XML -> COMPANY_NO                                    ; // 從登入結果取得Company_No
@@ -115,6 +124,7 @@ public function Send($NUMBER,$SUBJECT,$CONTENT,$NAME="",$EMAIL="",$DATETIME="",$
   $SMS    = new \SoapClient    ( $this -> SmsURL )                           ;
   $RESULT = $SMS    -> QueueIn ( $PARAMS         )                           ;
   $STR    = $RESULT -> QueueInResult                                         ;
+      echo $STR . "\n" ;
   if ( substr ( $STR , 0 , 1 ) == "-" ) return false                         ;
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
