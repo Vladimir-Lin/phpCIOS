@@ -36,6 +36,7 @@ public function Clear ( )                                                    {
   // $this -> Password   = "007071"                                             ;
   $this -> Cust       = "av8d20"                                             ;
   $this -> Credits    = 0                                                    ;
+  $this -> Error      = ""                                                   ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function setSecret ( $USERNAME , $PASSWORD )                          {
@@ -48,6 +49,8 @@ public function ManagerURL ( )                                               {
 }
 //////////////////////////////////////////////////////////////////////////////
 public function Login ( )                                                    {
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> Error = ""                                                        ;
   ////////////////////////////////////////////////////////////////////////////
   // 登入Every8d帳戶
   ////////////////////////////////////////////////////////////////////////////
@@ -69,6 +72,8 @@ public function Login ( )                                                    {
     if ( $this -> XML -> ERROR_CODE == "0000" )                              {
       $this -> Credits = $this -> XML -> CREDIT                              ;
       return true                                                            ;
+    } else                                                                   {
+      $this -> Error = (string) $this -> XML -> DESC [ 0 ]                   ;
     }                                                                        ;
   } catch ( Exception $e )                                                   {
     return false                                                             ;
