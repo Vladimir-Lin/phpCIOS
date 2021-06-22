@@ -18,7 +18,7 @@ function __destruct   (                                                    ) {
 //////////////////////////////////////////////////////////////////////////////
 function Request      ( $URL , $PARAMS                                     ) {
   ////////////////////////////////////////////////////////////////////////////
-  $JXON = json_encode ( $PARAMS                                            ) ;
+  $JXON = http_build_query ( $PARAMS                                       ) ;
   ////////////////////////////////////////////////////////////////////////////
   $ch   = curl_init   (                                                    ) ;
   curl_setopt         ( $ch , CURLOPT_URL            , $URL                ) ;
@@ -26,9 +26,6 @@ function Request      ( $URL , $PARAMS                                     ) {
   curl_setopt         ( $ch , CURLOPT_POSTFIELDS     , $JXON               ) ;
   curl_setopt         ( $ch , CURLOPT_RETURNTRANSFER , true                ) ;
   curl_setopt         ( $ch , CURLOPT_HEADER         , false               ) ;
-  curl_setopt         ( $ch , CURLOPT_HTTPHEADER     , $PASS               ) ;
-  curl_setopt         ( $ch , CURLOPT_SSL_VERIFYHOST , false               ) ;
-  curl_setopt         ( $ch , CURLOPT_SSL_VERIFYPEER , false               ) ;
   $RR  = curl_exec    ( $ch                                                ) ;
          curl_close   ( $ch                                                ) ;
   ////////////////////////////////////////////////////////////////////////////
