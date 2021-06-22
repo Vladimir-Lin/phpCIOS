@@ -20,6 +20,7 @@ function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
   $JXON   = json_encode ( $PARAMS                                          ) ;
   $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
+    echo $JXON . "\n" ;
   ////////////////////////////////////////////////////////////////////////////
   $ch   = curl_init   (                                                    ) ;
   curl_setopt         ( $ch , CURLOPT_URL            , $URL                ) ;
