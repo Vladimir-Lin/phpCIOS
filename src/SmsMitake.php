@@ -16,18 +16,18 @@ function __destruct   (                                                    ) {
   parent::__destruct  (                                                    ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-function Request      ( $URL , $PARAMS                                     ) {
+function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
-  $JXON = json_encode ( $PARAMS                                            ) ;
+  $JXON   = json_encode ( $PARAMS                                          ) ;
+  $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
   ////////////////////////////////////////////////////////////////////////////
   $ch   = curl_init   (                                                    ) ;
   curl_setopt         ( $ch , CURLOPT_URL            , $URL                ) ;
+  curl_setopt         ( $ch , CURLOPT_HTTPHEADER     , $HEADER             ) ;
   curl_setopt         ( $ch , CURLOPT_CUSTOMREQUEST  , "POST"              ) ;
   curl_setopt         ( $ch , CURLOPT_POSTFIELDS     , $JXON               ) ;
   curl_setopt         ( $ch , CURLOPT_RETURNTRANSFER , true                ) ;
   curl_setopt         ( $ch , CURLOPT_HEADER         , false               ) ;
-  curl_setopt         ( $ch , CURLOPT_SSL_VERIFYHOST , false               ) ;
-  curl_setopt         ( $ch , CURLOPT_SSL_VERIFYPEER , false               ) ;
   $RR  = curl_exec    ( $ch                                                ) ;
          curl_close   ( $ch                                                ) ;
   ////////////////////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ function credits      (                                                    ) {
                         "password" => $this -> Password                    ) ;
   ////////////////////////////////////////////////////////////////////////////
   $RR         = $this -> Request ( $CMD , $PARAMETERS                      ) ;
-    echo $RR ;
+
   ////////////////////////////////////////////////////////////////////////////
   return $this -> CurrentCredits                                             ;
 }
