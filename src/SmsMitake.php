@@ -111,7 +111,6 @@ function credits      (                                                    ) {
   ////////////////////////////////////////////////////////////////////////////
   $RR         = $this -> Request ( $CMD , $PARAMETERS                      ) ;
   $JSON       = $this -> ParseHttpResponses ( $RR                          ) ;
-    echo ( json_encode($JSON) ) ;
   ////////////////////////////////////////////////////////////////////////////
   if                  ( ! array_key_exists ( "AccountPoint" , $JSON ) )      {
     $this -> CurrentError = "Mitake did not answer current credits"          ;
