@@ -26,7 +26,6 @@ function Request      ( $URL , $PARAMS                                     ) {
   curl_setopt         ( $ch , CURLOPT_POSTFIELDS     , $JXON               ) ;
   curl_setopt         ( $ch , CURLOPT_RETURNTRANSFER , true                ) ;
   curl_setopt         ( $ch , CURLOPT_HEADER         , false               ) ;
-  curl_setopt         ( $ch , CURLOPT_HTTPHEADER     , $PASS               ) ;
   curl_setopt         ( $ch , CURLOPT_SSL_VERIFYHOST , false               ) ;
   curl_setopt         ( $ch , CURLOPT_SSL_VERIFYPEER , false               ) ;
   $RR  = curl_exec    ( $ch                                                ) ;
