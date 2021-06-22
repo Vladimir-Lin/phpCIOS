@@ -18,9 +18,10 @@ function __destruct   (                                                    ) {
 //////////////////////////////////////////////////////////////////////////////
 function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
-  $JXON   = json_encode ( $PARAMS                                          ) ;
+  // $JXON   = json_encode ( $PARAMS                                          ) ;
+  $JXON   = http_build_query ( $PARAMS                                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
   $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
-    echo $JXON . "\n" ;
   ////////////////////////////////////////////////////////////////////////////
   $ch   = curl_init   (                                                    ) ;
   curl_setopt         ( $ch , CURLOPT_URL            , $URL                ) ;
