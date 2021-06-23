@@ -20,12 +20,12 @@ function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
   if                    ( array_key_exists ("smbody" , $PARAMS )           ) {
     $BODY   = $PARAMS   [ "smbody"                                         ] ;
-    $UENC   = $BODY                                                          ;
-//    $UENC   = urlencode ( $BODY                                            ) ;
+    $UENC   = urlencode ( $BODY                                            ) ;
     $KK     = $PARAMS                                                        ;
     unset               ( $KK [ "smbody" ]                                 ) ;
-    $JXON   = http_build_query ( $PARAMS                                   ) ;
+    $JXON   = http_build_query ( $KK                                       ) ;
     $JXON   = "{$JXON}&smbody={$UENC}"                                       ;
+    echo $JXON ;
   } else                                                                     {
     $JXON   = http_build_query ( $PARAMS                                   ) ;
   }                                                                          ;
