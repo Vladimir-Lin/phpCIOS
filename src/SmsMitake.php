@@ -20,8 +20,6 @@ function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
   $JXON   = http_build_query ( $PARAMS                                     ) ;
   echo $JXON ;
-  $JXON   = urldecode        ( $JXON                                       ) ;
-  echo $JXON ;
   ////////////////////////////////////////////////////////////////////////////
   $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
   ////////////////////////////////////////////////////////////////////////////
@@ -169,7 +167,7 @@ function send                 ( $Phone , $Content , $Title = ""            ) {
   $this   -> CurrentError = ""                                               ;
   $BODY    = $Content                                                        ;
   $BODY    = str_replace      ( "\n" , "\x06" , $BODY                      ) ;
-  $BODY    = mb_convert_encoding ( $BODY , "UTF-8" )                         ;
+  $BODY    = utf8_encode      ( $BODY                                      ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CMD     = $this -> URL                                                    ;
   $CMD     = "{$CMD}/api/mtk/SmSend"                                         ;
