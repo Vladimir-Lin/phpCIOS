@@ -18,10 +18,16 @@ function __destruct   (                                                    ) {
 //////////////////////////////////////////////////////////////////////////////
 function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
-  $JXON   = http_build_query ( $PARAMS                                     ) ;
-  // echo $JXON ;
-  // $JXON   = urldecode        ( $JXON                                       ) ;
-  // echo $JXON ;
+  if                    ( array_key_exists ("smbody" , $PARAMS )           ) {
+    $BODY   = $PARAMS   [ "smbody"                                         ] ;
+    $UENC   = urlencode ( $BODY                                            ) ;
+    $KK     = $PARAMS                                                        ;
+    unset               ( $KK [ "smbody" ]                                 ) ;
+    $JXON   = http_build_query ( $PARAMS                                   ) ;
+    $JXON   = "{$JXON}&smbody={$UENC}"                                       ;
+  } else                                                                     {
+    $JXON   = http_build_query ( $PARAMS                                   ) ;
+  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
   ////////////////////////////////////////////////////////////////////////////
@@ -169,8 +175,6 @@ function send                 ( $Phone , $Content , $Title = ""            ) {
   $this   -> CurrentError = ""                                               ;
   $BODY    = $Content                                                        ;
   $BODY    = str_replace      ( "\n" , "\x06" , $BODY                      ) ;
-  // $BODY    = utf8_encode      ( $BODY                                      ) ;
-  echo mb_detect_encoding($BODY);
   ////////////////////////////////////////////////////////////////////////////
   $CMD     = $this -> URL                                                    ;
   $CMD     = "{$CMD}/api/mtk/SmSend"                                         ;
