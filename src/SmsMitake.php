@@ -19,6 +19,7 @@ function __destruct   (                                                    ) {
 function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
   $JXON   = http_build_query ( $PARAMS                                     ) ;
+  $JXON   = urldecode        ( $JXON                                       ) ;
   ////////////////////////////////////////////////////////////////////////////
   $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
   ////////////////////////////////////////////////////////////////////////////
@@ -166,7 +167,6 @@ function send                 ( $Phone , $Content , $Title = ""            ) {
   $this   -> CurrentError = ""                                               ;
   $BODY    = $Content                                                        ;
   $BODY    = str_replace      ( "\n" , "\x06" , $BODY                      ) ;
-  $BODY    = urlencode        ( $BODY                                      ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CMD     = $this -> URL                                                    ;
   $CMD     = "{$CMD}/api/mtk/SmSend"                                         ;
