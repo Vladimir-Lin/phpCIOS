@@ -20,6 +20,8 @@ function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
   $JXON   = http_build_query ( $PARAMS                                     ) ;
   echo $JXON ;
+  $JXON   = urldecode        ( $JXON                                       ) ;
+  echo $JXON ;
   ////////////////////////////////////////////////////////////////////////////
   $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
   ////////////////////////////////////////////////////////////////////////////
