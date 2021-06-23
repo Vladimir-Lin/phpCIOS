@@ -19,9 +19,9 @@ function __destruct   (                                                    ) {
 function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
   $JXON   = http_build_query ( $PARAMS                                     ) ;
-  echo $JXON ;
-  $JXON   = urldecode        ( $JXON                                       ) ;
-  echo $JXON ;
+  // echo $JXON ;
+  // $JXON   = urldecode        ( $JXON                                       ) ;
+  // echo $JXON ;
   ////////////////////////////////////////////////////////////////////////////
   $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
   ////////////////////////////////////////////////////////////////////////////
@@ -169,7 +169,7 @@ function send                 ( $Phone , $Content , $Title = ""            ) {
   $this   -> CurrentError = ""                                               ;
   $BODY    = $Content                                                        ;
   $BODY    = str_replace      ( "\n" , "\x06" , $BODY                      ) ;
-  $BODY    = utf8_encode      ( $BODY                                      ) ;
+  // $BODY    = utf8_encode      ( $BODY                                      ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CMD     = $this -> URL                                                    ;
   $CMD     = "{$CMD}/api/mtk/SmSend"                                         ;
