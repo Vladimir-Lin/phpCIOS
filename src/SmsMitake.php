@@ -94,6 +94,7 @@ function toPhone                    ( $Phone                               ) {
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   if                                ( strpos ( $Phone , "+886-" ) != false ) {
+    echo "replace\n" ;
     $Phone = str_replace            ( "+886-" , "0" , $Phone               ) ;
   }                                                                          ;
   echo $Phone . "\n" ;
