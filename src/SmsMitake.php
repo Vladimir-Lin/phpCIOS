@@ -88,6 +88,7 @@ function ParseHttpResponses         ( $Response                            ) {
 //////////////////////////////////////////////////////////////////////////////
 function toPhone                    ( $Phone                               ) {
   ////////////////////////////////////////////////////////////////////////////
+    echo $Phone . "\n" ;
   if                                ( strlen ( $Phone ) <= 0               ) {
     return ""                                                                ;
   }                                                                          ;
@@ -95,8 +96,10 @@ function toPhone                    ( $Phone                               ) {
   if                                ( strpos ( $Phone , "+886-" ) != false ) {
     $Phone = str_replace            ( "+886-" , "0" , $Phone               ) ;
   }                                                                          ;
+  echo $Phone . "\n" ;
   ////////////////////////////////////////////////////////////////////////////
   $Phone   = str_replace            ( "-" , "" , $Phone                    ) ;
+  echo $Phone . "\n" ;
   ////////////////////////////////////////////////////////////////////////////
   if                                ( strlen ( $Phone ) == 10              ) {
     $HEAD  = substr                 ( $Phone , 0 , 2                       ) ;
