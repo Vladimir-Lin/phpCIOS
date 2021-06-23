@@ -93,7 +93,9 @@ function toPhone                    ( $Phone                               ) {
     return ""                                                                ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  if                                ( strpos ( $Phone , "+886-" ) != false ) {
+  $MATCH = strpos                   ( $Phone , "+886-"                     ) ;
+  echo $MATCH . "\n" ;
+  if                                ( $MATCH !== false                     ) {
     echo "replace\n" ;
     $Phone = str_replace            ( "+886-" , "0" , $Phone               ) ;
   }                                                                          ;
