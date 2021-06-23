@@ -170,6 +170,7 @@ function send                 ( $Phone , $Content , $Title = ""            ) {
   $BODY    = $Content                                                        ;
   $BODY    = str_replace      ( "\n" , "\x06" , $BODY                      ) ;
   // $BODY    = utf8_encode      ( $BODY                                      ) ;
+  echo mb_detect_encoding($BODY);
   ////////////////////////////////////////////////////////////////////////////
   $CMD     = $this -> URL                                                    ;
   $CMD     = "{$CMD}/api/mtk/SmSend"                                         ;
