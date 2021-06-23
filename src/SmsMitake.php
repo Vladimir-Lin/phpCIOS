@@ -18,6 +18,7 @@ function __destruct   (                                                    ) {
 //////////////////////////////////////////////////////////////////////////////
 function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
+/*
   if                    ( array_key_exists ("smbody" , $PARAMS )           ) {
     $BODY   = $PARAMS   [ "smbody"                                         ] ;
     // $UENC   = $BODY                                                          ;
@@ -29,8 +30,9 @@ function Request        ( $URL , $PARAMS                                   ) {
     $JXON   = "{$JXON}&smbody={$UENC}"                                       ;
     echo $JXON ;
   } else                                                                     {
+*/
     $JXON   = http_build_query ( $PARAMS                                   ) ;
-  }                                                                          ;
+//  }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
   ////////////////////////////////////////////////////////////////////////////
