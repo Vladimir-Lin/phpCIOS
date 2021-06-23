@@ -86,6 +86,32 @@ function ParseHttpResponses         ( $Response                            ) {
   return $JSON                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
+function toPhone                    ( $Phone                               ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                                ( strlen ( $Phone ) <= 0               ) {
+    return ""                                                                ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                                ( strpos ( $Phone , "+886-" ) != false ) {
+    $Phone = str_replace            ( "+886-" , "0" , $Phone               ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $Phone   = str_replace            ( "-" , "" , $Phone                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                                ( strlen ( $Phone ) == 10              ) {
+    $HEAD  = substr                 ( $Phone , 0 , 2                       ) ;
+    if                              ( $HEAD == "09"                        ) {
+      if                            ( strpos ( $Phone , "-" ) == false     ) {
+        if                          ( strpos ( $Phone , "+" ) == false     ) {
+          return $Phone                                                      ;
+        }                                                                    ;
+      }                                                                      ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return ""                                                                  ;
+}
+//////////////////////////////////////////////////////////////////////////////
 function management   (                                                    ) {
   return $this -> ManagementURL                                              ;
 }
@@ -122,10 +148,49 @@ function credits      (                                                    ) {
   return $this -> CurrentCredits                                             ;
 }
 //////////////////////////////////////////////////////////////////////////////
-function send         ( $Phone , $Content , $Title = ""                    ) {
+function send                 ( $Phone , $Content , $Title = ""            ) {
   ////////////////////////////////////////////////////////////////////////////
+  $PN      = $this -> toPhone ( $Phone                                     ) ;
   ////////////////////////////////////////////////////////////////////////////
-  return false                                                               ;
+  if                          ( strlen ( $PN ) <= 0                        ) {
+    $this -> CurrentError = "SMS requires a valid phone number"              ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                          ( strlen ( $Content ) <= 0                   ) {
+    $this -> CurrentError = "SMS requires content"                           ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this   -> CurrentError = ""                                               ;
+  $BODY    = $Content                                                        ;
+  $BODY    = str_replace      ( "\n" , "\x06" , $BODY                      ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CMD     = $this -> URL                                                    ;
+  $CMD     = "{$CMD}/api/mtk/SmSend"                                         ;
+  $PARAMETERS    =  array                                                    (
+    "CharsetURL" => "UTF-8"                                                  ,
+    "username"   => $this -> Username                                        ,
+    "password"   => $this -> Password                                        ,
+    "dstaddr"    => $PN                                                      ,
+    "smbody"     => $BODY                                                    ,
+  )                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RR      = $this -> Request ( $CMD , $PARAMETERS                         ) ;
+  $JSON    = $this -> ParseHttpResponses ( $RR                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                  ( ! array_key_exists ( "statuscode" , $JSON ) )        {
+    $this -> CurrentError = "Mitake did not answer current status code"      ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $Status     = $JSON [ "statuscode"                                       ] ;
+  if ( ! in_array ( $Status , [ "0" , "1" , "2" , "4" ] )                    {
+    $this -> CurrentError = $Status                                          ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
 }
