@@ -151,6 +151,7 @@ function credits      (                                                    ) {
 function send                 ( $Phone , $Content , $Title = ""            ) {
   ////////////////////////////////////////////////////////////////////////////
   $PN      = $this -> toPhone ( $Phone                                     ) ;
+  echo $PN . "\n" ;
   ////////////////////////////////////////////////////////////////////////////
   if                          ( strlen ( $PN ) <= 0                        ) {
     $this -> CurrentError = "SMS requires a valid phone number"              ;
