@@ -88,21 +88,16 @@ function ParseHttpResponses         ( $Response                            ) {
 //////////////////////////////////////////////////////////////////////////////
 function toPhone                    ( $Phone                               ) {
   ////////////////////////////////////////////////////////////////////////////
-    echo $Phone . "\n" ;
   if                                ( strlen ( $Phone ) <= 0               ) {
     return ""                                                                ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $MATCH = strpos                   ( $Phone , "+886-"                     ) ;
-  echo $MATCH . "\n" ;
   if                                ( $MATCH !== false                     ) {
-    echo "replace\n" ;
     $Phone = str_replace            ( "+886-" , "0" , $Phone               ) ;
   }                                                                          ;
-  echo $Phone . "\n" ;
   ////////////////////////////////////////////////////////////////////////////
   $Phone   = str_replace            ( "-" , "" , $Phone                    ) ;
-  echo $Phone . "\n" ;
   ////////////////////////////////////////////////////////////////////////////
   if                                ( strlen ( $Phone ) == 10              ) {
     $HEAD  = substr                 ( $Phone , 0 , 2                       ) ;
@@ -157,7 +152,6 @@ function credits      (                                                    ) {
 function send                 ( $Phone , $Content , $Title = ""            ) {
   ////////////////////////////////////////////////////////////////////////////
   $PN      = $this -> toPhone ( $Phone                                     ) ;
-  echo $PN . "\n" ;
   ////////////////////////////////////////////////////////////////////////////
   if                          ( strlen ( $PN ) <= 0                        ) {
     $this -> CurrentError = "SMS requires a valid phone number"              ;
