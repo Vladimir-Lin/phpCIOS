@@ -20,7 +20,8 @@ function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
   if                    ( array_key_exists ("smbody" , $PARAMS )           ) {
     $BODY   = $PARAMS   [ "smbody"                                         ] ;
-    $UENC   = urlencode ( $BODY                                            ) ;
+    $UENC   = $BODY                                                          ;
+//    $UENC   = urlencode ( $BODY                                            ) ;
     $KK     = $PARAMS                                                        ;
     unset               ( $KK [ "smbody" ]                                 ) ;
     $JXON   = http_build_query ( $PARAMS                                   ) ;
