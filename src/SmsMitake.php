@@ -20,8 +20,9 @@ function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
   if                    ( array_key_exists ("smbody" , $PARAMS )           ) {
     $BODY   = $PARAMS   [ "smbody"                                         ] ;
-    $UENC   = $BODY                                                          ;
+    // $UENC   = $BODY                                                          ;
     // $UENC   = rawurlencode ( $BODY                                         ) ;
+    $UENC   = urlencode ( $BODY                                            ) ;
     $KK     = $PARAMS                                                        ;
     unset               ( $KK [ "smbody" ]                                 ) ;
     $JXON   = http_build_query ( $KK                                       ) ;
@@ -179,9 +180,17 @@ function send                 ( $Phone , $Content , $Title = ""            ) {
   $BODY    = str_replace      ( "\n" , "\x06" , $BODY                      ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CMD     = $this -> URL                                                    ;
-  $CMD     = "{$CMD}/api/mtk/SmSend"                                         ;
+  $CMD     = "{$CMD}/api/mtk/SmSend?CharsetURL=UTF-8"                        ;
+/*
   $PARAMETERS    =  array                                                    (
     "CharsetURL" => "UTF-8"                                                  ,
+    "username"   => $this -> Username                                        ,
+    "password"   => $this -> Password                                        ,
+    "dstaddr"    => $PN                                                      ,
+    "smbody"     => $BODY                                                    ,
+  )                                                                          ;
+*/
+  $PARAMETERS    =  array                                                    (
     "username"   => $this -> Username                                        ,
     "password"   => $this -> Password                                        ,
     "dstaddr"    => $PN                                                      ,
