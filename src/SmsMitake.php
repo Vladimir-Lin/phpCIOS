@@ -18,21 +18,7 @@ function __destruct   (                                                    ) {
 //////////////////////////////////////////////////////////////////////////////
 function Request        ( $URL , $PARAMS                                   ) {
   ////////////////////////////////////////////////////////////////////////////
-/*
-  if                    ( array_key_exists ("smbody" , $PARAMS )           ) {
-    $BODY   = $PARAMS   [ "smbody"                                         ] ;
-    // $UENC   = $BODY                                                          ;
-    // $UENC   = rawurlencode ( $BODY                                         ) ;
-    $UENC   = urlencode ( $BODY                                            ) ;
-    $KK     = $PARAMS                                                        ;
-    unset               ( $KK [ "smbody" ]                                 ) ;
-    $JXON   = http_build_query ( $KK                                       ) ;
-    $JXON   = "{$JXON}&smbody={$UENC}"                                       ;
-    echo $JXON ;
-  } else                                                                     {
-*/
-    $JXON   = http_build_query ( $PARAMS                                   ) ;
-//  }                                                                          ;
+  $JXON   = http_build_query ( $PARAMS                                     ) ;
   ////////////////////////////////////////////////////////////////////////////
   $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
   ////////////////////////////////////////////////////////////////////////////
@@ -183,15 +169,6 @@ function send                 ( $Phone , $Content , $Title = ""            ) {
   ////////////////////////////////////////////////////////////////////////////
   $CMD     = $this -> URL                                                    ;
   $CMD     = "{$CMD}/api/mtk/SmSend?CharsetURL=UTF-8"                        ;
-/*
-  $PARAMETERS    =  array                                                    (
-    "CharsetURL" => "UTF-8"                                                  ,
-    "username"   => $this -> Username                                        ,
-    "password"   => $this -> Password                                        ,
-    "dstaddr"    => $PN                                                      ,
-    "smbody"     => $BODY                                                    ,
-  )                                                                          ;
-*/
   $PARAMETERS    =  array                                                    (
     "username"   => $this -> Username                                        ,
     "password"   => $this -> Password                                        ,
