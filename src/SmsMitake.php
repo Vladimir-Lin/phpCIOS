@@ -166,6 +166,7 @@ function send                 ( $Phone , $Content , $Title = ""            ) {
   $this   -> CurrentError = ""                                               ;
   $BODY    = $Content                                                        ;
   $BODY    = str_replace      ( "\n" , "\x06" , $BODY                      ) ;
+  $BODY    = urlencode        ( $BODY                                      ) ;
   ////////////////////////////////////////////////////////////////////////////
   $CMD     = $this -> URL                                                    ;
   $CMD     = "{$CMD}/api/mtk/SmSend"                                         ;
