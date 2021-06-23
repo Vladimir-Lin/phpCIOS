@@ -185,7 +185,7 @@ function send                 ( $Phone , $Content , $Title = ""            ) {
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $Status     = $JSON [ "statuscode"                                       ] ;
-  if ( ! in_array ( $Status , [ "0" , "1" , "2" , "4" ] )                    {
+  if ( ! in_array ( $Status , [ "0" , "1" , "2" , "4" ] ) )                  {
     $this -> CurrentError = $Status                                          ;
     return false                                                             ;
   }                                                                          ;
