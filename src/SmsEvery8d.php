@@ -98,7 +98,6 @@ function send         ( $Phone , $Content , $Title = ""                    ) {
   $CompanyNo = $this -> XML -> COMPANY_NO                                    ; // 從登入結果取得Company_No
   $Credit    = $this -> XML -> CREDIT                                        ; // 從登入結果取得目前剩餘額度
   ////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////
   $SML  = '<REPS VER="2.0"><IP></IP><CARD_NO/>'                              ;
   $SML .= '<USER NAME="" '                                                   ;
   $SML .= 'MOBILE="' . $Phone . '" '                                         ; // 電話號碼
