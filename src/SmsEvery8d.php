@@ -16,18 +16,35 @@ function __destruct   (                                                    ) {
   parent::__destruct  (                                                    ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
+function Request        ( $URL , $PARAMS                                   ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $JXON   = http_build_query ( $PARAMS                                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HEADER = [ "Content-type: application/x-www-form-urlencoded" ]            ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ch   = curl_init   (                                                    ) ;
+  curl_setopt         ( $ch , CURLOPT_URL            , $URL                ) ;
+  curl_setopt         ( $ch , CURLOPT_HTTPHEADER     , $HEADER             ) ;
+  curl_setopt         ( $ch , CURLOPT_CUSTOMREQUEST  , "POST"              ) ;
+  curl_setopt         ( $ch , CURLOPT_POSTFIELDS     , $JXON               ) ;
+  curl_setopt         ( $ch , CURLOPT_RETURNTRANSFER , true                ) ;
+  curl_setopt         ( $ch , CURLOPT_HEADER         , false               ) ;
+  $RR  = curl_exec    ( $ch                                                ) ;
+         curl_close   ( $ch                                                ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $RR                                                                 ;
+}
+//////////////////////////////////////////////////////////////////////////////
 function Initialize   (                                                    ) {
   ////////////////////////////////////////////////////////////////////////////
   $KEY   = "SmsEvery8dConf"                                                  ;
   $this -> ManagementURL  = ""                                               ;
-  $this -> LoginURL       = ""                                               ;
   $this -> URL            = ""                                               ;
   $this -> Username       = ""                                               ;
   $this -> Password       = ""                                               ;
-  $this -> Cust           = ""                                               ;
   $this -> CurrentCredits = 0                                                ;
   $this -> CurrentError   = ""                                               ;
-  $this -> XML            = null                                             ;
+  $this -> JSON           = array ( )                                        ;
   ////////////////////////////////////////////////////////////////////////////
   if                  ( ! array_key_exists ( $KEY , $GLOBALS )             ) {
     return false                                                             ;
@@ -35,11 +52,9 @@ function Initialize   (                                                    ) {
   ////////////////////////////////////////////////////////////////////////////
   $CONF  = $GLOBALS   [ $KEY                                               ] ;
   $this -> ManagementURL  = $CONF [ "Management" ]                           ;
-  $this -> LoginURL       = $CONF [ "Login"      ]                           ;
   $this -> URL            = $CONF [ "Hostname"   ]                           ;
   $this -> Username       = $CONF [ "Username"   ]                           ;
   $this -> Password       = $CONF [ "Password"   ]                           ;
-  $this -> Cust           = $CONF [ "Cust"       ]                           ;
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -48,38 +63,7 @@ function management   (                                                    ) {
 }
 //////////////////////////////////////////////////////////////////////////////
 function login        (                                                    ) {
-  ////////////////////////////////////////////////////////////////////////////
-  // 登入Every8d帳戶
-  ////////////////////////////////////////////////////////////////////////////
-  $this -> CurrentError = ""                                                 ;
-  ////////////////////////////////////////////////////////////////////////////
-  $PARAMS = array                                                            (
-    "custID"   => $this -> Cust                                              ,
-    "userID"   => $this -> Username                                          ,
-    "password" => $this -> Password                                          ,
-    "APIType"  => ""                                                         ,
-    "version"  => ""                                                       ) ;
-  ////////////////////////////////////////////////////////////////////////////
-  try                                                                        {
-    $CLIENT      = new \SoapClient      ( $this -> LoginURL )                ;
-    $RESULT      = $CLIENT -> Login     ( $PARAMS           )                ;
-    $XMLSTR      = $RESULT -> LoginResult                                    ;
-    //////////////////////////////////////////////////////////////////////////
-    // 取得登入結果
-    //////////////////////////////////////////////////////////////////////////
-    $this -> XML = new \SimpleXMLElement ( $XMLSTR           )               ;
-    if ( $this -> XML -> ERROR_CODE == "0000" )                              {
-      $this -> CurrentCredits = $this -> XML -> CREDIT                       ;
-      return true                                                            ;
-    } else                                                                   {
-      $this -> CurrentError = (string) $this -> XML -> DESC [ 0 ]            ;
-    }                                                                        ;
-  } catch ( Exception $e )                                                   {
-    $this -> CurrentError = "Failure to create a SOAP client for Every8d"    ;
-    return false                                                             ;
-  }                                                                          ;
-  ////////////////////////////////////////////////////////////////////////////
-  return false                                                               ;
+  return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
 function error        (                                                    ) {
@@ -87,46 +71,79 @@ function error        (                                                    ) {
 }
 //////////////////////////////////////////////////////////////////////////////
 function credits      (                                                    ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> CurrentCredits = 0                                                ;
+  $this -> CurrentError   = ""                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CMD        = $this -> URL                                                 ;
+  $CMD        = "{$CMD}/API21/HTTP/getCredit.ashx"                           ;
+  ////////////////////////////////////////////////////////////////////////////
+  $PARAMETERS = array ( "UID" => $this -> Username                           ,
+                        "PWD" => $this -> Password                         ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RR         = $this -> Request ( $CMD , $PARAMETERS                      ) ;
+  $CREDITZ    = intval           ( $RR , 10                                ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                             ( $CREDITZ < 0                            ) {
+    $this -> CurrentError = "Every8d did not answer current credits"         ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> CurrentCredits = $CREDITZ                                         ;
+  ////////////////////////////////////////////////////////////////////////////
   return $this -> CurrentCredits                                             ;
 }
 //////////////////////////////////////////////////////////////////////////////
-function send         ( $Phone , $Content , $Title = ""                    ) {
+function send                 ( $Phone , $Content , $Title = ""            ) {
   ////////////////////////////////////////////////////////////////////////////
-  $this -> CurrentError = ""                                                 ;
+  $this   -> CurrentError = ""                                               ;
   ////////////////////////////////////////////////////////////////////////////
-  $UserNo    = $this -> XML -> USER_NO                                       ; // 從登入結果取得UserNo
-  $CompanyNo = $this -> XML -> COMPANY_NO                                    ; // 從登入結果取得Company_No
-  $Credit    = $this -> XML -> CREDIT                                        ; // 從登入結果取得目前剩餘額度
-  ////////////////////////////////////////////////////////////////////////////
-  $SML  = '<REPS VER="2.0"><IP></IP><CARD_NO/>'                              ;
-  $SML .= '<USER NAME="" '                                                   ;
-  $SML .= 'MOBILE="' . $Phone . '" '                                         ; // 電話號碼
-  $SML .= 'EMAIL="" SENDTIME="" PARAM="" MR=""/>'                            ;
-  $SML .= '</REPS>'                                                          ;
-  ////////////////////////////////////////////////////////////////////////////
-  $PARAMS = array                                                            (
-    "custID"      => $this -> Cust                                           ,
-    "CompanyNo"   => $CompanyNo                                              ,
-    "userNo"      => $UserNo                                                 ,
-    "sendtype"    => "110"                                                   ,
-    "msgCategory" => "10"                                                    ,
-    "subject"     => ""                                                      ,
-    "content"     => $Content                                                ,
-    "image"       => ""                                                      ,
-    "Audio"       => ""                                                      ,
-    "xml"         => $SML                                                    ,
-    "batchID"     => ""                                                      ,
-    "certified"   => ""                                                    ) ;
-  ////////////////////////////////////////////////////////////////////////////
-  // 發送簡訊
-  ////////////////////////////////////////////////////////////////////////////
-  $XMS    = new \SoapClient    ( $this -> URL )                              ;
-  $RESULT = $XMS    -> QueueIn ( $PARAMS      )                              ;
-  $STR    = $RESULT -> QueueInResult                                         ;
-  if ( substr ( $STR , 0 , 1 ) == "-" )                                      {
-    $this -> CurrentError = "Failure to send message to phone {$Phone}"      ;
+  if                          ( strlen ( $Phone ) <= 0                     ) {
+    $this -> CurrentError = "SMS requires a valid phone number"              ;
     return false                                                             ;
   }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                          ( strlen ( $Content ) <= 0                   ) {
+    $this -> CurrentError = "SMS requires content"                           ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CMD     = $this -> URL                                                    ;
+  $CMD     = "{$CMD}/API21/HTTP/sendSMS.ashx"                                ;
+  $PARAMETERS =  array                                                       (
+    "UID"     => $this -> Username                                           ,
+    "PWD"     => $this -> Password                                           ,
+    "DEST"    => $Phone                                                      ,
+    "MSG"     => $Content                                                    ,
+  )                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RR      = $this -> Request ( $CMD , $PARAMETERS                         ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                          ( strlen ( $RR ) <= 0                        ) {
+    $this -> CurrentError = "HTTP return text is empty"                      ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ANSZ    = explode          ( "," , $RR                                  ) ;
+  if                          ( count ( $ANSZ ) < 5                        ) {
+    $this -> CurrentError = "HTTP Response format did not match API document" ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CREDITZ = intval           ( $ANSZ [ 0 ] , 10                           ) ;
+  $this        -> JSON = array                                               (
+    "CREDIT"   => $CREDITZ                                                   ,
+    "SENDED"   => $ANSZ [ 1 ]                                                ,
+    "COST"     => $ANSZ [ 2 ]                                                ,
+    "UNSEND"   => $ANSZ [ 3 ]                                                ,
+    "BATCH_ID" => $ANSZ [ 4 ] ,                                            ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                          ( $CREDITZ < 0                               ) {
+    $this -> CurrentError = "Unknown mistake : {$RR}"                        ;
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> CurrentCredits = $CREDITZ                                         ;
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
 }
