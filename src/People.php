@@ -82,6 +82,15 @@ public function fromString ( $S                                            ) {
   return $U                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function fromSession   ( $KEY , $DEFAULT = ""                       ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                          ( ! isset ( $_SESSION [ $KEY ] )             ) {
+    return $DEFAULT                                                          ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $_SESSION            [ $KEY                                       ] ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function GetObjects    ( $DB , $TABLE , $T2 , $RELATION             ) {
   ////////////////////////////////////////////////////////////////////////////
   $RI  = new Relation         (                                            ) ;
@@ -411,28 +420,32 @@ public function SessionStart ( )                                             {
   //////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Recovery()
-{
-  if ( ! isset ( $_SESSION [ "Authorized" ] ) ) return            ;
-  $A = $_SESSION [ "Authorized" ]                                 ;
-  if ( ! $A ) return                                              ;
-  /////////////////////////////////////////////////////////////////
-  $this -> Uuid      = (string) $_SESSION [ "ACTIONS_UUID"      ] ;
-  $this -> Role      = (string) $_SESSION [ "ACTIONS_ROLE"      ] ;
-  $this -> Name      = (string) $_SESSION [ "ACTIONS_NAME"      ] ;
-  $this -> Level     = (string) $_SESSION [ "ACTIONS_LEVEL"     ] ;
-  $this -> Seniority = (string) $_SESSION [ "ACTIONS_SENIORITY" ] ;
-  $this -> Item      = (string) $_SESSION [ "ACTIONS_ITEM"      ] ;
-  /////////////////////////////////////////////////////////////////
-  $this -> Language  = Browser::GetLanguage (  )                  ;
-  $this -> TzId      = TimeZones::GetTzUuid (  )                  ;
-  $this -> TZ        = TimeZones::GetTZ     (  )                  ;
-  /////////////////////////////////////////////////////////////////
-  $RRS               = (string) $_SESSION [ "ACTIONS_ROLES"     ] ;
-  $this -> Roles     = explode ( " , " , $RRS )                   ;
-  /////////////////////////////////////////////////////////////////
-  $CCS               = (string) $_SESSION [ "ACTIONS_COURSES"   ] ;
-  $this -> Courses   = explode ( " , " , $CCS )                   ;
+public function Recovery ( )                                                 {
+  ////////////////////////////////////////////////////////////////////////////
+  if ( ! isset ( $_SESSION [ "Authorized" ] ) ) return                       ;
+  $A = $this -> fromSession ( "Authorized" , false )                         ;
+  if ( ! $A ) return                                                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> Uuid      = (string) $this -> fromSession ( "ACTIONS_UUID" ,"0" ) ;
+  $this -> Role      = (string) $this -> fromSession ( "ACTIONS_ROLE" ,""  ) ;
+  $this -> Name      = (string) $this -> fromSession ( "ACTIONS_NAME" ,""  ) ;
+  $this -> Level     = $this -> fromSession ( "ACTIONS_LEVEL"     , 0      ) ;
+  $this -> Seniority = $this -> fromSession ( "ACTIONS_SENIORITY" , 0      ) ;
+  $this -> Item      = (string) $this -> fromSession ( "ACTIONS_ITEM" ,""  ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> Level     = intval ( $this -> Level     , 10 )                    ;
+  $this -> Seniority = intval ( $this -> Seniority , 10 )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> Language  = Browser::GetLanguage (  )                             ;
+  $this -> TzId      = TimeZones::GetTzUuid (  )                             ;
+  $this -> TZ        = TimeZones::GetTZ     (  )                             ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RRS               = (string) $this -> fromSession ( "ACTIONS_ROLES",""  ) ;
+  $this -> Roles     = explode ( " , " , $RRS )                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CCS               = (string) $this -> fromSession ( "ACTIONS_COURSES","") ;
+  $this -> Courses   = explode ( " , " , $CCS )                              ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 public function HomeDir ( $ROLE )
