@@ -741,6 +741,22 @@ public function isClassCollision         ( $DB , $CLSTAB , $START          ) {
   return $DB -> FetchOne                 ( $QQ                             ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function isClassesCollision    ( $DB , $CLSTAB , $CLASSTIMES        ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                                  ( count ( $CLASSTIMES ) <= 0         ) {
+    return false                                                             ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  foreach                             ( $CLASSTIMES as $T                  ) {
+    $CC   = $this -> isClassCollision ( $DB , $CLSTAB , $T                 ) ;
+    if                                ( $CC > 0                            ) {
+      return true                                                            ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return false                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function StudentJson($DB,$TZ,$NAME,$LECTUREID,$NOW)
 {
   $HH   = new Parameters        (                        )                  ;
