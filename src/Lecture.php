@@ -327,103 +327,107 @@ public function obtain ( $R )                                                {
   $this -> Update       = $R [ "ltime"        ]                              ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function RegisterTime($TZ,$JOIN=" ",$DateFormat="Y/m/d D A",$TimeFormat="H:i:s")
-{
-  $REG    = new StarDate (             ) ;
-  $REG   -> Stardate = $this -> Register ;
-  $REGSTR = $REG -> toDateTimeString     (
-                      $TZ                ,
-                      $JOIN              ,
-                      $DateFormat        ,
-                      $TimeFormat      ) ;
-  unset                  ( $REG        ) ;
-  return $REGSTR                         ;
-}
-//////////////////////////////////////////////////////////////////////////////
-public function LogTime($TZ,$JOIN=" ",$DateFormat="Y/m/d D A",$TimeFormat="H:i:s")
-{
-  $LOG    = new StarDate (         ) ;
-  $LOG   -> Stardate = $this -> Log  ;
-  $LOGSTR = $LOG -> toDateTimeString (
-                      $TZ            ,
-                      $JOIN          ,
-                      $DateFormat    ,
-                      $TimeFormat  ) ;
-  unset                  ( $LOG    ) ;
-  return $LOGSTR                     ;
-}
-//////////////////////////////////////////////////////////////////////////////
-public function CallOffJS($TZ)
-{
-  $NOW  = new StarDate             (               ) ;
-  $END  = new StarDate             (               ) ;
-  $NOW -> Now                      (               ) ;
-  $END -> Stardate = $this -> CloseDay               ;
-  $HH   = new Parameters           (               ) ;
-  $LS   = $HH  -> LectureString    ( $this -> Uuid ) ;
-  $ST   = $NOW -> toDateTimeString ( $TZ           ) ;
-  $ET   = $END -> toDateTimeString ( $TZ           ) ;
-  return "CallOffClass('{$LS}','{$ST}','{$ET}')"     ;
-}
-//////////////////////////////////////////////////////////////////////////////
-public function GetUuid($DB,$Table,$Main)
-{
-  global $DataTypes                                          ;
-  $BASE         = "2900000000000000000"                      ;
-  $RI           = new Relation ( )                           ;
-  $TYPE         = $RI -> Types [ "Lecture" ]                 ;
-  $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE ) ;
-  if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false   ;
-  $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
-  return $this -> Uuid                                       ;
-}
-//////////////////////////////////////////////////////////////////////////////
-public function UpdateItems ( $DB , $TABLE , $ITEMS )
-{
-  $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
-           $DB -> WhereUuid ( $this -> Uuid , true )                ;
-  return $DB -> Query ( $QQ )                                       ;
-}
-//////////////////////////////////////////////////////////////////////////////
-public function Update ( $DB , $TABLE )
-{
+public function RegisterTime ( $TZ                                           ,
+                               $JOIN       = " "                             ,
+                               $DateFormat = "Y/m/d D A"                     ,
+                               $TimeFormat = "H:i:s"                       ) {
   ////////////////////////////////////////////////////////////////////////////
-  $ITEMS  = $this -> valueItems (                      )                     ;
-  $VALUES = $this -> Pairs      ( $ITEMS               )                     ;
+  $REG      = new StarDate   (                                             ) ;
+  $REG     -> Stardate = $this -> Register                                   ;
+  $REGSTR   = $REG    -> toDateTimeString                                    (
+                               $TZ                                           ,
+                               $JOIN                                         ,
+                               $DateFormat                                   ,
+                               $TimeFormat                                 ) ;
+  unset                      ( $REG                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $REGSTR                                                             ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function LogTime  ( $TZ                                               ,
+                           $JOIN       = " "                                 ,
+                           $DateFormat = "Y/m/d D A"                         ,
+                           $TimeFormat = "H:i:s"                           ) {
+  $LOG    = new StarDate (         )                                         ;
+  $LOG   -> Stardate = $this -> Log                                          ;
+  $LOGSTR = $LOG -> toDateTimeString                                         (
+                      $TZ                                                    ,
+                      $JOIN                                                  ,
+                      $DateFormat                                            ,
+                      $TimeFormat  )                                         ;
+  unset                  ( $LOG    )                                         ;
+  return $LOGSTR                                                             ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function CallOffJS          ( $TZ                                   ) {
+  $NOW  = new StarDate             (                                       ) ;
+  $END  = new StarDate             (                                       ) ;
+  $NOW -> Now                      (                                       ) ;
+  $END -> Stardate = $this -> CloseDay                                       ;
+  $HH   = new Parameters           (                                       ) ;
+  $LS   = $HH  -> LectureString    ( $this -> Uuid                         ) ;
+  $ST   = $NOW -> toDateTimeString ( $TZ                                   ) ;
+  $ET   = $END -> toDateTimeString ( $TZ                                   ) ;
+  return "CallOffClass('{$LS}','{$ST}','{$ET}')"                             ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetUuid ( $DB , $Table , $Main )                             {
+  ////////////////////////////////////////////////////////////////////////////
+  global $DataTypes                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $BASE         = "2900000000000000000"                                      ;
+  $RI           = new Relation ( )                                           ;
+  $TYPE         = $RI -> Types [ "Lecture" ]                                 ;
+  $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE )                 ;
+  if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false                   ;
+  $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )                           ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $this -> Uuid                                                       ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function UpdateItems ( $DB , $TABLE , $ITEMS                        ) {
+  $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS )          .
+           $DB -> WhereUuid ( $this -> Uuid , true                         ) ;
+  return $DB -> Query       ( $QQ                                          ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function Update          ( $DB , $TABLE                             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $ITEMS  = $this -> valueItems (                                          ) ;
+  $VALUES = $this -> Pairs      ( $ITEMS                                   ) ;
   ////////////////////////////////////////////////////////////////////////////
   $QQ     = "update {$TABLE} set {$VALUES} "                                 .
-            $DB   -> WhereUuid  ( $this -> Uuid , true )                     ;
-  unset                         ( $ITEMS               )                     ;
+            $DB   -> WhereUuid  ( $this -> Uuid , true                     ) ;
+  unset                         ( $ITEMS                                   ) ;
   ////////////////////////////////////////////////////////////////////////////
-  return $DB -> Query           ( $QQ                  )                     ;
+  return $DB -> Query           ( $QQ                                      ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsByQuery($DB,$QQ)
-{
-  $qq = $DB -> Query ( $QQ )                 ;
-  if ( $DB -> hasResult ( $qq ) )            {
-    $rr = $qq -> fetch_array ( MYSQLI_BOTH ) ;
-    $this     -> obtain      ( $rr         ) ;
-    return true                              ;
-  }                                          ;
-  return false                               ;
+public function ObtainsByQuery ( $DB , $QQ                                 ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $qq = $DB -> Query           ( $QQ                                       ) ;
+  if                           ( $DB -> hasResult ( $qq )                  ) {
+    $rr = $qq -> fetch_array   ( MYSQLI_BOTH                               ) ;
+    $this     -> obtain        ( $rr                                       ) ;
+    return true                                                              ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsByUuid ( $DB , $TABLE )
-{
-  $IT = $this -> Items ( )                        ;
-  $QQ = "select {$IT} from {$TABLE}"              .
-        $DB -> WhereUuid ( $this -> Uuid , true ) ;
-  return $this -> ObtainsByQuery ( $DB , $QQ )    ;
+public function ObtainsByUuid    ( $DB , $TABLE                            ) {
+  $IT = $this -> Items           (                                         ) ;
+  $QQ = "select {$IT} from {$TABLE}"                                         .
+        $DB -> WhereUuid         ( $this -> Uuid , true                    ) ;
+  return $this -> ObtainsByQuery ( $DB , $QQ                               ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsLectures ( $DB , $LECTURES , $ITEM , $ORDER = "asc" )
-{
-  $VV = $this -> get ( $ITEM )           ;
-  $QQ = "select `uuid` from {$LECTURES}" .
-        " where `{$ITEM}` = {$VV}"       .
-        " order by `openday` {$ORDER} ;" ;
-  return $DB -> ObtainUuids ( $QQ )      ;
+public function ObtainsLectures ( $DB , $LECTURES , $ITEM , $ORDER = "asc" ) {
+  $VV = $this -> get            ( $ITEM                                    ) ;
+  $QQ = "select `uuid` from {$LECTURES}"                                     .
+        " where `{$ITEM}` = {$VV}"                                           .
+        " order by `openday` {$ORDER} ;"                                     ;
+  return $DB -> ObtainUuids     ( $QQ                                      ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function ObtainsByPayer          ( $DB , $LECTURES , $ORDER = "asc" ) {
