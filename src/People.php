@@ -187,80 +187,93 @@ public function GetCourses ( $DB )                                           {
   $this -> Courses = explode ( " , " , $ITEMs )                              ;
 }
 //////////////////////////////////////////////////////////////////////////////
+// 是否具有夥伴或監督者身分
+//////////////////////////////////////////////////////////////////////////////
+public function isPartner (                                                ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                      ( $this -> ContainsRole ( 4 )                    ) {
+    return true                                                              ;
+  }                                                                          ;
+  if                      ( $this -> ContainsRole ( 5 )                    ) {
+    return true                                                              ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return false                                                               ;
+}
+//////////////////////////////////////////////////////////////////////////////
+// 是否具有諮詢顧問身分
+//////////////////////////////////////////////////////////////////////////////
 public function isCounselor ( )                                              {
-  if ( ! $this -> ContainsRole ( 7 ) ) return false             ;
-  if ( ( $this -> Level >= 300 ) and ( $this -> Level < 400 ) ) {
-    return true                                                 ;
-  }                                                             ;
-  return false                                                  ;
+  if ( ! $this -> ContainsRole ( 7 ) ) return false                          ;
+  if ( ( $this -> Level >= 300 ) and ( $this -> Level < 400 ) )              {
+    return true                                                              ;
+  }                                                                          ;
+  return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isTeamLeader ( )
-{
-  if ( ! $this -> ContainsRole ( 7 ) ) return false             ;
-  if ( ( $this -> Level >= 400 ) and ( $this -> Level < 500 ) ) {
-    return true                                                 ;
-  }                                                             ;
-  return false                                                  ;
+// 是否具有團隊領導身分
+//////////////////////////////////////////////////////////////////////////////
+public function isTeamLeader (                                             ) {
+  if ( ! $this -> ContainsRole ( 7 ) ) return false                          ;
+  if ( ( $this -> Level >= 400 ) and ( $this -> Level < 500 ) )              {
+    return true                                                              ;
+  }                                                                          ;
+  return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isManager ( )
-{
-  if ( ( $this -> Level >= 500 ) and ( $this -> Level < 800 ) ) {
-    return true                                                 ;
-  }                                                             ;
-  return false                                                  ;
+// 是否具有管理者身分
+//////////////////////////////////////////////////////////////////////////////
+public function isManager    (                                             ) {
+  if ( ( $this -> Level >= 500 ) and ( $this -> Level < 800 ) )              {
+    return true                                                              ;
+  }                                                                          ;
+  return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isSubsidiary ( )
-{
-  if ( ( $this -> Level >= 800 ) and ( $this -> Level < 900 ) ) {
-    return true                                                 ;
-  }                                                             ;
-  return false                                                  ;
+// 是否為分公司
+//////////////////////////////////////////////////////////////////////////////
+public function isSubsidiary (                                             ) {
+  if ( ( $this -> Level >= 800 ) and ( $this -> Level < 900 ) )              {
+    return true                                                              ;
+  }                                                                          ;
+  return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function TutorParameters ( $DB )
-{
-  $this -> GetSeniority ( $DB ) ;
-  $this -> GetCourses   ( $DB ) ;
+public function TutorParameters ( $DB                                      ) {
+  $this -> GetSeniority         ( $DB                                      ) ;
+  $this -> GetCourses           ( $DB                                      ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function StudentParameters ( $DB )
-{
-  $this -> GetCourse ( $DB ) ;
+public function StudentParameters ( $DB                                    ) {
+  $this -> GetCourse              ( $DB                                    ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ManagerParameters ( $DB )
-{
-  $this -> GetSeniority ( $DB )    ;
-  $this -> GetLevel     ( $DB )    ;
-  if ( $this -> isCounselor  ( ) ) {
-    $this -> GetCourses   ( $DB )  ;
+public function ManagerParameters ( $DB                                    ) {
+  $this -> GetSeniority ( $DB )                                              ;
+  $this -> GetLevel     ( $DB )                                              ;
+  if ( $this -> isCounselor  ( ) )                                           {
+    $this -> GetCourses   ( $DB )                                            ;
   } else
-  if ( $this -> isTeamLeader ( ) ) {
-    $this -> GetCourses   ( $DB )  ;
+  if ( $this -> isTeamLeader ( ) )                                           {
+    $this -> GetCourses   ( $DB )                                            ;
   } else
-  if ( $this -> isSubsidiary ( ) ) {
+  if ( $this -> isSubsidiary ( ) )                                           {
   } else
-  if ( $this -> isManager    ( ) ) {
+  if ( $this -> isManager    ( ) )                                           {
   }
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EmployeeParameters ( $DB )
-{
+public function EmployeeParameters ( $DB                                   ) {
 }
 //////////////////////////////////////////////////////////////////////////////
-public function RoleId ( )
-{
-  return $this -> ShortRole ( $this -> Role ) ;
+public function RoleId      (                                              ) {
+  return $this -> ShortRole ( $this -> Role                                ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ShortRole ( $X )
-{
-  $R = (string) $X                                              ;
-  $R = (string) str_replace ( "1700000000" , "" , (string) $R ) ;
-  return intval ( (string) $R , 10 )                            ;
+public function ShortRole ( $X )                                             {
+  $R = (string) $X                                                           ;
+  $R = (string) str_replace ( "1700000000" , "" , (string) $R )              ;
+  return intval ( (string) $R , 10 )                                         ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function ContainsRole ( $X )
