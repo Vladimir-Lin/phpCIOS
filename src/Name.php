@@ -1,10 +1,10 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Name extends Columns
 {
-
+//////////////////////////////////////////////////////////////////////////////
 public $Id                ;
 public $Uuid              ;
 public $Locality          ;
@@ -13,7 +13,7 @@ public $Relevance         ;
 public $Flags             ;
 public $Length            ;
 public $Name              ;
-
+//////////////////////////////////////////////////////////////////////////////
 public $Usages    = array (
   "Default"       =>   0  ,
   "Typo"          =>   1  ,
@@ -26,18 +26,18 @@ public $Usages    = array (
   "Other"         =>  99  ,
   "EndName"       =>   8  ,
 )                         ;
-
+//////////////////////////////////////////////////////////////////////////////
 function __construct()
 {
   parent::__construct ( ) ;
   $this -> clear      ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function __destruct()
 {
   parent::__destruct ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function clear()
 {
   $this -> Id        = 0  ;
@@ -49,7 +49,7 @@ public function clear()
   $this -> Length    = 0  ;
   $this -> Name      = "" ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assign($Item)
 {
   $this -> Id        = $Item -> Id        ;
@@ -61,7 +61,7 @@ public function assign($Item)
   $this -> Length    = $Item -> Length    ;
   $this -> Name      = $Item -> Name      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function tableItems()
 {
   $S = array (                  ) ;
@@ -75,32 +75,32 @@ public function tableItems()
   array_push ( $S , "name"      ) ;
   return $S                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isFlag($Mask)
 {
   return ( ( gmp_and ( $Mask , $this -> Flags ) ) == $Mask ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isUuid($u)
 {
   return ( 0 == gmp_cmp ( $u , $this -> Uuid ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isLocality($L)
 {
   return ( $L == $this -> Locality ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isRelevance ($r)
 {
   return ( $r == $this -> Relevance ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function hasName()
 {
   return ( strlen ( $this -> Name ) > 0 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function set($item,$V)
 {
   $a = strtolower ( $item )                        ;
@@ -113,12 +113,12 @@ public function set($item,$V)
   if ( "length"    == $a ) $this -> Length    = $V ;
   if ( "name"      == $a ) $this -> Name      = $V ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setRelevance($N)
 {
   $this -> Relevance = $this -> Usages [ $N ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ItemPair($item)
 {
   $a = strtolower ( $item )                          ;
@@ -148,7 +148,7 @@ public function ItemPair($item)
   }                                                  ;
   return ""                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Select                                 (
                   $Table                               ,
                   $Options = "order by `priority` asc" ,
@@ -160,7 +160,7 @@ public function Select                                 (
   unset                     ( $L                                     ) ;
   return $Q                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SelectPosition($Table)
 {
   $L = array                (             ) ;
@@ -174,7 +174,7 @@ public function SelectPosition($Table)
   unset                     ( $L          ) ;
   return $Q                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function LastPriority($Table)
 {
   $L = array                 (                          ) ;
@@ -189,7 +189,7 @@ public function LastPriority($Table)
   unset                      ( $L                       ) ;
   return $QQ                                              ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Fetch ( $DB , $Table )
 {
   $UX = $this -> Uuid                         ;
@@ -209,7 +209,7 @@ public function Fetch ( $DB , $Table )
   }                                           ;
   return ""                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FetchUuids ( $DB , $Table , $UUIDs )
 {
   $NAMEs = array (                                ) ;
@@ -219,7 +219,7 @@ public function FetchUuids ( $DB , $Table , $UUIDs )
   }                                                 ;
   return $NAMEs                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Insert($Table)
 {
   return "insert into " . $Table              .
@@ -238,7 +238,7 @@ public function Insert($Table)
             (string) $this -> Flags     . "," .
             "?,length(name)) ;"               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Delete($Table)
 {
   $L  = array (                                                     ) ;
@@ -248,12 +248,12 @@ public function Delete($Table)
   unset ( $L )                                                        ;
   return $QQ                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function DeleteId($Table)
 {
   return "delete from {$Table} where `id` = {$this->Id} ;" ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Update($Table)
 {
   $L  = array (                                                     ) ;
@@ -266,7 +266,7 @@ public function Update($Table)
   unset ( $L )                                                        ;
   return $QQ                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function UpdateId($Table)
 {
   return "update " . $Table                           .
@@ -279,7 +279,7 @@ public function UpdateId($Table)
            " `length` = length(`name`)"               .
          " where `id` = " . $this -> Id . " ;"        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function obtain($R)
 {
   $this -> Id        = $R [ "id"        ] ;
@@ -291,12 +291,12 @@ public function obtain($R)
   $this -> Length    = $R [ "length"    ] ;
   $this -> Name      = $R [ "name"      ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function bindName($DbQuery)
 {
   return $DbQuery -> bind_param ( 's' , $this -> Name ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function LastPosition($DB,$Table)
 {
   $QQ = $this -> LastPriority ( $Table )      ;
@@ -309,7 +309,7 @@ public function LastPosition($DB,$Table)
   $ID = $ID + 1                               ;
   return $ID                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Append($DB,$Table)
 {
   if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false   ;
@@ -319,7 +319,7 @@ public function Append($DB,$Table)
   $this       -> bindName ( $qq    )                         ;
   return $qq  -> execute  (        )                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Sync($DB,$Table)
 {
   if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false ;
@@ -328,7 +328,7 @@ public function Sync($DB,$Table)
   $this       -> bindName ( $qq    )                       ;
   return $qq  -> execute  (        )                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SyncId($DB,$Table)
 {
   if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false ;
@@ -337,7 +337,7 @@ public function SyncId($DB,$Table)
   $this       -> bindName ( $qq    )                       ;
   return $qq  -> execute  (        )                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Assure($DB,$Table)
 {
   if ( $this -> Id <= 0 )                                        {
@@ -351,7 +351,7 @@ public function Assure($DB,$Table)
   if ( $this -> Id > 0 ) return $this -> SyncId ( $DB , $Table ) ;
   return $this -> Append ( $DB , $Table )                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsById($DB,$TABLE)
 {
   $QQ = "select " . $this -> Items ( ) . " from {$TABLE}" .
@@ -364,7 +364,7 @@ public function ObtainsById($DB,$TABLE)
   }                                                       ;
   return false                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsForPriority($DB,$TABLE)
 {
   $IDs = array ( )                                      ;
@@ -418,7 +418,7 @@ public function ObtainsIDs($DB,$TABLE)
   }                                                    ;
   return $IDs                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function UpdateName($DB,$TABLE)
 {
   $QQ  = "update {$TABLE}"                      .
@@ -430,7 +430,7 @@ public function UpdateName($DB,$TABLE)
   $qq -> bind_param     ( 's' , $this -> Name ) ;
   $qq -> execute        (                     ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Editing($DB,$TABLE)
 {
   if ( $this -> Id < 0 )                            {
@@ -445,7 +445,7 @@ public function Editing($DB,$TABLE)
     }                                               ;
   }                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // Table Locked
 public function UpdatePriority($DB,$TABLE,$IDs)
 {
@@ -461,7 +461,7 @@ public function UpdatePriority($DB,$TABLE,$IDs)
   }                                  ;
   $DB -> UnlockTables (        )     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 // Table Locked
 public function UpdateSmartly($DB,$TABLE)
 {
@@ -500,7 +500,7 @@ public function UpdateSmartly($DB,$TABLE)
     }                                                           ;
   }                                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 ?>
