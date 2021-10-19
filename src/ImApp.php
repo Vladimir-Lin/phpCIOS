@@ -124,7 +124,7 @@ public function ObtainsByUuid ( $DB , $Table                               ) {
   ////////////////////////////////////////////////////////////////////////////
   $WH = $DB -> WhereUuid      ( $this -> Uuid , true                       ) ;
   $QQ = "select `account`,`imapp` from {$Table} {$WH} ;"                     ;
-  $qq = $DB -> Query          ( $Q                                         ) ;
+  $qq = $DB -> Query          ( $QQ                                        ) ;
   ////////////////////////////////////////////////////////////////////////////
   if                          ( ! $DB -> hasResult ( $qq )                 ) {
     return false                                                             ;
