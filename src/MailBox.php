@@ -290,20 +290,27 @@ public function GetOwners    ( $DB , $Table , $Type = "People"             ) {
 }
 //////////////////////////////////////////////////////////////////////////////
 public function FindByName ( $DB , $TABLE , $NAME                          ) {
+  ////////////////////////////////////////////////////////////////////////////
   $TMP = array             (                                               ) ;
   $SPT = "%{$NAME}%"                                                         ;
   $QQ  = "select `uuid` from {$TABLE}"                                       .
          " where `email` like ?"                                             .
          " order by `ltime` desc ;"                                          ;
+  ////////////////////////////////////////////////////////////////////////////
   $qq  = $DB -> Prepare    ( $QQ        )                                    ;
   $qq -> bind_param        ( 's' , $SPT )                                    ;
-  $qq -> execute           (            )                                    ;
+  $ANS = $qq -> execute    (            )                                    ;
+  if                       ( ! $ANS                                        ) {
+    return $TMP                                                              ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
   $kk  = $qq -> get_result (            )                                    ;
   if ( $DB -> hasResult ( $kk ) )                                            {
     while ( $rr = $kk -> fetch_array ( MYSQLI_BOTH ) )                       {
       array_push ( $TMP , $rr [ 0 ] )                                        ;
     }                                                                        ;
   }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
   return $TMP                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////

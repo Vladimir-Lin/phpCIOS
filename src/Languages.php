@@ -1,30 +1,32 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Languages
 {
-
+//////////////////////////////////////////////////////////////////////////////
 public $Codes ;
 public $Uuids ;
 public $Names ;
-
+//////////////////////////////////////////////////////////////////////////////
 function __construct()
 {
   $this -> Clear ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function __destruct()
 {
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Clear()
 {
   $this -> Codes = array ( ) ;
   $this -> Uuids = array ( ) ;
   $this -> Names = array ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Obtains($DB,$LOCALITY)
 {
   $QQ = "select `uuid`,`code` from {$LOCALITY} order by `code` asc ;"        ;
@@ -36,7 +38,7 @@ public function Obtains($DB,$LOCALITY)
     }                                                                        ;
   }                                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function DynamicList($FIRST,$Localities)
 {
   $LX = array (                   ) ;
@@ -48,7 +50,7 @@ public function DynamicList($FIRST,$Localities)
   }                                 ;
   return $LX                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetName($DB,$TABLE,$Locality,$Usage = "Default")
 {
   $this -> Names = array ( )       ;
@@ -61,7 +63,7 @@ public function GetName($DB,$TABLE,$Locality,$Usage = "Default")
     $this -> Names [ $u ] = $NN    ;
   }                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetNames($DB,$TABLE,$Localities,$Usage = "Default")
 {
   $this -> Names = array ( )         ;
@@ -76,7 +78,7 @@ public function GetNames($DB,$TABLE,$Localities,$Usage = "Default")
     $pos           = $pos + 1        ;
   }                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetNative($DB,$TABLE,$Localities,$Usage = "Default")
 {
   $this -> Names = array ( )                         ;
@@ -94,7 +96,7 @@ public function GetNative($DB,$TABLE,$Localities,$Usage = "Default")
     unset ( $AA )                                    ;
   }                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function EchoSelections($CURRENT)
 {
   $HS  = new Html    (          )            ;
@@ -115,7 +117,7 @@ public function EchoSelections($CURRENT)
   ////////////////////////////////////////////
   return $HS                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>

@@ -1,194 +1,269 @@
 <?php
-
-namespace CIOS ;
-
-define ( "CiosTimeZoneKey" , "CIOS-TimeZone" ) ;
-define ( "CiosTzUuidKey"   , "CIOS-TZ-Uuid"  ) ;
-
-class TimeZones
-{
-
-public $TZs   ;
-public $IDs   ;
-public $Uuids ;
-public $TzIds ;
-public $IdTzs ;
-public $TzSds ;
-public $SdTzs ;
-public $SdUds ;
-public $UdSds ;
-public $NAMEs ;
-
-function __construct()
-{
-  $this -> clear ( )  ;
-}
-
-function __destruct()
-{
-  unset ( $this -> TZs   ) ;
-  unset ( $this -> IDs   ) ;
-  unset ( $this -> Uuids ) ;
-  unset ( $this -> TzIds ) ;
-  unset ( $this -> IdTzs ) ;
-  unset ( $this -> TzSds ) ;
-  unset ( $this -> SdTzs ) ;
-  unset ( $this -> SdUds ) ;
-  unset ( $this -> UdSds ) ;
-  unset ( $this -> NAMEs ) ;
-}
-
-public function clear()
-{
-  $this -> TZs   = array ( ) ;
-  $this -> IDs   = array ( ) ;
-  $this -> Uuids = array ( ) ;
-  $this -> TzIds = array ( ) ;
-  $this -> IdTzs = array ( ) ;
-  $this -> TzSds = array ( ) ;
-  $this -> SdTzs = array ( ) ;
-  $this -> SdUds = array ( ) ;
-  $this -> UdSds = array ( ) ;
-}
-
-public function UuidById ( $id )
-{
-  return $this -> SdUds [ $id ] ;
-}
-
-public function ZoneNameById ( $id )
-{
-  return $this -> TzSds [ $id ] ;
-}
-
-public function Query ( $DB , $Table )
-{
+//////////////////////////////////////////////////////////////////////////////
+// 時區處理元件
+//////////////////////////////////////////////////////////////////////////////
+namespace CIOS                                                               ;
+//////////////////////////////////////////////////////////////////////////////
+define ( "CiosTimeZoneKey" , "CIOS-TimeZone" )                               ;
+define ( "CiosTzUuidKey"   , "CIOS-TZ-Uuid"  )                               ;
+//////////////////////////////////////////////////////////////////////////////
+class TimeZones                                                              {
+//////////////////////////////////////////////////////////////////////////////
+public $TZs                                                                  ;
+public $IDs                                                                  ;
+public $Uuids                                                                ;
+public $TzIds                                                                ;
+public $IdTzs                                                                ;
+public $TzSds                                                                ;
+public $SdTzs                                                                ;
+public $SdUds                                                                ;
+public $UdSds                                                                ;
+public $NAMEs                                                                ;
+//////////////////////////////////////////////////////////////////////////////
+function __construct (                                                     ) {
   $this -> clear     (                                                     ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+function __destruct (                                                      ) {
+  ////////////////////////////////////////////////////////////////////////////
+  unset             ( $this -> TZs                                         ) ;
+  unset             ( $this -> IDs                                         ) ;
+  unset             ( $this -> Uuids                                       ) ;
+  unset             ( $this -> TzIds                                       ) ;
+  unset             ( $this -> IdTzs                                       ) ;
+  unset             ( $this -> TzSds                                       ) ;
+  unset             ( $this -> SdTzs                                       ) ;
+  unset             ( $this -> SdUds                                       ) ;
+  unset             ( $this -> UdSds                                       ) ;
+  unset             ( $this -> NAMEs                                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+// 設定原始值
+//////////////////////////////////////////////////////////////////////////////
+public function clear    ( )                                                 {
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> TZs   = array ( )                                                 ;
+  $this -> IDs   = array ( )                                                 ;
+  $this -> Uuids = array ( )                                                 ;
+  $this -> TzIds = array ( )                                                 ;
+  $this -> IdTzs = array ( )                                                 ;
+  $this -> TzSds = array ( )                                                 ;
+  $this -> SdTzs = array ( )                                                 ;
+  $this -> SdUds = array ( )                                                 ;
+  $this -> UdSds = array ( )                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+// 透過時區短編號取得時區長編號
+// 參數:
+//   id : 時區短編號
+// 返回值: 時區長編號
+//////////////////////////////////////////////////////////////////////////////
+public function UuidById ( $id )                                             {
+  return $this -> SdUds  [ $id ]                                             ;
+}
+//////////////////////////////////////////////////////////////////////////////
+// 透過時區短編號取得時區文字名稱
+// 參數:
+//   id : 時區短編號
+// 返回值: 時區文字名稱
+//////////////////////////////////////////////////////////////////////////////
+public function ZoneNameById ( $id )                                         {
+  return $this -> TzSds      [ $id ]                                         ;
+}
+//////////////////////////////////////////////////////////////////////////////
+// 取得所有時區紀錄
+// 參數:
+//   DB    : 資料庫連線元件
+//   Table : 時區資料庫表格
+//////////////////////////////////////////////////////////////////////////////
+public function Query ( $DB , $Table                                       ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> clear      (                                                    ) ;
   $QQ = "select `id`,`uuid`,`zonename` from {$Table} order by `id` asc ;"    ;
-  $qq = $DB -> Query ( $QQ                                                 ) ;
-  if                 ( $DB -> hasResult ( $qq )                            ) {
-    while            ( $rr = $qq -> fetch_array ( MYSQLI_BOTH )            ) {
-      $id = $rr [ "id"       ]                                               ;
-      $UU = $rr [ "uuid"     ]                                               ;
-      $ZZ = $rr [ "zonename" ]                                               ;
-      $this -> TzIds [ $UU ] = $ZZ                                           ;
-      $this -> IdTzs [ $ZZ ] = $UU                                           ;
-      $this -> TzSds [ $id ] = $ZZ                                           ;
-      $this -> SdTzs [ $ZZ ] = $id                                           ;
-      $this -> SdUds [ $id ] = $UU                                           ;
-      $this -> UdSds [ $UU ] = $id                                           ;
-      array_push ( $this -> TZs   , $ZZ )                                    ;
-      array_push ( $this -> Uuids , $UU )                                    ;
-      array_push ( $this -> IDs   , $id )                                    ;
+  $qq = $DB -> Query  ( $QQ                                                ) ;
+  if                  ( $DB -> hasResult ( $qq )                           ) {
+    while             ( $rr = $qq -> fetch_array ( MYSQLI_BOTH )           ) {
+      $id    = $rr    [ "id"                                               ] ;
+      $UU    = $rr    [ "uuid"                                             ] ;
+      $ZZ    = $rr    [ "zonename"                                         ] ;
+      $this -> TzIds  [ $UU ] = $ZZ                                          ;
+      $this -> IdTzs  [ $ZZ ] = $UU                                          ;
+      $this -> TzSds  [ $id ] = $ZZ                                          ;
+      $this -> SdTzs  [ $ZZ ] = $id                                          ;
+      $this -> SdUds  [ $id ] = $UU                                          ;
+      $this -> UdSds  [ $UU ] = $id                                          ;
+      array_push      ( $this -> TZs   , $ZZ                               ) ;
+      array_push      ( $this -> Uuids , $UU                               ) ;
+      array_push      ( $this -> IDs   , $id                               ) ;
     }                                                                        ;
   }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
-
-public function ZoneNames ( $DB , $Table , $LANGs )
-{
-  $this -> NAMEs = array        (                                ) ;
-  $NI            = new Name     (                                ) ;
-  $NI           -> set          ( "Priority"  , 0                ) ;
-  $NI           -> setRelevance ( "Default"                      ) ;
-  foreach                       ( $LANGs as $kk                  ) {
-    $NI   -> set                ( "Locality"  , $kk              ) ;
-    $NAMES = $NI -> FetchUuids  ( $DB  , $Table , $this -> Uuids ) ;
-    $this -> NAMEs [ $kk ] = $NAMES                                ;
-  }                                                                ;
+//////////////////////////////////////////////////////////////////////////////
+// 取得所有時區翻譯名稱
+// 參數:
+//   DB    : 資料庫連線元件
+//   Table : 時區資料庫表格
+//   LANGs : 語言列表 [ 1001 , 1002 , ... ]
+//////////////////////////////////////////////////////////////////////////////
+public function ZoneNames       ( $DB , $Table , $LANGs                    ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> NAMEs = array        (                                          ) ;
+  $NI            = new Name     (                                          ) ;
+  $NI           -> set          ( "Priority"  , 0                          ) ;
+  $NI           -> setRelevance ( "Default"                                ) ;
+  foreach                       ( $LANGs as $kk                            ) {
+    $NI   -> set                ( "Locality"  , $kk                        ) ;
+    $NAMES = $NI -> FetchUuids  ( $DB  , $Table , $this -> Uuids           ) ;
+    $this -> NAMEs [ $kk ] = $NAMES                                          ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
-
-public function GetZoneName ( $DB , $Table , $U )
-{
-  $ZN = ""                                                      ;
-  $QQ = "select `zonename` from {$Table} where `uuid` = {$U} ;" ;
-  $qq = $DB -> Query ( $QQ                                    ) ;
-  if                 ( $DB -> hasResult ( $qq )               ) {
-    $rr = $qq -> fetch_array ( MYSQLI_BOTH )                    ;
-    $ZN = $rr [ 0 ]                                             ;
-  }                                                             ;
-  return $ZN                                                    ;
+//////////////////////////////////////////////////////////////////////////////
+// 取得指定時區文字名稱
+// 參數:
+//   DB    : 資料庫連線元件
+//   Table : 時區資料庫表格
+//   U     : 時區長編號
+// 返回值: 時區文字名稱
+//////////////////////////////////////////////////////////////////////////////
+public function GetZoneName  ( $DB , $Table , $U                           ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $ZN   = ""                                                                 ;
+  $QQ   = "select `zonename` from {$Table} where `uuid` = {$U} ;"            ;
+  $qq   = $DB -> Query       ( $QQ                                         ) ;
+  if                         ( $DB -> hasResult ( $qq )                    ) {
+    $rr = $qq -> fetch_array ( MYSQLI_BOTH                                 ) ;
+    $ZN = $rr                [ 0                                           ] ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $ZN                                                                 ;
 }
-
-public function GetTimeZone ( $DB , $Table , $U , $Default , $Type = "People" )
-{
-  $CT   = 0                                          ;
-  $RI   = new Relation         (                   ) ;
-  $RI  -> set                  ( "first" , $U      ) ;
-  $RI  -> setT1                ( $Type             ) ;
-  $RI  -> setT2                ( "TimeZone"        ) ;
-  $RI  -> setRelation          ( "Originate"       ) ;
-  $UU   = $RI -> Subordination ( $DB , $Table      ) ;
-  unset                        ( $RI               ) ;
-  if                           ( count ( $UU ) > 0 ) {
-    $UX = $UU [ 0 ]                                  ;
-    $CT = "{$UX}"                                    ;
-  } else                                             {
-    $CT = "{$Default}"                               ;
-  }                                                  ;
-  return $CT                                         ;
+//////////////////////////////////////////////////////////////////////////////
+// 取得擁有者的內定時區長編號
+// 參數:
+//   DB      : 資料庫連線元件
+//   Table   : 時區資料庫表格
+//   U       : 擁有者長編號
+//   Default : 內定時區長編號
+//   Type    : 擁有者類型
+// 返回值: 時區長編號
+//////////////////////////////////////////////////////////////////////////////
+public function GetTimeZone    ( $DB                                         ,
+                                 $Table                                      ,
+								 $U                                          ,
+								 $Default                                    ,
+								 $Type = "People"                          ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $CT   = 0                                                                  ;
+  $RI   = new Relation         (                                           ) ;
+  $RI  -> set                  ( "first" , $U                              ) ;
+  $RI  -> setT1                ( $Type                                     ) ;
+  $RI  -> setT2                ( "TimeZone"                                ) ;
+  $RI  -> setRelation          ( "Originate"                               ) ;
+  $UU   = $RI -> Subordination ( $DB , $Table                              ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  unset                        ( $RI                                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                           ( count ( $UU ) > 0                         ) {
+    $UX = $UU                  [ 0                                         ] ;
+    $CT = "{$UX}"                                                            ;
+  } else                                                                     {
+    $CT = "{$Default}"                                                       ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $CT                                                                 ;
 }
-
-public function addSelector($NameMaps,$CurrentTimeZone,$TzMenu,$TzClass="")
-{
-  $CT  = $CurrentTimeZone                     ;
-  $HS  = new Html    (                      ) ;
-  $HS -> setSplitter ( "\n"                 ) ;
-  $HS -> setTag      ( "select"             ) ;
-  $HS -> SafePair    ( "id"      , $TzMenu  ) ;
-  $HS -> SafePair    ( "class"   , $TzClass ) ;
-  $HS -> SafePair    ( "name"    , $TzMenu  ) ;
-  $HS -> addOptions  ( $NameMaps , $CT      ) ;
-  return $HS                                  ;
+//////////////////////////////////////////////////////////////////////////////
+// 產生時區的HTML選取元件
+// 參數:
+// 返回值: Html(select元件)
+// 似乎已經廢棄,但因為不確定沒有使用到,所以暫時保留
+//////////////////////////////////////////////////////////////////////////////
+public function addSelector ( $NameMaps                                      ,
+                              $CurrentTimeZone                               ,
+							  $TzMenu                                        ,
+							  $TzClass = ""                                ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $CT  = $CurrentTimeZone                                                    ;
+  $HS  = new Html           (                                              ) ;
+  $HS -> setSplitter        ( "\n"                                         ) ;
+  $HS -> setTag             ( "select"                                     ) ;
+  $HS -> SafePair           ( "id"      , $TzMenu                          ) ;
+  $HS -> SafePair           ( "class"   , $TzClass                         ) ;
+  $HS -> SafePair           ( "name"    , $TzMenu                          ) ;
+  $HS -> addOptions         ( $NameMaps , $CT                              ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HS                                                                 ;
 }
-
-public function addSelection($CurrentTimeZone,$TzMenu,$TzClass="",$LANG=0)
-{
-  $LANGs   = $this -> TzIds                      ;
-  if                          ( $LANG > 0      ) {
-    $LANGs = $this -> NAMEs [ $LANG ]            ;
-  }                                              ;
-  return $this -> addSelector ( $LANGs           ,
-                                $CurrentTimeZone ,
-                                $TzMenu          ,
-                                $TzClass       ) ;
+//////////////////////////////////////////////////////////////////////////////
+// 產生時區的HTML選取元件
+// 參數:
+// 返回值: Html(select元件)
+// 似乎已經廢棄,但因為不確定沒有使用到,所以暫時保留
+//////////////////////////////////////////////////////////////////////////////
+public function addSelection  ( $CurrentTimeZone                             ,
+                                $TzMenu                                      ,
+                                $TzClass = ""                                ,
+                                $LANG    = 0                               ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $LANGs   = $this -> TzIds                                                  ;
+  if                          ( $LANG > 0                                  ) {
+    $LANGs = $this -> NAMEs   [ $LANG                                      ] ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $this -> addSelector ( $LANGs                                       ,
+                                $CurrentTimeZone                             ,
+                                $TzMenu                                      ,
+                                $TzClass                                   ) ;
 }
-
-public static function SetTZ ( $TZ )
-{
-  $_SESSION [ CiosTimeZoneKey ] = $TZ ;
-  return $TZ                          ;
+//////////////////////////////////////////////////////////////////////////////
+// 指定時區文字名稱到用戶網頁Session
+//////////////////////////////////////////////////////////////////////////////
+public static function SetTZ ( $TZ )                                         {
+  $_SESSION [ CiosTimeZoneKey ] = $TZ                                        ;
+  return $TZ                                                                 ;
 }
-
-public static function GetTZ ( )
-{
-  //////////////////////////////////////////////////
-  if   ( isset ( $_SESSION [ CiosTimeZoneKey ] ) ) {
-    $TZ = $_SESSION [ CiosTimeZoneKey ]            ;
-    if ( strlen ( $TZ ) > 0                      ) {
-      return $TZ                                   ;
-    }                                              ;
-  }                                                ;
-  //////////////////////////////////////////////////
-  return date_default_timezone_get ( )             ;
+//////////////////////////////////////////////////////////////////////////////
+// 從用戶網頁Session當中取得內定時區文字名稱
+// 返回值: 時區文字名稱
+//////////////////////////////////////////////////////////////////////////////
+public static function GetTZ (                                             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                         ( isset ( $_SESSION [ CiosTimeZoneKey ] )     ) {
+    $TZ = $_SESSION          [ CiosTimeZoneKey                             ] ;
+    if                       ( strlen ( $TZ ) > 0                          ) {
+      return $TZ                                                             ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return date_default_timezone_get ( )                                       ;
 }
-
-public static function SetTzUuid ( $TZ )
-{
-  $_SESSION [ CiosTzUuidKey ] = $TZ ;
-  return $TZ                        ;
+//////////////////////////////////////////////////////////////////////////////
+// 指定時區長編號到用戶網頁Session
+//////////////////////////////////////////////////////////////////////////////
+public static function SetTzUuid ( $TZ )                                     {
+  $_SESSION [ CiosTzUuidKey ] = $TZ                                          ;
+  return $TZ                                                                 ;
 }
-
-public static function GetTzUuid ( )
-{
-  if   ( isset ( $_SESSION [ CiosTzUuidKey ] ) ) {
-    $TZ = $_SESSION [ CiosTzUuidKey ]            ;
-    if ( strlen ( $TZ ) > 0                    ) {
-      return $TZ                                 ;
-    }                                            ;
-  }                                              ;
-  return ""                                      ;
+//////////////////////////////////////////////////////////////////////////////
+// 從用戶網頁Session當中取得時區長編號
+// 返回值: 時區長編號,沒有指定時,返回空白文字
+//////////////////////////////////////////////////////////////////////////////
+public static function GetTzUuid (                                         ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                             ( isset ( $_SESSION [ CiosTzUuidKey ] )   ) {
+    $TZ = $_SESSION              [ CiosTzUuidKey                           ] ;
+    if                           ( strlen ( $TZ ) > 0                      ) {
+      return $TZ                                                             ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return ""                                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 ?>

@@ -1,29 +1,30 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+// 
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Settings extends Columns
 {
-/////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////
 public $Id        ;
 public $Username  ;
 public $Scope     ;
 public $Keyword   ;
 public $Value     ;
 public $Update    ;
-
+//////////////////////////////////////////////////////////////////////////////
 function __construct()
 {
   parent::__construct ( ) ;
   $this -> clear      ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function __destruct()
 {
   parent::__destruct ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function clear()
 {
   $this -> Id       = -1 ;
@@ -33,7 +34,7 @@ function clear()
   $this -> Value    = "" ;
   $this -> Update   = "" ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assign($Item)
 {
   $this -> Id       = $Item -> Id       ;
@@ -43,7 +44,7 @@ public function assign($Item)
   $this -> Value    = $Item -> Value    ;
   $this -> Update   = $Item -> Update   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function tableItems()
 {
   $S = array (                 ) ;
@@ -55,7 +56,7 @@ public function tableItems()
   array_push ( $S , "ltime"    ) ;
   return $S                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ItemPair($item)
 {
   $a = strtolower ( $item )                         ;
@@ -79,7 +80,7 @@ public function ItemPair($item)
   }                                                 ;
   return ""                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function set($item,$V)
 {
   $a = strtolower ( $item )                      ;
@@ -90,7 +91,7 @@ public function set($item,$V)
   if ( "value"    == $a ) $this -> Value    = $V ;
   if ( "ltime"    == $a ) $this -> Update   = $V ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function get($item)
 {
   $a = strtolower ( $item )                        ;
@@ -102,19 +103,19 @@ public function get($item)
   if ( "ltime"    == $a ) return $this -> Update   ;
   return ""                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setIndex($USERNAME,$SCOPE,$KEYWORD)
 {
   $this -> Username = $USERNAME ;
   $this -> Scope    = $SCOPE    ;
   $this -> Keyword  = $KEYWORD  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setKey($KEYWORD)
 {
   $this -> Keyword  = $KEYWORD  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Select                           (
                   $Table                         ,
                   $Options = "order by `id` asc" ,
@@ -125,7 +126,7 @@ public function Select                           (
   unset                     ( $L                                     ) ;
   return $Q                                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Obtain ( $R )
 {
   $this -> Id       = $R [ "id"       ] ;
@@ -135,7 +136,7 @@ public function Obtain ( $R )
   $this -> Value    = $R [ "value"    ] ;
   $this -> Update   = $R [ "ltime"    ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsId ( $DB , $TABLE , $ID )
 {
   $QQ = "select `id`,`username`,`scope`,`keyword`,`value`,`ltime` from {$TABLE}" .
@@ -147,13 +148,13 @@ public function ObtainsId ( $DB , $TABLE , $ID )
   }                                             ;
   return false                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function DeleteId ( $DB , $TABLE , $ID )
 {
   $QQ = "delete from {$TABLE} where `id` = {$ID} ;" ;
   return $DB -> Query ( $QQ )                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function obtainValue ( $DB , $TABLE )
 {
   $QQ   = "select `value` from {$TABLE}"         .
@@ -171,7 +172,7 @@ public function obtainValue ( $DB , $TABLE )
   $rr   = $kk -> fetch_array ( MYSQLI_BOTH )     ;
   return $rr [ 0 ]                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assureValue($DB,$TABLE,$VALUE)
 {
   $QQ   = "select `id` from {$TABLE}"                     .
@@ -207,7 +208,7 @@ public function assureValue($DB,$TABLE,$VALUE)
     return $qq  -> execute     (                        ) ;
   }                                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>

@@ -1,10 +1,12 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+// 
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Trade extends Columns
 {
-
+//////////////////////////////////////////////////////////////////////////////
 public $Id          ;
 public $Uuid        ;
 public $Payer       ;
@@ -21,16 +23,16 @@ public $Record      ;
 public $Complete    ;
 public $DueDate     ;
 public $Update      ;
-
+//////////////////////////////////////////////////////////////////////////////
 function __construct()
 {
   $this -> Clear ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function __destruct()
 {
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Clear()
 {
   $this -> Id          = -1    ;
@@ -50,7 +52,7 @@ public function Clear()
   $this -> DueDate     =  0    ;
   $this -> Update      =  0    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assign($Item)
 {
   $this -> Id          = $Item -> Id          ;
@@ -70,7 +72,7 @@ public function assign($Item)
   $this -> DueDate     = $Item -> DueDate     ;
   $this -> Update      = $Item -> Update      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function tableItems()
 {
   $S = array (                    ) ;
@@ -92,7 +94,7 @@ public function tableItems()
   array_push ( $S , "ltime"       ) ;
   return $S                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function valueItems()
 {
   $S = array (                    ) ;
@@ -111,7 +113,7 @@ public function valueItems()
   array_push ( $S , "duedate"     ) ;
   return $S                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function set($item,$V)
 {
   $a = strtolower ( $item )                             ;
@@ -132,9 +134,7 @@ public function set($item,$V)
   if ( "duedate"     == $a ) $this -> DueDate      = $V ;
   if ( "ltime"       == $a ) $this -> Update       = $V ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function get($item)
 {
   $a = strtolower ( $item )                                        ;
@@ -156,9 +156,7 @@ public function get($item)
   if ( "ltime"       == $a ) return (string) $this -> Update       ;
   return ""                                                        ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function Pair($item)
 {
   if ( $item == "currency" )                              {
@@ -166,9 +164,7 @@ public function Pair($item)
   }                                                       ;
   return "`{$item}` = " . $this -> get ( $item )          ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function Pairs($Items)
 {
   $P = array ( )                                ;
@@ -179,7 +175,7 @@ public function Pairs($Items)
   unset        ( $P         )                   ;
   return $Q                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ItemPair($item)
 {
   $a = strtolower ( $item )                            ;
@@ -233,7 +229,7 @@ public function ItemPair($item)
   }                                                    ;
   return ""                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isToken()
 {
   $des = $this -> Description                          ;
@@ -244,7 +240,7 @@ public function isToken()
   if ( gmp_cmp ( $des , $duidmax )  > 0 ) return false ;
   return true                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isClass()
 {
   $des = $this -> Description                          ;
@@ -255,14 +251,12 @@ public function isClass()
   if ( gmp_cmp ( $des , $duidmax )  > 0 ) return false ;
   return true                                          ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function toString()
 {
   return sprintf ( "trs5%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setId($ID)
 {
   $HH           = new Parameters (     ) ;
@@ -270,28 +264,24 @@ public function setId($ID)
   unset ( $HH )                          ;
   return $this -> Uuid                   ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function Money()
 {
   return number_format ( $this -> Amount , 0 , "" , "," ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function setMoney($amount)
 {
   $A = (string) str_replace ( "," , "" , $amount ) ;
   $this -> Amount = intval ( $A , 10 )             ;
   return $this -> Amount                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetMoney ( $SPLITTER = " " )
 {
   return $this -> Money ( ) . $SPLITTER . $this -> Currency ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Payment($PUID)
 {
   global $Translations                           ;
@@ -304,19 +294,17 @@ public function Payment($PUID)
   }                                              ;
   return $WAY                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isPaid($PUID)
 {
   return ( gmp_cmp ( $this -> Payer , $PUID ) == 0 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isRefund($PUID)
 {
   return ( gmp_cmp ( $this -> Payee , $PUID ) == 0 ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function TradeRecord($TZ,$JOIN=" ",$DateFormat="Y/m/d",$TimeFormat="H:i:s")
 {
   $SD  = new StarDate ( )                                                    ;
@@ -325,7 +313,7 @@ public function TradeRecord($TZ,$JOIN=" ",$DateFormat="Y/m/d",$TimeFormat="H:i:s
   unset ( $SD )                                                              ;
   return $TT                                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TradeTime($TZ,$JOIN=" ",$DateFormat="Y/m/d",$TimeFormat="H:i:s")
 {
   $SD  = new StarDate ( )                                        ;
@@ -334,9 +322,7 @@ public function TradeTime($TZ,$JOIN=" ",$DateFormat="Y/m/d",$TimeFormat="H:i:s")
   unset ( $SD )                                                  ;
   return $TT                                                     ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function obtain($R)
 {
   $this -> Id          = $R [ "id"          ]            ;
@@ -359,9 +345,7 @@ public function obtain($R)
   $this -> Item        = intval ( $this -> Item   , 10 ) ;
   $this -> States      = intval ( $this -> States , 10 ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function InsertInto($Table)
 {
   return "insert into " . $Table . " "                         .
@@ -380,9 +364,7 @@ public function InsertInto($Table)
           (string) $this -> Description . ","                  .
           (string) $this -> Record      . ") ;"                ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function UpdateProduct($Table)
 {
   return "update " . $Table . " set "                       .
@@ -390,9 +372,7 @@ public function UpdateProduct($Table)
          "`description` = " . (string) $this -> Description .
          " where `uuid` = " . (string) $this -> Uuid . " ;" ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function GetUuid ( $DB , $Table , $Main )
 {
   $BASE         = "3200000000000000000"                      ;
@@ -403,18 +383,14 @@ public function GetUuid ( $DB , $Table , $Main )
   $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
   return $this -> Uuid                                       ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function UpdateItems($DB,$TABLE,$ITEMS)
 {
   $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
            $DB -> WhereUuid ( $this -> Uuid , true )                ;
   return $DB -> Query ( $QQ )                                       ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function Update($DB,$TABLE)
 {
   $ITEMS = $this -> valueItems ( )                            ;
@@ -423,9 +399,7 @@ public function Update($DB,$TABLE)
   unset ( $ITEMS )                                            ;
   return $DB -> Query ( $QQ )                                 ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function ObtainsByUuid($DB,$TABLE)
 {
   $QQ = "select " . $this -> Items ( ) . " from " . $TABLE .
@@ -438,9 +412,7 @@ public function ObtainsByUuid($DB,$TABLE)
   }                                                        ;
   return false                                             ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function ObtainsTrades($DB,$TRADES,$ITEM)
 {
   $QQ = "select `uuid` from " . $TRADES                 .
@@ -450,9 +422,7 @@ public function ObtainsTrades($DB,$TRADES,$ITEM)
         " order by `record` desc ;"                     ;
   return $DB -> ObtainUuids ( $QQ )                     ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function ObtainsTransactions($DB,$TRADES,$ITEM,$ORDER="asc")
 {
   $QQ = "select `uuid` from " . $TRADES                              .
@@ -460,9 +430,7 @@ public function ObtainsTransactions($DB,$TRADES,$ITEM,$ORDER="asc")
         " order by `record` asc ;"                                   ;
   return $DB -> ObtainUuids ( $QQ )                                  ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function ObtainsByDescription($DB,$TABLE,$DESCRIPTION)
 {
   $QQ = "select `uuid` from {$TABLE}"           .
@@ -472,7 +440,6 @@ public function ObtainsByDescription($DB,$TABLE,$DESCRIPTION)
 }
 
 //////////////////////////////////////////////////////////////////////////////
-
 public function ObtainRelated($DB,$RELATIONS,$CLASSID)
 {
   $RI     = new RelationItem     (                    ) ;
@@ -484,7 +451,6 @@ public function ObtainRelated($DB,$RELATIONS,$CLASSID)
   unset                          ( $RI                ) ;
   return $TRADES                                        ;
 }
-
 public function ObtainsByClass($DB,$TABLE,$RELATIONS,$CLASSID)
 {
   $TRADES = $this -> ObtainsByDescription ( $DB , $TABLE     , $CLASSID ) ;
@@ -492,9 +458,7 @@ public function ObtainsByClass($DB,$TABLE,$RELATIONS,$CLASSID)
   $TRADES = $DB   -> JoinArray            ( $TRADES , $TRDS             ) ;
   return $TRADES                                                          ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function JoinClass($DB,$TABLE,$CLASSID)
 {
   $RI    = new RelationItem (                          ) ;
@@ -506,9 +470,7 @@ public function JoinClass($DB,$TABLE,$CLASSID)
   $RI   -> Join             ( $DB , $TABLE             ) ;
   unset                     ( $RI                      ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function JoinPeople($DB,$TABLE,$PEOPLEID)
 {
   $RI    = new RelationItem (                          ) ;
@@ -520,9 +482,7 @@ public function JoinPeople($DB,$TABLE,$PEOPLEID)
   $RI   -> Join             ( $DB , $TABLE             ) ;
   unset                     ( $RI                      ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function RemoveWithClass($DB,$TABLE,$CLASSID)
 {
   //////////////////////////////////////////////////////
@@ -540,9 +500,7 @@ public function RemoveWithClass($DB,$TABLE,$CLASSID)
   unset                   ( $RI                      ) ;
   //////////////////////////////////////////////////////
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function RemoveWithPeople($DB,$TABLE,$PEOPLEID)
 {
   //////////////////////////////////////////////////////
@@ -560,7 +518,6 @@ public function RemoveWithPeople($DB,$TABLE,$PEOPLEID)
   unset                   ( $RI                      ) ;
   //////////////////////////////////////////////////////
 }
-
 //////////////////////////////////////////////////////////////////////////////
 public function GetSkipQuotas ( $DB , $TABLE )
 {
@@ -572,9 +529,7 @@ public function GetSkipQuotas ( $DB , $TABLE )
   ////////////////////////////////////////////////////////////////////////////
   return $SKIPS                                                              ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function StudentJson($DB,$TZ,$NAME,$TRADEID)
 {
   global $ProductItems                                                      ;
@@ -612,9 +567,7 @@ public function StudentJson($DB,$TZ,$NAME,$TRADEID)
   ///////////////////////////////////////////////////////////////////////////
   return $JSC                                                               ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function StudentTrades($DB,$TZ,$JAVA,$TRADES,$NAME,$TRADEID)
 {
   $UU = $this -> ObtainsTransactions ( $DB , $TRADES , "payer" ) ;
@@ -630,9 +583,7 @@ public function StudentTrades($DB,$TZ,$JAVA,$TRADES,$NAME,$TRADEID)
     }                                                            ;
   }                                                              ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function ItemTd($ITEM,$COLSPAN=1)
 {
   global $Translations                             ;
@@ -649,9 +600,7 @@ public function ItemTd($ITEM,$COLSPAN=1)
   //////////////////////////////////////////////////
   return $HD                                       ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function DetailButton ( $CLASSID = "SelectionButton" )
 {
   global $Translations                            ;
@@ -667,7 +616,6 @@ public function DetailButton ( $CLASSID = "SelectionButton" )
   /////////////////////////////////////////////////
   return $HB                                      ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
 // 交易簡報表格
 //////////////////////////////////////////////////////////////////////////////
@@ -739,7 +687,7 @@ public function TradeDivBlock($TZ,$PAY,$TKN,$SKIPS=0)
   ////////////////////////////////////////////////////////////////////////////
   return $HDXV                                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addAppendPayee($CLASSID,$BTNCLASS="SelectionButton")
 {
   /////////////////////////////////////////////////////////////////
@@ -755,7 +703,7 @@ public function addAppendPayee($CLASSID,$BTNCLASS="SelectionButton")
   /////////////////////////////////////////////////////////////////
   return $BTN                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addAppendPayer($CLASSID,$BTNCLASS="SelectionButton")
 {
   /////////////////////////////////////////////////////////////////
@@ -771,7 +719,7 @@ public function addAppendPayer($CLASSID,$BTNCLASS="SelectionButton")
   /////////////////////////////////////////////////////////////////
   return $BTN                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function payerInput($CLASSID,$IDV,$INPCLASS="NameInput")
 {
   $JSC  = "changePayer(this.value,'{$this->Uuid}','{$CLASSID}') ;" ;
@@ -785,7 +733,7 @@ public function payerInput($CLASSID,$IDV,$INPCLASS="NameInput")
   //////////////////////////////////////////////////////////////////
   return $INP                                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addPayer($HD,$CLASSID,$INPCLASS="NameInput",$editable=false)
 {
   $HH    = new Parameters      (                             ) ;
@@ -800,7 +748,7 @@ public function addPayer($HD,$CLASSID,$INPCLASS="NameInput",$editable=false)
   }                                                            ;
   unset                        ( $HH                         ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function payeeInput($CLASSID,$IDV,$INPCLASS="NameInput")
 {
   $JSC  = "changePayee(this.value,'{$this->Uuid}','{$CLASSID}') ;" ;
@@ -814,7 +762,7 @@ public function payeeInput($CLASSID,$IDV,$INPCLASS="NameInput")
   //////////////////////////////////////////////////////////////////
   return $INP                                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addPayee($HD,$CLASSID,$INPCLASS="NameInput",$editable=false)
 {
   $HH    = new Parameters      (                             ) ;
@@ -829,7 +777,7 @@ public function addPayee($HD,$CLASSID,$INPCLASS="NameInput",$editable=false)
   }                                                            ;
   unset                        ( $HH                         ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function currencyListing()
 {
   //////////////////////////////////////////////////////////////
@@ -852,7 +800,7 @@ public function currencyListing()
   //////////////////////////////////////////////////////////////
   return $HS                                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addCurrency($HD,$SELCLASS="",$editable=false)
 {
   if                                 ( $editable           ) {
@@ -864,7 +812,7 @@ public function addCurrency($HD,$SELCLASS="",$editable=false)
     $HD -> AddText                   ( $DTV                ) ;
   }                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function amountInput($AMTCLASS="AmountInput")
 {
   $TJS  = "TradeChanged(this.value,'amount','$this->Uuid') ;" ;
@@ -882,7 +830,7 @@ public function amountInput($AMTCLASS="AmountInput")
   /////////////////////////////////////////////////////////////
   return $TIP                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addAmount($HD,$AMTCLASS="AmountInput",$editable=false)
 {
   if                            ( $editable ) {
@@ -893,7 +841,7 @@ public function addAmount($HD,$AMTCLASS="AmountInput",$editable=false)
     $HD -> AddText              ( $DTV      ) ;
   }                                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function statesListing()
 {
   ////////////////////////////////////////////////////////////
@@ -910,7 +858,7 @@ public function statesListing()
   ////////////////////////////////////////////////////////////
   return $HS                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addStates($HD,$editable=false)
 {
   ///////////////////////////////////////////////
@@ -924,7 +872,7 @@ public function addStates($HD,$editable=false)
     $HD -> AddText                ( $DTV      ) ;
   }                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function itemsListing()
 {
   //////////////////////////////////////////////////////////
@@ -941,7 +889,7 @@ public function itemsListing()
   //////////////////////////////////////////////////////////
   return $HS                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addItems($HD,$editable=false)
 {
   //////////////////////////////////////////////
@@ -955,7 +903,7 @@ public function addItems($HD,$editable=false)
     $HD -> AddText               ( $DTV      ) ;
   }                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addRecordInput($TZ)
 {
   $TDT  = $this -> TradeRecord ( $TZ , "T" , "Y-m-d" , "H:i:s" ) ;
@@ -969,7 +917,7 @@ public function addRecordInput($TZ)
   $INP -> AddPair     ( "onchange" , $JSC             )          ;
   return $INP                                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addRecordTime($HD,$TZ,$editable=false)
 {
   if ( $editable )                          {
@@ -984,7 +932,7 @@ public function addRecordTime($HD,$TZ,$editable=false)
     $HD -> AddText ( $DTI )                 ;
   }                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addRemoveTrade($CLASSID,$BTNCLASS="SelectionButton")
 {
   ////////////////////////////////////////////////////////////
@@ -1000,7 +948,6 @@ public function addRemoveTrade($CLASSID,$BTNCLASS="SelectionButton")
   ////////////////////////////////////////////////////////////
   return $BTN                                                ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////

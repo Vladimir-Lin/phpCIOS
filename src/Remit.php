@@ -1,10 +1,12 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+// 
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Remit extends Columns
 {
-
+//////////////////////////////////////////////////////////////////////////////
 public $Id           ;
 public $Uuid         ;
 public $Used         ;
@@ -26,16 +28,16 @@ public $Remark       ;
 public $Reasons      ;
 public $Others       ;
 public $Update       ;
-
+//////////////////////////////////////////////////////////////////////////////
 function __construct()
 {
   $this -> Clear ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function __destruct()
 {
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Clear()
 {
   $this -> Id           = -1    ;
@@ -60,7 +62,7 @@ public function Clear()
   $this -> Others       =  ""   ;
   $this -> Update       =  0    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assign($Item)
 {
   $this -> Id           = $Item -> Id           ;
@@ -85,7 +87,7 @@ public function assign($Item)
   $this -> Others       = $Item -> Others       ;
   $this -> Update       = $Item -> Update       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function tableItems()
 {
   $S = array (                     ) ;
@@ -112,7 +114,7 @@ public function tableItems()
   array_push ( $S , "ltime"        ) ;
   return $S                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function valueItems()
 {
   $S = array (                     ) ;
@@ -136,7 +138,7 @@ public function valueItems()
   array_push ( $S , "others"       ) ;
   return $S                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function set($item,$V)
 {
   $a = strtolower ( $item )                              ;
@@ -162,9 +164,7 @@ public function set($item,$V)
   if ( "others"       == $a ) $this -> Others       = $V ;
   if ( "ltime"        == $a ) $this -> Update       = $V ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function get($item)
 {
   $a = strtolower ( $item )                                         ;
@@ -191,9 +191,7 @@ public function get($item)
   if ( "ltime"        == $a ) return (string) $this -> Update       ;
   return ""                                                         ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function Pair($item)
 {
   if ( $item == "currency" )                              {
@@ -207,9 +205,7 @@ public function Pair($item)
   }                                                       ;
   return "`{$item}` = " . $this -> get ( $item )          ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function Pairs($Items)
 {
   $P = array ( )                                ;
@@ -220,7 +216,7 @@ public function Pairs($Items)
   unset        ( $P         )                   ;
   return $Q                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ItemPair($item)
 {
   $a = strtolower ( $item )                                 ;
@@ -289,23 +285,17 @@ public function ItemPair($item)
   }                                                         ;
   return ""                                                 ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function toString()
 {
   return sprintf ( "rmts%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function fromString ( $ID )
 {
   $this -> Uuid = str_replace ( "rmts" , "79000000000" , $ID ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function toLongString ( $TZ , $ITEM , $DATE = "Y/m/d" , $TIME = "H:i:s" )
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -314,9 +304,7 @@ public function toLongString ( $TZ , $ITEM , $DATE = "Y/m/d" , $TIME = "H:i:s" )
   ////////////////////////////////////////////////////////////////////////////
   return $SDT -> toLongString            ( $TZ , $DATE , $TIME             ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function obtain($R)
 {
   $this -> Id           = $R [ "id"           ] ;
@@ -341,9 +329,7 @@ public function obtain($R)
   $this -> Others       = $R [ "others"       ] ;
   $this -> Update       = $R [ "ltime"        ] ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function GetUuid ( $DB , $Table , $Main )
 {
   global $DataTypes                                          ;
@@ -355,18 +341,14 @@ public function GetUuid ( $DB , $Table , $Main )
   $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
   return $this -> Uuid                                       ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function UpdateItems($DB,$TABLE,$ITEMS)
 {
   $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
            $DB -> WhereUuid ( $this -> Uuid , true )                ;
   return $DB -> Query ( $QQ )                                       ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function UpdateFresh   ( $DB , $TABLE      )
 {
   $S = array                  (                     ) ;
@@ -386,9 +368,7 @@ public function UpdateFresh   ( $DB , $TABLE      )
   array_push                  ( $S , "verification" ) ;
   return $this -> UpdateItems ( $DB , $TABLE , $S   ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function UpdateString ( $DB , $TABLE , $ITEM )
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -400,9 +380,7 @@ public function UpdateString ( $DB , $TABLE , $ITEM )
   $qq   -> execute          (                                              ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function Update ( $DB , $TABLE )
 {
   $ITEMS = $this -> valueItems ( )                            ;
@@ -411,9 +389,7 @@ public function Update ( $DB , $TABLE )
   unset ( $ITEMS )                                            ;
   return $DB -> Query ( $QQ )                                 ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function ObtainsByUuid ( $DB , $TABLE )
 {
   $QQ = "select " . $this -> Items ( ) . " from " . $TABLE .
@@ -426,9 +402,7 @@ public function ObtainsByUuid ( $DB , $TABLE )
   }                                                        ;
   return false                                             ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function JoinTrade ( $DB , $RELATION , $TradeUuid )
 {
   $RI  = new Relation (                          ) ;
@@ -439,9 +413,7 @@ public function JoinTrade ( $DB , $RELATION , $TradeUuid )
   $RI -> setRelation  ( "Subordination"          ) ;
   $RI -> Join         ( $DB      , $RELATION     ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function TradeMembers ( $DB , $RELATION , $TradeUuid )
 {
   $RI  = new Relation         (                       ) ;
@@ -452,7 +424,6 @@ public function TradeMembers ( $DB , $RELATION , $TradeUuid )
   return $RI -> Subordination ( $DB , $RELATION       ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-
 public function RemitPictures ( $DB , $RELATION )
 {
   $RI  = new Relation         (                          ) ;
@@ -462,9 +433,7 @@ public function RemitPictures ( $DB , $RELATION )
   $RI -> setRelation          ( "Subordination"          ) ;
   return $RI -> Subordination ( $DB , $RELATION          ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function JoinPicture ( $DB , $RELATION , $PictureUuid )
 {
   $RI  = new Relation (                          ) ;
@@ -475,7 +444,6 @@ public function JoinPicture ( $DB , $RELATION , $PictureUuid )
   $RI -> setRelation  ( "Subordination"          ) ;
   $RI -> Join         ( $DB      , $RELATION     ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////

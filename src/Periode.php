@@ -1,11 +1,12 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+// 
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Periode extends Columns
 {
-/////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////
 public $Id        ;
 public $Uuid      ;
 public $Type      ;
@@ -15,16 +16,16 @@ public $End       ;
 public $States    ;
 public $Update    ;
 public $TermCount ;
-
+//////////////////////////////////////////////////////////////////////////////
 function __construct ( )
 {
   $this -> Clear ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function __destruct ( )
 {
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Clear ( )
 {
   $this -> Id     = -1 ;
@@ -36,7 +37,7 @@ public function Clear ( )
   $this -> States =  1 ;
   $this -> Update =  0 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assign($Item)
 {
   $this -> Id        = $Item -> Id        ;
@@ -49,7 +50,7 @@ public function assign($Item)
   $this -> Update    = $Item -> Update    ;
   $this -> TermCount = $Item -> TermCount ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function tableItems()
 {
   $S = array (               ) ;
@@ -63,7 +64,7 @@ public function tableItems()
   array_push ( $S , "ltime"  ) ;
   return $S                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function JoinItems ( $X , $S = "," )
 {
   $U = array ( )               ;
@@ -75,7 +76,7 @@ public function JoinItems ( $X , $S = "," )
   unset ( $U )                 ;
   return $L                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Items( $S = "," )
 {
   $X = $this -> tableItems (         ) ;
@@ -83,7 +84,7 @@ public function Items( $S = "," )
   unset                    ( $X      ) ;
   return $L                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function valueItems()
 {
   $S = array (               ) ;
@@ -94,7 +95,7 @@ public function valueItems()
   array_push ( $S , "states" ) ;
   return $S                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function set($item,$V)
 {
   $a = strtolower ( $item )                  ;
@@ -107,7 +108,7 @@ public function set($item,$V)
   if ( "states" == $a ) $this -> States = $V ;
   if ( "ltime"  == $a ) $this -> Update = $V ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function get($item)
 {
   $a = strtolower ( $item )                             ;
@@ -121,12 +122,12 @@ public function get($item)
   if ( "ltime"  == $a ) return (string) $this -> Update ;
   return ""                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Pair($item)
 {
   return "`{$item}` = " . $this -> get ( $item ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Pairs($Items)
 {
   $P = array ( )                                ;
@@ -137,7 +138,7 @@ public function Pairs($Items)
   unset        ( $P         )                   ;
   return $Q                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ItemPair($item)
 {
   $a = strtolower ( $item )                          ;
@@ -167,17 +168,17 @@ public function ItemPair($item)
   }                                                  ;
   return ""                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isValid ( )
 {
   return ( gmp_cmp ( $this -> Uuid , 0 ) > 0 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toString ( )
 {
   return sprintf ( "prd9%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function fromString ( $S                                            ) {
   ////////////////////////////////////////////////////////////////////////////
   if                       ( 12 != strlen ( $S )                           ) {
@@ -200,22 +201,22 @@ public function fromString ( $S                                            ) {
   ////////////////////////////////////////////////////////////////////////////
   return $this -> Uuid                                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setType ( $TYPE )
 {
   $this -> Type = $TYPE ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setStates($STATES)
 {
   $this -> States = $STATES ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setInterval($SECONDS)
 {
   $this -> End = gmp_add ( $this -> Start , $SECONDS ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setNow($shrink=false)
 {
   $SD    = new StarDate (           ) ;
@@ -227,7 +228,7 @@ public function setNow($shrink=false)
   $this -> setInterval  ( 86400     ) ;
   unset                 ( $SD       ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setStart($DATETIME,$TZ="")
 {
   $SD    = new StarDate (                 ) ;
@@ -235,7 +236,7 @@ public function setStart($DATETIME,$TZ="")
   $this -> Start = $SD -> Stardate          ;
   unset                 ( $SD             ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setEnd($DATETIME,$TZ="")
 {
   $SD    = new StarDate (                 ) ;
@@ -243,18 +244,18 @@ public function setEnd($DATETIME,$TZ="")
   $this -> End = $SD -> Stardate            ;
   unset                 ( $SD             ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setPeriod($STARTTIME,$ENDTIME,$TZ="")
 {
   $this -> setStart ( $STARTTIME , $TZ ) ;
   $this -> setEnd   ( $ENDTIME   , $TZ ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isCorrect()
 {
   return ( gmp_cmp ( $this -> End , $this -> Start ) > 0 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TypeString ( )
 {
   //////////////////////////////////////////
@@ -262,7 +263,7 @@ public function TypeString ( )
   //////////////////////////////////////////
   return $AllPeriodTypes [ $this -> Type ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TimeItem($item,$TZ)
 {
   $ZZ = "0"                                      ;
@@ -277,7 +278,7 @@ public function TimeItem($item,$TZ)
   unset                               ( $SD )    ;
   return $DD                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TimeFormat($fmt,$item,$TZ)
 {
   $DD = $this -> TimeItem ( $item , $TZ ) ;
@@ -286,7 +287,7 @@ public function TimeFormat($fmt,$item,$TZ)
   unset                   ( $DD         ) ;
   return $FMT                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toTimeString            (
                   $TZ                   ,
                   $item                 ,
@@ -306,7 +307,7 @@ public function toTimeString            (
   unset ( $SD )                                                              ;
   return $SS                                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toLongString            (
                   $TZ                   ,
                   $item                 ,
@@ -325,7 +326,7 @@ public function toLongString            (
   unset ( $SD )                                                  ;
   return $SS                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toDateString            (
                   $TZ                   ,
                   $item                 ,
@@ -343,7 +344,7 @@ public function toDateString            (
   unset ( $SD )                                    ;
   return $SS                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toDuration ( )                                               {
   $DT  = gmp_sub ( $this -> End , $this -> Start )                           ;
   if             ( gmp_cmp ( $DT , 0 ) < 0       )                           {
@@ -363,7 +364,7 @@ public function toDuration ( )                                               {
   }                                                                          ;
   return $DS                                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function obtain($R)
 {
   $this -> Id     = $R [ "id"     ] ;
@@ -375,7 +376,7 @@ public function obtain($R)
   $this -> States = $R [ "states" ] ;
   $this -> Update = $R [ "ltime"  ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetUuid ( $DB , $Table , $Main )
 {
   global $DataTypes                                           ;
@@ -387,14 +388,14 @@ public function GetUuid ( $DB , $Table , $Main )
   $DB -> AddUuid ( $Main  , $this -> Uuid , $TYPE         )   ;
   return $this -> Uuid                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function UpdateItems ( $DB , $TABLE , $ITEMS )
 {
   $QQ    = "update " . $TABLE . " set " . $this -> Pairs ( $ITEMS ) .
            $DB -> WhereUuid ( $this -> Uuid , true )                ;
   return $DB -> Query ( $QQ )                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Update ( $DB , $TABLE )
 {
   $ITEMS = $this -> valueItems ( )                                  ;
@@ -403,7 +404,7 @@ public function Update ( $DB , $TABLE )
   unset ( $ITEMS )                                                  ;
   return $DB -> Query ( $QQ )                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsByUuid ( $DB , $TABLE )
 {
   $IT = $this -> Items   (                      ) ;
@@ -417,7 +418,7 @@ public function ObtainsByUuid ( $DB , $TABLE )
   }                                               ;
   return false                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsDuration ( $DB , $TABLE , $NOW , $TYPE )
 {
   $QQ = "select `uuid` from {$TABLE}"     .
@@ -430,7 +431,7 @@ public function ObtainsDuration ( $DB , $TABLE , $NOW , $TYPE )
         " limit 0 , 1 ;"                  ;
   return $DB -> FetchOne ( $QQ )          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsPublicEventsByStart($DB,$TABLE,$START,$MINV=11,$MAXV=18)
 {
   //////////////////////////////////////////////////////
@@ -452,7 +453,7 @@ public function ObtainsPublicEventsByStart($DB,$TABLE,$START,$MINV=11,$MAXV=18)
   //////////////////////////////////////////////////////
   return $VACATIONS                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsFirstPublicEvents($DB,$TABLE,$BASE,$ITEMV=15)
 {
   //////////////////////////////////////////////////////
@@ -473,7 +474,7 @@ public function ObtainsFirstPublicEvents($DB,$TABLE,$BASE,$ITEMV=15)
   //////////////////////////////////////////////////////
   return 0                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsPublicEventsByEnd($DB,$TABLE,$END,$MINV=11,$MAXV=18)
 {
   //////////////////////////////////////////////////////
@@ -495,7 +496,7 @@ public function ObtainsPublicEventsByEnd($DB,$TABLE,$END,$MINV=11,$MAXV=18)
   //////////////////////////////////////////////////////
   return $VACATIONS                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsPublicEventsByDuration($DB,$TABLE,$START,$END,$MINV=11,$MAXV=18)
 {
   //////////////////////////////////////////////////////
@@ -518,7 +519,7 @@ public function ObtainsPublicEventsByDuration($DB,$TABLE,$START,$END,$MINV=11,$M
   //////////////////////////////////////////////////////
   return $VACATIONS                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsPublicEvents($DB,$TABLE,$MINV=11,$MAXV=18)
 {
   //////////////////////////////////////////////////////
@@ -539,7 +540,7 @@ public function ObtainsPublicEvents($DB,$TABLE,$MINV=11,$MAXV=18)
   //////////////////////////////////////////////////////
   return $VACATIONS                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsEventPeriods($DB,$TABLE,$VACATIONS)
 {
   $PERIODs = array         (                    ) ;
@@ -551,14 +552,14 @@ public function ObtainsEventPeriods($DB,$TABLE,$VACATIONS)
   }                                               ;
   return $PERIODs                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Between($T)
 {
   if ( gmp_cmp ( $this -> Start , $T ) > 0 ) return  1 ;
   if ( gmp_cmp ( $this -> End   , $T ) > 0 ) return  0 ;
   return -1                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Within($T,$PERIODs)
 {
   foreach ( $PERIODs as $p )                     {
@@ -566,7 +567,7 @@ public function Within($T,$PERIODs)
   }                                              ;
   return false                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Meeting($T,$PERIODs)
 {
   foreach ( $PERIODs as $PX )                     {
@@ -574,7 +575,7 @@ public function Meeting($T,$PERIODs)
   }                                               ;
   return false                                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function JsonTitle($PNAME)
 {
   $PNAME = str_replace ( "\n" , "\\n"  , $PNAME ) ;
@@ -582,7 +583,7 @@ public function JsonTitle($PNAME)
   $PNAME = str_replace ( "\"" , "\\\"" , $PNAME ) ;
   return $PNAME                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toPeriodJson($TZ,$JSON)
 {
   $JSON -> JsonSqString                                (
@@ -592,7 +593,7 @@ public function toPeriodJson($TZ,$JSON)
              "end"                                     ,
              $this -> toTimeString ( $TZ , "end"   ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function VacationJson($JSON,$editable="false",$allDay="false",$CLASSID="")
 {
   $JSON   -> JsonSqString ( "id"        , $this -> Uuid ) ;
@@ -602,7 +603,7 @@ public function VacationJson($JSON,$editable="false",$allDay="false",$CLASSID=""
     $JSON -> JsonSqString ( "className" , $CLASSID      ) ;
   }                                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function VacationColors($JSON)
 {
   ////////////////////////////////////////////////////
@@ -658,7 +659,7 @@ public function VacationColors($JSON)
   $JSON -> JsonSqString ( "textColor"       , $TXC ) ;
   $JSON -> JsonSqString ( "borderColor"     , $BRC ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function PublicEventsJson($DB,$NAMTAB,$LANG,$TZ)
 {
   //////////////////////////////////////////////////////////////////
@@ -682,7 +683,7 @@ public function PublicEventsJson($DB,$NAMTAB,$LANG,$TZ)
   //////////////////////////////////////////////////////////////////
   return $JSON                                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function PublicEvents($DB,$PTAB,$NTAB,$LANG,$TZ,$VACATIONS,$JSON)
 {
   $this   -> TermCount = 0                                           ;
@@ -696,7 +697,7 @@ public function PublicEvents($DB,$PTAB,$NTAB,$LANG,$TZ,$VACATIONS,$JSON)
     }                                                                ;
   }                                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toHtml($TZ,$HR,$LeftWidth="",$NameWidth="",$bgcolors="",$original=false,$editable=false)
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -778,7 +779,7 @@ public function toHtml($TZ,$HR,$LeftWidth="",$NameWidth="",$bgcolors="",$origina
     $HD  -> SafePair        ( "bgcolor"  , $bgcolors        )                ;
   }                                                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function TimeColumn($TZ,$ID,$ITEM="")
 {
   ////////////////////////////////////////////////////
@@ -798,7 +799,7 @@ public function TimeColumn($TZ,$ID,$ITEM="")
   ////////////////////////////////////////////////////
   return $XTN                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function RangeEditor($TZ,$HR)
 {
   //////////////////////////////////////////////////////////////
@@ -821,7 +822,7 @@ public function RangeEditor($TZ,$HR)
   $HDIV -> AddTag              ( $BTN                        ) ;
   //////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CallOffButtons($HDIV,$FOUND=false,$PSC="PickClasses();",$COJ="CallOffClasses();")
 {
   /////////////////////////////////////////////////////////////////
@@ -840,7 +841,7 @@ public function CallOffButtons($HDIV,$FOUND=false,$PSC="PickClasses();",$COJ="Ca
   $BTN   -> AddPair             ( "onclick" , $PSC              ) ;
   /////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CallOff($TZ,$FOUND=false,$PSC="PickClasses();",$COJ="CallOffClasses();")
 {
   ///////////////////////////////////////////////////////////////////
@@ -865,7 +866,7 @@ public function CallOff($TZ,$FOUND=false,$PSC="PickClasses();",$COJ="CallOffClas
   ///////////////////////////////////////////////////////////////////
   return $HT                                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function WorkingTable($PUID,$TZ,$WORKS)
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -917,7 +918,7 @@ public function WorkingTable($PUID,$TZ,$WORKS)
   ////////////////////////////////////////////////////////////////////////////
   return $HTX                                                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>

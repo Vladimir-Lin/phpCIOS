@@ -1,22 +1,24 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Layouts
 {
-
+//////////////////////////////////////////////////////////////////////////////
 public $MAIN    ;
 public $TABLE   ;
 public $TBODY   ;
 public $TRs     ;
 public $PROFILE ;
 public $Objects ;
-
+//////////////////////////////////////////////////////////////////////////////
 public function __construct()
 {
   $this -> Clear ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function __destruct()
 {
   unset ( $this -> MAIN    ) ;
@@ -26,23 +28,23 @@ public function __destruct()
   unset ( $this -> PROFILE ) ;
   unset ( $this -> Objects ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Clear()
 {
   $this -> TRs     = array ( ) ;
   $this -> Objects = array ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setObject($INDEX,$OBJECT)
 {
   $this -> Objects [ $INDEX ] = $OBJECT ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function getObject($INDEX)
 {
   return $this -> Objects [ $INDEX ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Create ( $PART = "onepiece" )
 {
   $this -> MAIN   = new Html                (                       ) ;
@@ -53,43 +55,43 @@ public function Create ( $PART = "onepiece" )
   $this -> TABLE -> AddPair                 ( "class" , "PageTable" ) ;
   $this -> TBODY  = $TT                                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Report()
 {
   $this -> MAIN -> Report ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Join($TAG)
 {
   $this -> MAIN -> AddTag ( $TAG ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addTr()
 {
   $HR = $this -> TBODY -> addTr ( ) ;
   array_push ( $this -> TRs , $HR ) ;
   return $HR                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function lastTr()
 {
   return end ( $this -> TRs ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function appendLine($MSG="")
 {
   $HR = $this -> addTr (      ) ;
   $HD = $HR   -> addTd ( $MSG ) ;
   return $HD                    ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addLine ( $TAG )
 {
   $HD  = $this -> appendLine (      ) ;
   $HD          -> AddTag     ( $TAG ) ;
   return $HD                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function addProgress ( $BAR , $PROGRESS )
 {
   $HR   = $this -> addTr  (                     ) ;
@@ -99,7 +101,7 @@ public function addProgress ( $BAR , $PROGRESS )
   $DIV -> AddPair         ( "width" , "0%"      ) ;
   return $HD                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function appendTable($BORDER=0,$SPACING=0,$PADDING=0,$TNAME="")
 {
   $HD    = $this  -> appendLine     (                               ) ;
@@ -110,14 +112,12 @@ public function appendTable($BORDER=0,$SPACING=0,$PADDING=0,$TNAME="")
   }                                                                   ;
   return $TBODY                                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function LoadScript($FILENAME)
 {
   return file_get_contents ( $FILENAME ) ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function AppendScript       ( $FILENAME                             ) {
   ////////////////////////////////////////////////////////////////////////////
   $SRC  = $this -> LoadScript      ( $FILENAME                             ) ;
@@ -126,9 +126,7 @@ public function AppendScript       ( $FILENAME                             ) {
   $JSV -> AddText                  ( $SRC                                  ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function DisconnectSQL (                                            ) {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
@@ -137,9 +135,7 @@ public function DisconnectSQL (                                            ) {
   $this -> Report             (                                            ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 public function CreateAndConnect ( $DB , $CONF                             ) {
   ////////////////////////////////////////////////////////////////////////////
   $this     -> Create            (                                         ) ;
@@ -152,8 +148,6 @@ public function CreateAndConnect ( $DB , $CONF                             ) {
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
 }
-
 //////////////////////////////////////////////////////////////////////////////
-
 }
 ?>

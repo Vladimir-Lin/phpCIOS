@@ -1,11 +1,13 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+// 
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS                                     ;
 use Intervention\Image\ImageManagerStatic as Image ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Picture
 {
-
+//////////////////////////////////////////////////////////////////////////////
 public $Uuid          ;
 public $Width         ;
 public $Height        ;
@@ -29,16 +31,15 @@ public $ThumbTable    ;
 public $ThumbDepot    ;
 public $MainTable     ;
 //////////////////////////////////////////////////////////////////////////////
-
 public function __construct()
 {
   $this -> Clear ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function __destruct()
 {
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Clear()
 {
   $this -> Uuid          = 0                       ;
@@ -64,7 +65,7 @@ public function Clear()
   $this -> ThumbDepot    = "`erp`.`thumbdepot`"    ;
   $this -> MainTable     = "`erp`.`uuids`"         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetUuid ( $DB )
 {
   global $DataTypes                                                          ;
@@ -77,7 +78,7 @@ public function GetUuid ( $DB )
   $DB -> AppendUuid ( $this -> ThumbTable    , $this -> Uuid )               ;
   return $this -> Uuid                                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsUuid($DB)
 {
   $QQ = "select `uuid` from {$this->PictureTable}"     .
@@ -105,7 +106,7 @@ public function ObtainsUuid($DB)
   //////////////////////////////////////////////////////
   return false                                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function UpdateImage ( $DB )
 {
   $QQ = "update {$this->PictureTable} set"          .
@@ -124,7 +125,7 @@ public function UpdateImage ( $DB )
   $qq  -> bind_param     ( 's' , $this -> Raw     ) ;
   $qq  -> execute        (                        ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function UpdateThumb ( $DB )
 {
   $ICONSIZE = strlen ( $this -> IconRaw )           ;
@@ -148,7 +149,7 @@ public function UpdateThumb ( $DB )
   $qq  -> bind_param     ( 's' , $this -> IconRaw ) ;
   $qq  -> execute        (                        ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Import ( $DB )
 {
   if ( $this -> GetUuid ( $DB ) === false ) return false ;
@@ -156,7 +157,7 @@ public function Import ( $DB )
   $this -> UpdateThumb ( $DB )                           ;
   return true                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsDetails( $DB )
 {
   $QQ = "select `suffix`,`filesize`,`checksum`,`width`,`height` from {$this->PictureTable}" .
@@ -174,7 +175,7 @@ public function ObtainsDetails( $DB )
   }                                                        ;
   return false                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsImage( $DB )
 {
   $QQ = "select `file` from {$this->PictureDepot}"    .
@@ -187,7 +188,7 @@ public function ObtainsImage( $DB )
   }                                                   ;
   return false                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainsIcon( $DB )
 {
   $QQ = "select `thumb` from {$this->ThumbDepot}"         .
@@ -200,24 +201,24 @@ public function ObtainsIcon( $DB )
   }                                                       ;
   return false                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function MakeImage()
 {
   $this -> Image = Image::make( $this -> Raw ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function MakeIcon()
 {
   $this -> Icon = Image::make( $this -> IconRaw ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FixIcon()
 {
   $img  = Image::canvas ( 128 , 128                ) ;
   $img -> insert        ( $this -> Icon , "center" ) ;
   return $img -> encode ( "png"                    ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ResizeIcon($WIDTH,$HEIGHT)
 {
   $img  = Image::canvas  ( 128           , 128      ) ;
@@ -225,7 +226,7 @@ public function ResizeIcon($WIDTH,$HEIGHT)
   $img  = $img -> resize ( $WIDTH        , $HEIGHT  ) ;
   return $img  -> encode ( "png"                    ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ResizeImage($WIDTH,$HEIGHT)
 {
   $img  = $this -> Image -> resize            (
@@ -236,26 +237,26 @@ public function ResizeImage($WIDTH,$HEIGHT)
              }                              ) ;
   return $img -> encode ( "png" )             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ImageContentType()
 {
   return "Content-Type: {$this->MIME}" ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ImageContentLength()
 {
   $FILESIZE = $this -> FileSize        ;
   return "Content-Length: {$FILESIZE}" ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function EchoIcon()
 {
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function EchoFixIcon()
 {
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function fromUpload($KEY,$UploadPath)
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -352,7 +353,7 @@ public function fromUpload($KEY,$UploadPath)
   ////////////////////////////////////////////////////////////////////////////
   return $AA                                                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function UploadForm($FORM="uploadForm",$INPUT="uploadImage",$PERCENT="uploadPercent",$LABEL="inputImage")
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -407,7 +408,7 @@ public function UploadForm($FORM="uploadForm",$INPUT="uploadImage",$PERCENT="upl
   ////////////////////////////////////////////////////////////////////////////
   return $HTF                                                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ShortForm($FORM="uploadForm",$INPUT="uploadImage",$LABEL="uploadButton")
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -439,7 +440,7 @@ public function ShortForm($FORM="uploadForm",$INPUT="uploadImage",$LABEL="upload
   ////////////////////////////////////////////////////////////////////////////
   return $LBL                                                                ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>

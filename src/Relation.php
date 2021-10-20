@@ -1,10 +1,12 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+// 
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Relation extends Columns
 {
-
+//////////////////////////////////////////////////////////////////////////////
 public $Id          ;
 public $First       ;
 public $T1          ;
@@ -16,7 +18,7 @@ public $Reverse     ;
 public $Prefer      ;
 public $Membership  ;
 public $Description ;
-
+//////////////////////////////////////////////////////////////////////////////
 public $Relations = array (
   "Ignore"        =>  0   ,
   "Subordination" =>  1   ,
@@ -51,7 +53,7 @@ public $Relations = array (
   "Facebook"      => 30   ,
   "End"           => 31   ,
 )                         ;
-
+//////////////////////////////////////////////////////////////////////////////
 public $Types         = array (
   "None"              =>   0  ,
   "Type"              =>   1  ,
@@ -108,18 +110,18 @@ public $Types         = array (
   "Proficiency"       => 129  ,
   "Remittance"        => 130  ,
 )                             ;
-
+//////////////////////////////////////////////////////////////////////////////
 function __construct()
 {
   parent::__construct ( ) ;
   $this -> clear      ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function __destruct()
 {
   parent::__destruct ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function clear()
 {
   $this -> Id          = 0 ;
@@ -134,7 +136,7 @@ public function clear()
   $this -> Membership  = 0 ;
   $this -> Description = 0 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assign($Item)
 {
   $this -> Id          = $Item -> Id          ;
@@ -149,7 +151,7 @@ public function assign($Item)
   $this -> Membership  = $Item -> Membership  ;
   $this -> Description = $Item -> Description ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function tableItems()
 {
   $S = array (                    ) ;
@@ -166,7 +168,7 @@ public function tableItems()
   array_push ( $S , "description" ) ;
   return $S                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FullList()
 {
   $L = array (            ) ;
@@ -179,7 +181,7 @@ public function FullList()
                "position" ) ;
   return $L                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ExactList()
 {
   $L = array (          ) ;
@@ -191,7 +193,7 @@ public function ExactList()
                "second" ) ;
   return $L               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FirstList()
 {
   $L = array (          ) ;
@@ -202,7 +204,7 @@ public function FirstList()
                "first"  ) ;
   return $L               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SecondList()
 {
   $L = array (          ) ;
@@ -213,39 +215,39 @@ public function SecondList()
                "second" ) ;
   return $L               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isFirst($F)
 {
   return ( 0 == gmp_cmp ( $F , $this -> First ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isSecond($S)
 {
   return ( 0 == gmp_cmp ( $S , $this -> Second ) ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isType($t1,$t2)
 {
   if ( $this -> T1 != $t1 ) return false ;
   if ( $this -> T2 != $t2 ) return false ;
   return true                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isT1($t1)
 {
   return ( $t1 == $this -> T1 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isT2($t2)
 {
   return ( $t2 == $this -> T2 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function isRelation($R)
 {
   return ( $R == $this -> Relation ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function set($item,$V)
 {
   $a = strtolower ( $item )                            ;
@@ -261,22 +263,22 @@ public function set($item,$V)
   if ( "membership"  == $a ) $this -> Membership  = $V ;
   if ( "description" == $a ) $this -> Description = $V ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setT1($N)
 {
   $this -> T1 = $this -> Types [ $N ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setT2($N)
 {
   $this -> T2 = $this -> Types [ $N ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function setRelation($N)
 {
   $this -> Relation = $this -> Relations [ $N ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ItemPair($item)
 {
   $a = strtolower ( $item )                                  ;
@@ -315,7 +317,7 @@ public function ItemPair($item)
   }                                                          ;
   return ""                                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Value($item)
 {
   $a = strtolower ( $item )                                       ;
@@ -332,7 +334,7 @@ public function Value($item)
   if ( "description" == $a ) return (string) $this -> Description ;
   return ""                                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Values($items)
 {
   $I = array ( )                              ;
@@ -343,7 +345,7 @@ public function Values($items)
   unset        (       $I )                   ;
   return $L                                   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ExactItem ( $Options = "" , $Limits = "" )
 {
   $L = $this -> ExactList  (                         ) ;
@@ -351,7 +353,7 @@ public function ExactItem ( $Options = "" , $Limits = "" )
   unset                    ( $L                      ) ;
   return $Q                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function FirstItem ( $Options = "" , $Limits = "" )
 {
   $L = $this -> FirstList  (                         ) ;
@@ -359,7 +361,7 @@ public function FirstItem ( $Options = "" , $Limits = "" )
   unset                    ( $L                      ) ;
   return $Q                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function SecondItem ( $Options = "" , $Limits = "" )
 {
   $L = $this -> SecondList (                         ) ;
@@ -367,19 +369,19 @@ public function SecondItem ( $Options = "" , $Limits = "" )
   unset                    ( $L                      ) ;
   return $Q                                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Last($Table)
 {
   $WS = $this -> FirstItem ( "order by `position` desc" , "limit 0,1" ) ;
   return "select `position` from " . $Table . " " . $WS . " ;"          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ExactColumn ( $Table , $Item , $Options = "" , $Limits = "" )
 {
   $WS = $this -> ExactItem ( $Options , $Limits )                 ;
   return "select " . $Item . " from " . $Table . " " . $WS . " ;" ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Configure ( $First , $T1 , $T2 , $Relation )
 {
   $this -> set         ( "first" , $First ) ;
@@ -387,7 +389,7 @@ public function Configure ( $First , $T1 , $T2 , $Relation )
   $this -> setT2       ( $T2              ) ;
   $this -> setRelation ( $Relation        ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function InsertItems($Table,$items)
 {
   return "insert into " . $Table . " ("      .
@@ -396,7 +398,7 @@ public function InsertItems($Table,$items)
          $this -> Values    ( $items       ) .
          ") ;"                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Insert($Table)
 {
   $L = $this -> FullList    (             ) ;
@@ -404,13 +406,13 @@ public function Insert($Table)
   unset                     ( $L          ) ;
   return $Q                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function DeleteItems($Table,$items)
 {
   return "delete from {$Table} "               .
          $this -> QueryItems ( $items ) . " ;" ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Delete($Table)
 {
   $L = $this -> ExactList   (             ) ;
@@ -418,7 +420,7 @@ public function Delete($Table)
   unset                     ( $L          ) ;
   return $Q                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function WipeOut($Table)
 {
   $L = $this -> FirstList   (             ) ;
@@ -426,7 +428,7 @@ public function WipeOut($Table)
   unset                     ( $L          ) ;
   return $Q                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function obtain($R)
 {
   $this -> Id          = $R [ "id"          ] ;
@@ -441,7 +443,7 @@ public function obtain($R)
   $this -> Membership  = $R [ "membership"  ] ;
   $this -> Description = $R [ "description" ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Subordination                 (
          $DB                                  ,
          $Table                               ,
@@ -452,7 +454,7 @@ public function Subordination                 (
   $Q = "select `second` from " . $Table . " " . $W . " ;" ;
   return $DB -> ObtainUuids ( $Q )                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function GetOwners               (
          $DB                            ,
          $Table                         ,
@@ -463,7 +465,7 @@ public function GetOwners               (
   $Q = "select `first` from " . $Table . " " . $W . " ;" ;
   return $DB -> ObtainUuids ( $Q )                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CountFirst($DB,$TABLE)
 {
   $WW = $this -> SecondItem ( )                 ;
@@ -475,7 +477,7 @@ public function CountFirst($DB,$TABLE)
   }                                             ;
   return 0                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function CountSecond($DB,$TABLE)
 {
   $WW = $this -> FirstItem ( )                  ;
@@ -487,7 +489,7 @@ public function CountSecond($DB,$TABLE)
   }                                             ;
   return 0                                      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Assure($DB,$Table)
 {
   $QQ  = $this -> WipeOut ( $Table ) ;
@@ -495,13 +497,13 @@ public function Assure($DB,$Table)
   $QQ  = $this -> Insert  ( $Table ) ;
   $DB -> Query            ( $QQ    ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Append($DB,$Table)
 {
   $QQ =  $this -> Insert ( $Table ) ;
   return $DB   -> Query  ( $QQ    ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Join ( $DB , $Table )
 {
   $QQ = $this -> ExactColumn ( $Table , "id" ) ;
@@ -520,7 +522,7 @@ public function Join ( $DB , $Table )
   //////////////////////////////////////////////
   return $this -> Append ( $DB , $Table )      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Joins ( $DB , $Table , $LIST )
 {
   foreach             ( $LIST as $L        ) {
@@ -528,7 +530,7 @@ public function Joins ( $DB , $Table , $LIST )
     $this -> Join     ( $DB      , $Table  ) ;
   }                                          ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function PrefectOrder($DB,$Table)
 {
   $IX = array ( )                                           ;
@@ -547,7 +549,7 @@ public function PrefectOrder($DB,$Table)
   }                                                         ;
   unset ( $IX )                                             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ObtainOwners ( $DB , $TABLE , $MEMBERS , $TMP )
 {
   foreach                            ( $TMP as $nsx    ) {
@@ -557,7 +559,7 @@ public function ObtainOwners ( $DB , $TABLE , $MEMBERS , $TMP )
   }                                                      ;
   return $MEMBERS                                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Organize ( $DB , $TABLE )
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -579,7 +581,7 @@ public function Organize ( $DB , $TABLE )
   $DB    -> UnlockTables          (                                        ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Ordering ( $DB , $TABLE , $UUIDs )
 {
   ////////////////////////////////////////////////////////////////////////////
@@ -595,7 +597,7 @@ public function Ordering ( $DB , $TABLE , $UUIDs )
   $DB    -> UnlockTables          (                                        ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 ?>

@@ -1,219 +1,197 @@
 <?php
 //////////////////////////////////////////////////////////////////////////////
-namespace CIOS ;
-
-class Phone
-{
+// 
 //////////////////////////////////////////////////////////////////////////////
-
-public    $Uuid          ;
-public    $Used          ;
+namespace CIOS                                                               ;
+//////////////////////////////////////////////////////////////////////////////
+class Phone                                                                  {
+//////////////////////////////////////////////////////////////////////////////
+public    $Uuid                                                              ;
+public    $Used                                                              ;
 public    $ISD           ; // international subscriber dialing , international direct dialing
 public    $Area          ; // Area code
 public    $Number        ; // Local Phone Number
-protected $Splitters     ;
-protected $ForcelyMobile ;
-
+protected $Splitters                                                         ;
+protected $ForcelyMobile                                                     ;
 //////////////////////////////////////////////////////////////////////////////
-
-function __construct()
-{
-  $this -> clear ( )  ;
+function __construct ( )                                                     {
+  $this -> clear     ( )                                                     ;
 }
 //////////////////////////////////////////////////////////////////////////////
-function __destruct()
-{
+function __destruct ( )                                                      {
 }
 //////////////////////////////////////////////////////////////////////////////
-public function clear()
-{
-  $this -> Uuid          = "0"       ;
-  $this -> Used          =  1        ;
-  $this -> ISD           = ""        ;
-  $this -> Area          = ""        ;
-  $this -> Number        = ""        ;
-  $this -> ForcelyMobile = false     ;
-  $this -> Splitters     = array ( ) ;
+public function clear ( )                                                    {
+  $this -> Uuid          = "0"                                               ;
+  $this -> Used          =  1                                                ;
+  $this -> ISD           = ""                                                ;
+  $this -> Area          = ""                                                ;
+  $this -> Number        = ""                                                ;
+  $this -> ForcelyMobile = false                                             ;
+  $this -> Splitters     = array ( )                                         ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Purge($n)
-{
-  $r = $n                            ;
-  $r = str_replace ( " " , "" , $r ) ;
-  $r = str_replace ( "-" , "" , $r ) ;
-  $r = str_replace ( "+" , "" , $r ) ;
-  $r = str_replace ( "(" , "" , $r ) ;
-  $r = str_replace ( ")" , "" , $r ) ;
-  return  $r                         ;
+public function Purge ( $n                                                 ) {
+  $r = $n                                                                    ;
+  $r = str_replace    ( " " , "" , $r                                      ) ;
+  $r = str_replace    ( "-" , "" , $r                                      ) ;
+  $r = str_replace    ( "+" , "" , $r                                      ) ;
+  $r = str_replace    ( "(" , "" , $r                                      ) ;
+  $r = str_replace    ( ")" , "" , $r                                      ) ;
+  return  $r                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isLoaded()
-{
-  return ( gmp_cmp ( $this -> Uuid , "0" ) > 0 ) ;
+public function isLoaded (                                                 ) {
+  return                 ( gmp_cmp ( $this -> Uuid , "0" ) > 0             ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isEqual($phone)
-{
-  if ( ! $this  -> isValid ( ) ) return false          ;
-  if ( ! $phone -> isValid ( ) ) return false          ;
-  return ( $this -> Phone ( ) == $phone -> Phone ( ) ) ;
+public function isEqual ( $phone )                                           {
+  if ( ! $this  -> isValid ( ) ) return false                                ;
+  if ( ! $phone -> isValid ( ) ) return false                                ;
+  return ( $this -> Phone ( ) == $phone -> Phone ( ) )                       ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isValid()
-{
-  if ( strlen ( $this -> ISD    ) <= 0 ) return false ;
-  if ( strlen ( $this -> Number ) <= 0 ) return false ;
-  return true                                         ;
+public function isValid ( )                                                  {
+  if ( strlen ( $this -> ISD    ) <= 0 ) return false                        ;
+  if ( strlen ( $this -> Number ) <= 0 ) return false                        ;
+  return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isMobile()
-{
-  if ( $this -> ForcelyMobile ) return true ;
-  return ( strlen ( $this -> Area ) <= 0 )  ;
+public function isMobile ( )                                                 {
+  if ( $this -> ForcelyMobile ) return true                                  ;
+  return ( strlen ( $this -> Area ) <= 0 )                                   ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isAllow($n)
-{
-  $N = trim   ( $n         )              ;
-  $H = substr ( $N , 0 , 1 )              ;
-  if ( $H != "+" ) return false           ;
-  return ( strpos ( $N , '-') !== false ) ;
+public function isAllow ( $n )                                               {
+  $N = trim   ( $n         )                                                 ;
+  $H = substr ( $N , 0 , 1 )                                                 ;
+  if ( $H != "+" ) return false                                              ;
+  return ( strpos ( $N , '-') !== false )                                    ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function assign($phone)
-{
-  $this -> Uuid          = $phone -> Uuid          ;
-  $this -> ISD           = $phone -> ISD           ;
-  $this -> Area          = $phone -> Area          ;
-  $this -> Number        = $phone -> Number        ;
-  $this -> Splitters     = $phone -> Splitters     ;
-  $this -> ForcelyMobile = $phone -> ForcelyMobile ;
+public function assign ( $phone )                                            {
+  $this -> Uuid          = $phone -> Uuid                                    ;
+  $this -> ISD           = $phone -> ISD                                     ;
+  $this -> Area          = $phone -> Area                                    ;
+  $this -> Number        = $phone -> Number                                  ;
+  $this -> Splitters     = $phone -> Splitters                               ;
+  $this -> ForcelyMobile = $phone -> ForcelyMobile                           ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function setSplitters($splitters)
-{
-  $this -> Splitters = $splitters ;
+public function setSplitters ( $splitters )                                  {
+  $this -> Splitters = $splitters                                            ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function setMobile($mobile)
-{
-  $this -> ForcelyMobile = $mobile ;
+public function setMobile ( $mobile )                                        {
+  $this -> ForcelyMobile = $mobile                                           ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function International()
-{
-  if ( ! is_numeric ( $this -> ISD ) ) return 0 ;
-  return $this -> ISD                           ;
+public function International ( )                                            {
+  if ( ! is_numeric ( $this -> ISD ) ) return 0                              ;
+  return $this -> ISD                                                        ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Phone()
-{
-  $n = ""                             ;
-  if ( strlen ( $this -> ISD  ) > 0 ) {
-    $n = $n . "+"                     ;
-    $n = $n . $this -> ISD            ;
-    $n = $n . "-"                     ;
-  }                                   ;
-  if ( strlen ( $this -> Area ) > 0 ) {
-    $n = $n . $this -> Area           ;
-    $n = $n . "-"                     ;
-  }                                   ;
-  $n = $n . $this -> dashNumbers ( )  ;
-  return $n                           ;
+public function Phone ( )                                                    {
+  $n = ""                                                                    ;
+  if ( strlen ( $this -> ISD  ) > 0 )                                        {
+    $n = $n . "+"                                                            ;
+    $n = $n . $this -> ISD                                                   ;
+    $n = $n . "-"                                                            ;
+  }                                                                          ;
+  if ( strlen ( $this -> Area ) > 0 )                                        {
+    $n = $n . $this -> Area                                                  ;
+    $n = $n . "-"                                                            ;
+  }                                                                          ;
+  $n = $n . $this -> dashNumbers ( )                                         ;
+  return $n                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function CallNumber()
-{
-  $n = ""                             ;
-  if ( strlen ( $this -> ISD  ) > 0 ) {
-    $n = $n . "+"                     ;
-    $n = $n . $this -> ISD            ;
-    $n = $n . "-"                     ;
-  }                                   ;
-  if ( strlen ( $this -> Area ) > 0 ) {
-    $n = $n . $this -> Area           ;
-    $n = $n . "-"                     ;
-  }                                   ;
-  $n = $n . $this -> Number           ;
-  return $n                           ;
+public function CallNumber ( )                                               {
+  $n = ""                                                                    ;
+  if ( strlen ( $this -> ISD  ) > 0 )                                        {
+    $n = $n . "+"                                                            ;
+    $n = $n . $this -> ISD                                                   ;
+    $n = $n . "-"                                                            ;
+  }                                                                          ;
+  if ( strlen ( $this -> Area ) > 0 )                                        {
+    $n = $n . $this -> Area                                                  ;
+    $n = $n . "-"                                                            ;
+  }                                                                          ;
+  $n = $n . $this -> Number                                                  ;
+  return $n                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function dashNumbers()
-{
-  if ( count ( $this -> Splitters ) <= 0 )                       {
-    return $this -> Number                                       ;
-  }                                                              ;
-  $S = array ( )                                                 ;
-  $s = $this -> Number                                           ;
-  foreach ( $this -> Splitters as $d )                           {
-    if ( intval ( $d , 10 ) < strlen ( $s ) )                    {
-      array_push ( $S , substr ( $s , 0 , intval ( $d , 10 ) ) ) ;
-      $s = substr ( $s , intval ( $d , 10 ) )                    ;
-    }                                                            ;
-  }                                                              ;
-  if ( strlen ( $s ) > 0 ) array_push ( $S , $s )                ;
-  return implode ( "-" , $S )                                    ;
+public function dashNumbers ( )                                              {
+  if ( count ( $this -> Splitters ) <= 0 )                                   {
+    return $this -> Number                                                   ;
+  }                                                                          ;
+  $S = array ( )                                                             ;
+  $s = $this -> Number                                                       ;
+  foreach ( $this -> Splitters as $d )                                       {
+    if ( intval ( $d , 10 ) < strlen ( $s ) )                                {
+      array_push ( $S , substr ( $s , 0 , intval ( $d , 10 ) ) )             ;
+      $s = substr ( $s , intval ( $d , 10 ) )                                ;
+    }                                                                        ;
+  }                                                                          ;
+  if ( strlen ( $s ) > 0 ) array_push ( $S , $s )                            ;
+  return implode ( "-" , $S )                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function setInternational($isd)
-{
-  $this -> ISD    = $this -> Purge ( $isd  ) ;
-  $this -> installSplitters        (       ) ;
+public function setInternational   ( $isd )                                  {
+  $this -> ISD    = $this -> Purge ( $isd )                                  ;
+  $this -> installSplitters        (      )                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function setArea($area)
-{
-  $this -> Area   = $this -> Purge ( $area ) ;
-  $this -> installSplitters        (       ) ;
+public function setArea            ( $area )                                 {
+  $this -> Area   = $this -> Purge ( $area )                                 ;
+  $this -> installSplitters        (       )                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function setPhone($n)
-{
-  $this -> Number = $this -> Purge ( $n    ) ;
-  $this -> installSplitters        (       ) ;
+public function setPhone           ( $n )                                    {
+  $this -> Number = $this -> Purge ( $n )                                    ;
+  $this -> installSplitters        (    )                                    ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function setFull($n)
-{
-  $N = trim ( $n )                            ;
-  $H = substr ( $N , 0 , 1 )                  ;
-  if ( "+" == $H )                            {
-    $N = substr ( $N , 1 )                    ;
-  }                                           ;
-  $S = explode ( "-" , $N )                   ;
-  $C = count ( $S )                           ;
-  if ( $C < 2 ) return false                  ;
-  switch ( $C )                               {
-    case 2                                    :
-      $this -> ISD    = $S [ 0 ]              ;
-      $this -> Area   = ""                    ;
-      $this -> Number = $S [ 1 ]              ;
-    break                                     ;
-    case 3                                    :
-      $this -> ISD = $S [ 0 ]                 ;
-      unset ( $S [ 0 ] )                      ;
-      if ( $this -> ForcelyMobile )           {
-        $this -> Area   = ""                  ;
-        $this -> Number = implode ( "" , $S ) ;
-      } else                                  {
-        $this -> Area   = $S [ 0 ]            ;
-        $this -> Number = $S [ 1 ]            ;
-      }                                       ;
-    break                                     ;
-    default                                   :
-      $this -> ISD = $S [ 0 ]                 ;
-      unset ( $S [ 0 ] )                      ;
-      if ( ForcelyMobile )                    {
-        $this -> Area   = ""                  ;
-      } else                                  {
-        $this -> Area   = $S [ 0 ]            ;
-        unset ( $S [ 0 ] )                    ;
-      }                                       ;
-      $this   -> Number = implode ( "" , $S ) ;
-    break                                     ;
-  }                                           ;
-  $this -> installSplitters ( )               ;
-  return true                                 ;
+public function setFull ( $n )                                               {
+  $N = trim ( $n )                                                           ;
+  $H = substr ( $N , 0 , 1 )                                                 ;
+  if ( "+" == $H )                                                           {
+    $N = substr ( $N , 1 )                                                   ;
+  }                                                                          ;
+  $S = explode ( "-" , $N )                                                  ;
+  $C = count ( $S )                                                          ;
+  if ( $C < 2 ) return false                                                 ;
+  switch ( $C )                                                              {
+    case 2                                                                   :
+      $this -> ISD    = $S [ 0 ]                                             ;
+      $this -> Area   = ""                                                   ;
+      $this -> Number = $S [ 1 ]                                             ;
+    break                                                                    ;
+    case 3                                                                   :
+      $this -> ISD = $S [ 0 ]                                                ;
+      unset ( $S [ 0 ] )                                                     ;
+      if ( $this -> ForcelyMobile )                                          {
+        $this -> Area   = ""                                                 ;
+        $this -> Number = implode ( "" , $S )                                ;
+      } else                                                                 {
+        $this -> Area   = $S [ 0 ]                                           ;
+        $this -> Number = $S [ 1 ]                                           ;
+      }                                                                      ;
+    break                                                                    ;
+    default                                                                  :
+      $this -> ISD = $S [ 0 ]                                                ;
+      unset ( $S [ 0 ] )                                                     ;
+      if ( ForcelyMobile )                                                   {
+        $this -> Area   = ""                                                 ;
+      } else                                                                 {
+        $this -> Area   = $S [ 0 ]                                           ;
+        unset ( $S [ 0 ] )                                                   ;
+      }                                                                      ;
+      $this   -> Number = implode ( "" , $S )                                ;
+    break                                                                    ;
+  }                                                                          ;
+  $this -> installSplitters ( )                                              ;
+  return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function installSplitters()
@@ -290,190 +268,182 @@ public function installSplitters()
   }
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Obtains($q)
-{
-  $this -> ISD    = $q [ "country" ] ;
-  $this -> Area   = $q [ "area"    ] ;
-  $this -> Number = $q [ "number"  ] ;
-  $this -> installSplitters ( )      ;
-  return true                        ;
+public function Obtains     ( $q        )                                    {
+  $this -> ISD    = $q      [ "country" ]                                    ;
+  $this -> Area   = $q      [ "area"    ]                                    ;
+  $this -> Number = $q      [ "number"  ]                                    ;
+  $this -> installSplitters (           )                                    ;
+  return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Update($DB,$Table)
-{
-  if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false   ;
-  $QQ = "update " . $Table . " set "                         .
-         "`country` = '" . (string) $this -> ISD    . "' , " .
-            "`area` = '" . (string) $this -> Area   . "' , " .
-          "`number` = '" . (string) $this -> Number . "' "   .
-        $DB -> WhereUuid ( $this -> Uuid , true            ) ;
-  return $DB -> Query ( $QQ )                                ;
+public function Update ( $DB , $Table )                                      {
+  if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false                   ;
+  $QQ = "update " . $Table . " set "                                         .
+         "`country` = '" . (string) $this -> ISD    . "' , "                 .
+            "`area` = '" . (string) $this -> Area   . "' , "                 .
+          "`number` = '" . (string) $this -> Number . "' "                   .
+        $DB -> WhereUuid ( $this -> Uuid , true )                            ;
+  return $DB -> Query ( $QQ )                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsByUuid($DB,$Table)
-{
-  $Q = "select `country`,`area`,`number` from " . $Table  .
-       " where `uuid` = " . (string) $this -> Uuid . " ;" ;
-  $q = $DB -> Query ( $Q )                                ;
-  if ( ! $DB -> hasResult ( $q ) ) return false           ;
-  $N = $q -> fetch_array ( MYSQLI_BOTH )                  ;
-  return $this -> Obtains ( $N )                          ;
+public function ObtainsByUuid ( $DB , $Table )                               {
+  $Q = "select `country`,`area`,`number` from " . $Table                     .
+       " where `uuid` = " . (string) $this -> Uuid . " ;"                    ;
+  $q = $DB -> Query ( $Q )                                                   ;
+  if ( ! $DB -> hasResult ( $q ) ) return false                              ;
+  $N = $q -> fetch_array ( MYSQLI_BOTH )                                     ;
+  return $this -> Obtains ( $N )                                             ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsByNumber($DB,$Table)
-{
-  $QQ = ""                                                        ;
-  /////////////////////////////////////////////////////////////////
-  if ( $this -> isMobile ( ) )                                    {
-    $QQ = "select `uuid` from " . $Table                          .
-          " where `country` = " . (string) $this -> ISD           .
-               " and `used` = 1"                                  .
-             " and `number` = " . (string) $this -> Number . " ;" ;
-  } else                                                          {
-    $QQ = "select `uuid` from " . $Table                          .
-          " where `country` = " . (string) $this -> ISD           .
-               " and `used` = 1"                                  .
-               " and `area` = " . (string) $this -> Area          .
-             " and `number` = " . (string) $this -> Number . " ;" ;
-  }                                                               ;
-  /////////////////////////////////////////////////////////////////
-  $q = $DB -> Query ( $QQ )                                       ;
-  if ( ! $DB -> hasResult ( $q ) ) return false                   ;
-  $N = $q -> fetch_array ( MYSQLI_BOTH )                          ;
-  /////////////////////////////////////////////////////////////////
-  $this -> Uuid = $N [ "uuid" ]                                   ;
-  return true                                                     ;
+public function ObtainsByNumber ( $DB , $Table )                             {
+  $QQ = ""                                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( $this -> isMobile ( ) )                                               {
+    $QQ = "select `uuid` from " . $Table                                     .
+          " where `country` = " . (string) $this -> ISD                      .
+               " and `used` = 1"                                             .
+             " and `number` = " . (string) $this -> Number . " ;"            ;
+  } else                                                                     {
+    $QQ = "select `uuid` from " . $Table                                     .
+          " where `country` = " . (string) $this -> ISD                      .
+               " and `used` = 1"                                             .
+               " and `area` = " . (string) $this -> Area                     .
+             " and `number` = " . (string) $this -> Number . " ;"            ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $q = $DB -> Query ( $QQ )                                                  ;
+  if ( ! $DB -> hasResult ( $q ) ) return false                              ;
+  $N = $q -> fetch_array ( MYSQLI_BOTH )                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> Uuid = $N [ "uuid" ]                                              ;
+  ////////////////////////////////////////////////////////////////////////////
+  return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainPhone($DB,$Table)
-{
-  if ( gmp_cmp ( $this -> Uuid , "0" ) > 0 )                     {
-    if ( $this -> ObtainsByUuid   ( $DB , $Table ) ) return true ;
-  }                                                              ;
-  return $this -> ObtainsByNumber ( $DB , $Table )               ;
+public function ObtainPhone ( $DB , $Table )                                 {
+  if ( gmp_cmp ( $this -> Uuid , "0" ) > 0 )                                 {
+    if ( $this -> ObtainsByUuid   ( $DB , $Table ) ) return true             ;
+  }                                                                          ;
+  return $this -> ObtainsByNumber ( $DB , $Table )                           ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsITU($DB,$TABLE)
-{
-  $IU = array ( )                                        ;
-  $QQ = "select `itu` from {$TABLE} order by `id` asc ;" ;
-  $qq = $DB -> Query ( $QQ )                             ;
-  while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )     {
-    array_push ( $IU , $rr [ 0 ] )                       ;
-  }                                                      ;
-  return $IU                                             ;
+public function ObtainsITU ( $DB , $TABLE )                                  {
+  $IU = array ( )                                                            ;
+  $QQ = "select `itu` from {$TABLE} order by `id` asc ;"                     ;
+  $qq = $DB -> Query ( $QQ )                                                 ;
+  while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                         {
+    array_push ( $IU , $rr [ 0 ] )                                           ;
+  }                                                                          ;
+  return $IU                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Append ( $DB , $PhoneTable , $UuidTable )
-{
-  $U = $DB -> ObtainsUuid ( $PhoneTable , $UuidTable ) ;
-  if ( gmp_cmp ( $U , "0" ) <= 0 ) return false        ;
-  $this -> Uuid = $U                                   ;
-  return $this -> Update ( $DB , $PhoneTable )         ;
+public function Append ( $DB , $PhoneTable , $UuidTable )                    {
+  $U = $DB -> ObtainsUuid ( $PhoneTable , $UuidTable )                       ;
+  if ( gmp_cmp ( $U , "0" ) <= 0 ) return false                              ;
+  $this -> Uuid = $U                                                         ;
+  return $this -> Update ( $DB , $PhoneTable )                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Assure ( $DB , $PhoneTable , $UuidTable )
-{
-  if ( gmp_cmp ( $this -> Uuid , "0" ) == 0 )                          {
-    if ( ! $this -> isValid ( )                         ) return false ;
-    if ( $this -> ObtainsByNumber ( $DB , $PhoneTable ) ) return true  ;
-  } else                                                               {
-    if ( $this -> ObtainsByUuid   ( $DB , $PhoneTable ) ) return true  ;
-  }                                                                    ;
-  return $this -> Append ( $DB , $PhoneTable , $UuidTable )            ;
+public function Assure ( $DB , $PhoneTable , $UuidTable )                    {
+  if ( gmp_cmp ( $this -> Uuid , "0" ) == 0 )                                {
+    if ( ! $this -> isValid ( )                         ) return false       ;
+    if ( $this -> ObtainsByNumber ( $DB , $PhoneTable ) ) return true        ;
+  } else                                                                     {
+    if ( $this -> ObtainsByUuid   ( $DB , $PhoneTable ) ) return true        ;
+  }                                                                          ;
+  return $this -> Append ( $DB , $PhoneTable , $UuidTable )                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Newbie ( $DB , $PhoneTable , $UuidTable )
-{
-  if ( $this -> ObtainsByNumber ( $DB , $PhoneTable ) ) return false ;
-  return $this -> Append ( $DB , $PhoneTable , $UuidTable )          ;
+public function Newbie ( $DB , $PhoneTable , $UuidTable )                    {
+  if ( $this -> ObtainsByNumber ( $DB , $PhoneTable ) ) return false         ;
+  return $this -> Append ( $DB , $PhoneTable , $UuidTable )                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Subordination ( $DB , $Table , $U , $Type = "People" )
-{
-  $RI  = new Relation         (                 ) ;
-  $RI -> set                  ( "first" , $U    ) ;
-  $RI -> setT1                ( $Type           ) ;
-  $RI -> setT2                ( "Phone"         ) ;
-  $RI -> setRelation          ( "Subordination" ) ;
-  $UU  = $RI -> Subordination ( $DB , $Table    ) ;
-  unset                       ( $RI             ) ;
-  return $UU                                      ;
+public function Subordination ( $DB , $Table , $U , $Type = "People"       ) {
+  $RI  = new Relation         (                                            ) ;
+  $RI -> set                  ( "first" , $U                               ) ;
+  $RI -> setT1                ( $Type                                      ) ;
+  $RI -> setT2                ( "Phone"                                    ) ;
+  $RI -> setRelation          ( "Subordination"                            ) ;
+  $UU  = $RI -> Subordination ( $DB , $Table                               ) ;
+  unset                       ( $RI                                        ) ;
+  return $UU                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function GetOwners ( $DB , $Table , $Type = "People" )
-{
-  $RI  = new RelationItem (                          ) ;
-  $RI -> set              ( "second" , $this -> Uuid ) ;
-  $RI -> setT1            ( $Type                    ) ;
-  $RI -> setT2            ( "Phone"                  ) ;
-  $RI -> setRelation      ( "Subordination"          ) ;
-  $UU  = $RI -> GetOwners ( $DB , $Table             ) ;
-  unset                   ( $RI                      ) ;
-  return $UU                                           ;
+public function GetOwners ( $DB , $Table , $Type = "People"                ) {
+  $RI  = new RelationItem (                                                ) ;
+  $RI -> set              ( "second" , $this -> Uuid                       ) ;
+  $RI -> setT1            ( $Type                                          ) ;
+  $RI -> setT2            ( "Phone"                                        ) ;
+  $RI -> setRelation      ( "Subordination"                                ) ;
+  $UU  = $RI -> GetOwners ( $DB , $Table                                   ) ;
+  unset                   ( $RI                                            ) ;
+  return $UU                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function FindByName ( $DB , $TABLE , $NAME )
-{
-  $TMP  = array ( )                                        ;
-  $SPT  = "%{$NAME}%"                                      ;
-  $QQ   = "select `uuid` from {$TABLE}"                    .
-          " where ( ( `number` like ? )"                   .
-              " or ( `country` like ? )"                   .
-                 " or ( `area` like ? ) )"                 .
-          " and ( `used` > 0 )"                            .
-          " order by `ltime` desc ;"                       ;
-  $qq   = $DB -> Prepare    ( $QQ                        ) ;
-  $qq  -> bind_param        ( 'sss' , $SPT , $SPT , $SPT ) ;
-  $qq  -> execute           (                            ) ;
-  $kk   = $qq -> get_result (                            ) ;
-  if ( $DB -> hasResult ( $kk ) )                          {
-    while ( $rr = $kk -> fetch_array ( MYSQLI_BOTH ) )     {
-      array_push ( $TMP , $rr [ 0 ] )                      ;
-    }                                                      ;
-  }                                                        ;
-  return $TMP                                              ;
+public function FindByName  ( $DB , $TABLE , $NAME                         ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $TMP  = array ( )                                                          ;
+  $SPT  = "%{$NAME}%"                                                        ;
+  $QQ   = "select `uuid` from {$TABLE}"                                      .
+          " where ( ( `number` like ? )"                                     .
+              " or ( `country` like ? )"                                     .
+                 " or ( `area` like ? ) )"                                   .
+          " and ( `used` > 0 )"                                              .
+          " order by `ltime` desc ;"                                         ;
+  ////////////////////////////////////////////////////////////////////////////
+  $qq   = $DB -> Prepare    ( $QQ                                          ) ;
+  $qq  -> bind_param        ( 'sss' , $SPT , $SPT , $SPT                   ) ;
+  $ANS = $qq -> execute     (                                              ) ;
+  if                        ( ! $ANS                                       ) {
+    return $TMP                                                              ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $kk   = $qq -> get_result (                                              ) ;
+  if                        ( $DB -> hasResult ( $kk )                     ) {
+    while                   ( $rr = $kk -> fetch_array ( MYSQLI_BOTH )     ) {
+      array_push            ( $TMP , $rr [ 0 ]                             ) ;
+    }                                                                        ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $TMP                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoOptions($HS,$ITU)
-{
-  if ( count ( $ITU ) <= 0 ) return   ;
-  foreach ( $ITU as $itx )            {
-    $HE = new Html ( )                ;
-    $HE -> setTag ( "option" )        ;
-    if ( $itx == $this -> ISD )       {
-      $HE -> AddMember ( "selected" ) ;
-    }                                 ;
-    $HE -> AddPair ( "value" , $itx ) ;
-    $HE -> AddText ( "+" . $itx     ) ;
-    $HS -> AddTag  ( $HE            ) ;
+public function EchoOptions ( $HS , $ITU )                                   {
+  if ( count ( $ITU ) <= 0 ) return                                          ;
+  foreach ( $ITU as $itx )                                                   {
+    $HE = new Html ( )                                                       ;
+    $HE -> setTag ( "option" )                                               ;
+    if ( $itx == $this -> ISD )                                              {
+      $HE -> AddMember ( "selected" )                                        ;
+    }                                                                        ;
+    $HE -> AddPair ( "value" , $itx )                                        ;
+    $HE -> AddText ( "+" . $itx     )                                        ;
+    $HS -> AddTag  ( $HE            )                                        ;
   }
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoSelection($ClassName,$ItemName,$ITU)
-{
-  $HS    = new Html    (                      ) ;
-  $HS   -> setSplitter ( "\n"                 ) ;
-  $HS   -> setTag      ( "select"             ) ;
-  $HS   -> SafePair    ( "class" , $ClassName ) ;
-  $HS   -> SafePair    ( "id"    , $ItemName  ) ;
-  $HS   -> SafePair    ( "name"  , $ItemName  ) ;
-  $this -> EchoOptions ( $HS     , $ITU       ) ;
-  return $HS                                    ;
+public function EchoSelection ( $ClassName , $ItemName , $ITU              ) {
+  $HS    = new Html           (                                            ) ;
+  $HS   -> setSplitter        ( "\n"                                       ) ;
+  $HS   -> setTag             ( "select"                                   ) ;
+  $HS   -> SafePair           ( "class" , $ClassName                       ) ;
+  $HS   -> SafePair           ( "id"    , $ItemName                        ) ;
+  $HS   -> SafePair           ( "name"  , $ItemName                        ) ;
+  $this -> EchoOptions        ( $HS     , $ITU                             ) ;
+  return $HS                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoUuidInput($ItemName)
-{
-  $HS  = new HtmlTag    (                         ) ;
-  $HS -> setHiddenInput (                         ) ;
-  $HS -> SafePair       ( "id"    , $ItemName     ) ;
-  $HS -> SafePair       ( "name"  , $ItemName     ) ;
-  $HS -> SafePair       ( "value" , $this -> Uuid ) ;
-  return $HS                                        ;
+public function EchoUuidInput ( $ItemName                                  ) {
+  $HS  = new HtmlTag          (                                            ) ;
+  $HS -> setHiddenInput       (                                            ) ;
+  $HS -> SafePair             ( "id"    , $ItemName                        ) ;
+  $HS -> SafePair             ( "name"  , $ItemName                        ) ;
+  $HS -> SafePair             ( "value" , $this -> Uuid                    ) ;
+  return $HS                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoPositionInput($ItemName,$ID)
-{
+public function EchoPositionInput ( $ItemName , $ID ) {
   $HT  = new HtmlTag    (                     ) ;
   $HT -> setHiddenInput (                     ) ;
   $HT -> SafePair       ( "id"    , $ItemName ) ;
@@ -483,8 +453,7 @@ public function EchoPositionInput($ItemName,$ID)
   return $HT                                    ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoAreaInput($ClassName,$ItemName,$Width)
-{
+public function EchoAreaInput($ClassName,$ItemName,$Width) {
   /////////////////////////////////////////////////////////
   global $Translations                                    ;
   /////////////////////////////////////////////////////////
@@ -503,18 +472,17 @@ public function EchoAreaInput($ClassName,$ItemName,$Width)
   return $HS                                              ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoPhoneInput($ClassName,$ItemName,$Width,$Holder="")
-{
-  $HS  = new HtmlTag (                                                   ) ;
-  $HS -> setInput    (                                                   ) ;
-  $HS -> AddPair     ( "type"        , "text"                            ) ;
-  $HS -> AddPair     ( "size"        , $Width                            ) ;
-  $HS -> SafePair    ( "class"       , $ClassName                        ) ;
-  $HS -> SafePair    ( "id"          , $ItemName                         ) ;
-  $HS -> SafePair    ( "name"        , $ItemName                         ) ;
-  $HS -> SafePair    ( "value"       , (string) $this -> dashNumbers ( ) ) ;
-  $HS -> SafePair    ( "placeholder" , $Holder                           ) ;
-  return $HS                                                               ;
+public function EchoPhoneInput ( $ClassName,$ItemName,$Width,$Holder=""    ) {
+  $HS  = new HtmlTag (                                                     ) ;
+  $HS -> setInput    (                                                     ) ;
+  $HS -> AddPair     ( "type"        , "text"                              ) ;
+  $HS -> AddPair     ( "size"        , $Width                              ) ;
+  $HS -> SafePair    ( "class"       , $ClassName                          ) ;
+  $HS -> SafePair    ( "id"          , $ItemName                           ) ;
+  $HS -> SafePair    ( "name"        , $ItemName                           ) ;
+  $HS -> SafePair    ( "value"       , (string) $this -> dashNumbers ( )   ) ;
+  $HS -> SafePair    ( "placeholder" , $Holder                             ) ;
+  return $HS                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function EchoDIV($ITU,$ID,$Width,$Holder="")

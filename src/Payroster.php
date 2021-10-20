@@ -1,11 +1,12 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+// 
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Payroster extends Columns
 {
-/////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////
 public $Id          ;
 public $Period      ;
 public $Beneficiary ;
@@ -25,16 +26,16 @@ public $Penalty     ;
 public $Salary      ;
 public $Currency    ;
 public $Update      ;
-
+//////////////////////////////////////////////////////////////////////////////
 function __construct()
 {
   $this -> Clear ( ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function __destruct()
 {
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Clear ( )
 {
   $this -> Id          = -1 ;
@@ -57,7 +58,7 @@ public function Clear ( )
   $this -> Currency    = "" ;
   $this -> Update      =  0 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function assign ( $Item )
 {
   $this -> Id          = $Item -> Id          ;
@@ -80,7 +81,7 @@ public function assign ( $Item )
   $this -> Currency    = $Item -> Currency    ;
   $this -> Update      = $Item -> Update      ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function tableItems ( )
 {
   $S = array (                    ) ;
@@ -105,7 +106,7 @@ public function tableItems ( )
   array_push ( $S , "ltime"       ) ;
   return $S                         ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function valueItems ( )
 {
   $S = array (                   ) ;
@@ -125,7 +126,7 @@ public function valueItems ( )
   array_push ( $S , "currency"   ) ;
   return $S                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function set ( $item , $V )
 {
   $a = strtolower ( $item )                            ;
@@ -149,7 +150,7 @@ public function set ( $item , $V )
   if ( "currency"    == $a ) $this -> Currency    = $V ;
   if ( "ltime"       == $a ) $this -> Update      = $V ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function get ( $item )
 {
   $a = strtolower ( $item )                                       ;
@@ -174,13 +175,13 @@ public function get ( $item )
   if ( "ltime"       == $a ) return (string) $this -> Update      ;
   return ""                                                       ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Pair ( $item )
 {
   $GV = $this -> get ( $item ) ;
   return "`{$item}` = {$GV}"   ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Pairs ( $Items )
 {
   $P = array ( )                                ;
@@ -191,12 +192,12 @@ public function Pairs ( $Items )
   unset        ( $P         )                   ;
   return $Q                                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function ItemPair($item)
 {
   return $this -> Pair ( $item ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function obtain ( $R )
 {
   $this -> Id          = $R [ "id"          ] ;
@@ -219,7 +220,7 @@ public function obtain ( $R )
   $this -> Currency    = $R [ "currency"    ] ;
   $this -> Update      = $R [ "ltime"       ] ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Obtains ( $DB , $TABLE )
 {
   $IT = $this -> Items ( )                   ;
@@ -238,7 +239,7 @@ public function Obtains ( $DB , $TABLE )
   }                                          ;
   return false                               ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 ?>

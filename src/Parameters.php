@@ -1,17 +1,19 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////////
 namespace CIOS ;
-
+//////////////////////////////////////////////////////////////////////////////
 class Parameters
 {
-
+//////////////////////////////////////////////////////////////////////////////
 public function hasParameter($KEY)
 {
   if ( isset ( $_GET  [ $KEY ] ) ) return true ;
   if ( isset ( $_POST [ $KEY ] ) ) return true ;
   return false                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Parameter($KEY)
 {
   if ( isset ( $_GET  [ $KEY ] ) ) {
@@ -22,7 +24,7 @@ public function Parameter($KEY)
   }                                ;
   return ""                        ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Variables($KEY,$Split)
 {
   if ( ! $this -> hasParameter ( $KEY ) )     {
@@ -32,7 +34,7 @@ public function Variables($KEY,$Split)
   if ( strlen ( $PP ) <= 0 ) return array ( ) ;
   return explode ( $Split , $PP )             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Listings($KEY,$Split)
 {
   if ( ! isset ( $_SESSION [ $KEY ] ) )       {
@@ -42,12 +44,12 @@ public function Listings($KEY,$Split)
   if ( strlen ( $PP ) <= 0 ) return array ( ) ;
   return explode ( $Split , $PP )             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function hasCookie($KEY)
 {
   return isset ( $_COOKIE [ $KEY ] ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function Cookie($KEY)
 {
   if ( ! $this -> hasCookie ( $KEY ) ) {
@@ -55,17 +57,17 @@ public function Cookie($KEY)
   }                                    ;
   return $_COOKIE [ $KEY ]             ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function hasSession($KEY)
 {
   return isset ( $_SESSION [ $KEY ] ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function Contains($UU,$ID)
 {
   return in_array ( $ID , $UU ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function Remove($UU,$ID)
 {
   $INDEX = array_search ( $ID , $UU        ) ;
@@ -74,7 +76,7 @@ public static function Remove($UU,$ID)
   }                                          ;
   return $UU                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function JoinArray($AA,$BB)
 {
   if ( count ( $BB ) <= 0 ) return $AA ;
@@ -85,7 +87,7 @@ public static function JoinArray($AA,$BB)
   }                                    ;
   return $AA                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function IntersectArray ( $AA , $BB )
 {
   if ( count ( $AA ) <= 0 ) return array ( ) ;
@@ -100,7 +102,7 @@ public static function IntersectArray ( $AA , $BB )
   }                                          ;
   return $CC                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function Exclude($AA,$BB)
 {
   if ( count ( $BB ) <= 0 ) return $AA ;
@@ -112,7 +114,7 @@ public static function Exclude($AA,$BB)
   }                                    ;
   return $CC                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function MergeArray ( $AA , $BB )
 {
   if             ( count ( $BB ) > 0 ) {
@@ -122,7 +124,7 @@ public static function MergeArray ( $AA , $BB )
   }                                    ;
   return $AA                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function UniqueArray ( $UU )
 {
   if             ( count ( $UU ) <= 0      ) {
@@ -136,7 +138,7 @@ public static function UniqueArray ( $UU )
   }                                          ;
   return $AA                                 ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function TakeUuid($UUIDs,$START,$TOTAL)
 {
   $UU = array ( )                       ;
@@ -151,7 +153,7 @@ public static function TakeUuid($UUIDs,$START,$TOTAL)
   }                                     ;
   return $UU                            ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function ToDefaultUuids ( $UUIDs , $UUID )
 {
   /////////////////////////////////////////////
@@ -166,12 +168,12 @@ public static function ToDefaultUuids ( $UUIDs , $UUID )
   /////////////////////////////////////////////
   return $XI                                  ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function toLocality($LL)
 {
   return gmp_mod ( $LL , 100000 ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public function asLanguage($L)
 {
   $SL = "{$L}"                   ;
@@ -183,7 +185,7 @@ public function asLanguage($L)
   }                              ;
   return $LL                     ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function isEnglish ( $S )
 {
   $S = trim ( $S )                   ;
@@ -193,12 +195,12 @@ public static function isEnglish ( $S )
   if ( $L == $M ) return 1           ;
   return 2                           ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 public static function isChinese($NAME)
 {
   return preg_match ( "/[\x{4e00}-\x{9fa5}]+/u" , $NAME ) ;
 }
-
+//////////////////////////////////////////////////////////////////////////////
 }
-
+//////////////////////////////////////////////////////////////////////////////
 ?>
