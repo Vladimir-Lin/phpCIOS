@@ -1,260 +1,245 @@
 <?php
 //////////////////////////////////////////////////////////////////////////////
-// 
+// 交易元件
 //////////////////////////////////////////////////////////////////////////////
-namespace CIOS ;
+namespace CIOS                                                               ;
 //////////////////////////////////////////////////////////////////////////////
-class Trade extends Columns
-{
+class Trade extends Columns                                                  {
 //////////////////////////////////////////////////////////////////////////////
-public $Id          ;
-public $Uuid        ;
-public $Payer       ;
-public $PayerBank   ;
-public $Payee       ;
-public $PayeeBank   ;
-public $Currency    ;
-public $Amount      ;
-public $States      ;
-public $Item        ;
+public $Id                                                                   ;
+public $Uuid                                                                 ;
+public $Payer                                                                ;
+public $PayerBank                                                            ;
+public $Payee                                                                ;
+public $PayeeBank                                                            ;
+public $Currency                                                             ;
+public $Amount                                                               ;
+public $States                                                               ;
+public $Item                                                                 ;
 public $Group       ; // 用於團購 , 1 - 單一訂單 , 2 - 團購單 , 3 - 團購隸屬單
-public $Description ;
-public $Record      ;
-public $Complete    ;
-public $DueDate     ;
-public $Update      ;
+public $Description                                                          ;
+public $Record                                                               ;
+public $Complete                                                             ;
+public $DueDate                                                              ;
+public $Update                                                               ;
 //////////////////////////////////////////////////////////////////////////////
-function __construct()
-{
-  $this -> Clear ( ) ;
+function __construct ( )                                                     {
+  $this -> Clear     ( )                                                     ;
 }
 //////////////////////////////////////////////////////////////////////////////
-function __destruct()
-{
+function __destruct ( )                                                      {
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Clear()
-{
-  $this -> Id          = -1    ;
-  $this -> Uuid        =  0    ;
-  $this -> Payer       =  0    ;
-  $this -> PayerBank   =  0    ;
-  $this -> Payee       =  0    ;
-  $this -> PayeeBank   =  0    ;
-  $this -> Currency    = "TWD" ;
-  $this -> Amount      =  0    ;
-  $this -> States      =  0    ;
-  $this -> Item        =  0    ;
-  $this -> Group       =  1    ;
-  $this -> Description =  0    ;
-  $this -> Record      =  0    ;
-  $this -> Complete    =  0    ;
-  $this -> DueDate     =  0    ;
-  $this -> Update      =  0    ;
+public function Clear ( )                                                    {
+  $this -> Id          = -1                                                  ;
+  $this -> Uuid        =  0                                                  ;
+  $this -> Payer       =  0                                                  ;
+  $this -> PayerBank   =  0                                                  ;
+  $this -> Payee       =  0                                                  ;
+  $this -> PayeeBank   =  0                                                  ;
+  $this -> Currency    = "TWD"                                               ;
+  $this -> Amount      =  0                                                  ;
+  $this -> States      =  0                                                  ;
+  $this -> Item        =  0                                                  ;
+  $this -> Group       =  1                                                  ;
+  $this -> Description =  0                                                  ;
+  $this -> Record      =  0                                                  ;
+  $this -> Complete    =  0                                                  ;
+  $this -> DueDate     =  0                                                  ;
+  $this -> Update      =  0                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function assign($Item)
-{
-  $this -> Id          = $Item -> Id          ;
-  $this -> Uuid        = $Item -> Uuid        ;
-  $this -> Payer       = $Item -> Payer       ;
-  $this -> PayerBank   = $Item -> PayerBank   ;
-  $this -> Payee       = $Item -> Payee       ;
-  $this -> PayeeBank   = $Item -> PayeeBank   ;
-  $this -> Currency    = $Item -> Currency    ;
-  $this -> Amount      = $Item -> Amount      ;
-  $this -> States      = $Item -> States      ;
-  $this -> Item        = $Item -> Item        ;
-  $this -> Group       = $Item -> Group       ;
-  $this -> Description = $Item -> Description ;
-  $this -> Record      = $Item -> Record      ;
-  $this -> Complete    = $Item -> Complete    ;
-  $this -> DueDate     = $Item -> DueDate     ;
-  $this -> Update      = $Item -> Update      ;
+public function assign ( $Item                                             ) {
+  $this -> Id          = $Item -> Id                                         ;
+  $this -> Uuid        = $Item -> Uuid                                       ;
+  $this -> Payer       = $Item -> Payer                                      ;
+  $this -> PayerBank   = $Item -> PayerBank                                  ;
+  $this -> Payee       = $Item -> Payee                                      ;
+  $this -> PayeeBank   = $Item -> PayeeBank                                  ;
+  $this -> Currency    = $Item -> Currency                                   ;
+  $this -> Amount      = $Item -> Amount                                     ;
+  $this -> States      = $Item -> States                                     ;
+  $this -> Item        = $Item -> Item                                       ;
+  $this -> Group       = $Item -> Group                                      ;
+  $this -> Description = $Item -> Description                                ;
+  $this -> Record      = $Item -> Record                                     ;
+  $this -> Complete    = $Item -> Complete                                   ;
+  $this -> DueDate     = $Item -> DueDate                                    ;
+  $this -> Update      = $Item -> Update                                     ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function tableItems()
-{
-  $S = array (                    ) ;
-  array_push ( $S , "id"          ) ;
-  array_push ( $S , "uuid"        ) ;
-  array_push ( $S , "payer"       ) ;
-  array_push ( $S , "payerbank"   ) ;
-  array_push ( $S , "payee"       ) ;
-  array_push ( $S , "payeebank"   ) ;
-  array_push ( $S , "currency"    ) ;
-  array_push ( $S , "amount"      ) ;
-  array_push ( $S , "states"      ) ;
-  array_push ( $S , "item"        ) ;
-  array_push ( $S , "group"       ) ;
-  array_push ( $S , "description" ) ;
-  array_push ( $S , "record"      ) ;
-  array_push ( $S , "complete"    ) ;
-  array_push ( $S , "duedate"     ) ;
-  array_push ( $S , "ltime"       ) ;
-  return $S                         ;
+public function tableItems (                                               ) {
+  $S = array               (                                               ) ;
+  array_push               ( $S , "id"                                     ) ;
+  array_push               ( $S , "uuid"                                   ) ;
+  array_push               ( $S , "payer"                                  ) ;
+  array_push               ( $S , "payerbank"                              ) ;
+  array_push               ( $S , "payee"                                  ) ;
+  array_push               ( $S , "payeebank"                              ) ;
+  array_push               ( $S , "currency"                               ) ;
+  array_push               ( $S , "amount"                                 ) ;
+  array_push               ( $S , "states"                                 ) ;
+  array_push               ( $S , "item"                                   ) ;
+  array_push               ( $S , "group"                                  ) ;
+  array_push               ( $S , "description"                            ) ;
+  array_push               ( $S , "record"                                 ) ;
+  array_push               ( $S , "complete"                               ) ;
+  array_push               ( $S , "duedate"                                ) ;
+  array_push               ( $S , "ltime"                                  ) ;
+  return $S                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function valueItems()
-{
-  $S = array (                    ) ;
-  array_push ( $S , "payer"       ) ;
-  array_push ( $S , "payerbank"   ) ;
-  array_push ( $S , "payee"       ) ;
-  array_push ( $S , "payeebank"   ) ;
-  array_push ( $S , "currency"    ) ;
-  array_push ( $S , "amount"      ) ;
-  array_push ( $S , "states"      ) ;
-  array_push ( $S , "item"        ) ;
-  array_push ( $S , "group"       ) ;
-  array_push ( $S , "description" ) ;
-  array_push ( $S , "record"      ) ;
-  array_push ( $S , "complete"    ) ;
-  array_push ( $S , "duedate"     ) ;
-  return $S                         ;
+public function valueItems (                                               ) {
+  $S = array               (                                               ) ;
+  array_push               ( $S , "payer"                                  ) ;
+  array_push               ( $S , "payerbank"                              ) ;
+  array_push               ( $S , "payee"                                  ) ;
+  array_push               ( $S , "payeebank"                              ) ;
+  array_push               ( $S , "currency"                               ) ;
+  array_push               ( $S , "amount"                                 ) ;
+  array_push               ( $S , "states"                                 ) ;
+  array_push               ( $S , "item"                                   ) ;
+  array_push               ( $S , "group"                                  ) ;
+  array_push               ( $S , "description"                            ) ;
+  array_push               ( $S , "record"                                 ) ;
+  array_push               ( $S , "complete"                               ) ;
+  array_push               ( $S , "duedate"                                ) ;
+  return $S                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function set($item,$V)
-{
-  $a = strtolower ( $item )                             ;
-  if ( "id"          == $a ) $this -> Id           = $V ;
-  if ( "uuid"        == $a ) $this -> Uuid         = $V ;
-  if ( "payer"       == $a ) $this -> Payer        = $V ;
-  if ( "payerbank"   == $a ) $this -> PayerBank    = $V ;
-  if ( "payee"       == $a ) $this -> Payee        = $V ;
-  if ( "payeebank"   == $a ) $this -> PayeeBank    = $V ;
-  if ( "currency"    == $a ) $this -> Currency     = $V ;
-  if ( "amount"      == $a ) $this -> Amount       = $V ;
-  if ( "states"      == $a ) $this -> States       = $V ;
-  if ( "item"        == $a ) $this -> Item         = $V ;
-  if ( "group"       == $a ) $this -> Group        = $V ;
-  if ( "description" == $a ) $this -> Description  = $V ;
-  if ( "record"      == $a ) $this -> Record       = $V ;
-  if ( "complete"    == $a ) $this -> Complete     = $V ;
-  if ( "duedate"     == $a ) $this -> DueDate      = $V ;
-  if ( "ltime"       == $a ) $this -> Update       = $V ;
+public function set ( $item , $V )                                           {
+  $a = strtolower ( $item )                                                  ;
+  if ( "id"          == $a ) $this -> Id           = $V                      ;
+  if ( "uuid"        == $a ) $this -> Uuid         = $V                      ;
+  if ( "payer"       == $a ) $this -> Payer        = $V                      ;
+  if ( "payerbank"   == $a ) $this -> PayerBank    = $V                      ;
+  if ( "payee"       == $a ) $this -> Payee        = $V                      ;
+  if ( "payeebank"   == $a ) $this -> PayeeBank    = $V                      ;
+  if ( "currency"    == $a ) $this -> Currency     = $V                      ;
+  if ( "amount"      == $a ) $this -> Amount       = $V                      ;
+  if ( "states"      == $a ) $this -> States       = $V                      ;
+  if ( "item"        == $a ) $this -> Item         = $V                      ;
+  if ( "group"       == $a ) $this -> Group        = $V                      ;
+  if ( "description" == $a ) $this -> Description  = $V                      ;
+  if ( "record"      == $a ) $this -> Record       = $V                      ;
+  if ( "complete"    == $a ) $this -> Complete     = $V                      ;
+  if ( "duedate"     == $a ) $this -> DueDate      = $V                      ;
+  if ( "ltime"       == $a ) $this -> Update       = $V                      ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function get($item)
-{
-  $a = strtolower ( $item )                                        ;
-  if ( "id"          == $a ) return (string) $this -> Id           ;
-  if ( "uuid"        == $a ) return (string) $this -> Uuid         ;
-  if ( "payer"       == $a ) return (string) $this -> Payer        ;
-  if ( "payerbank"   == $a ) return (string) $this -> PayerBank    ;
-  if ( "payee"       == $a ) return (string) $this -> Payee        ;
-  if ( "payeebank"   == $a ) return (string) $this -> PayeeBank    ;
-  if ( "currency"    == $a ) return (string) $this -> Currency     ;
-  if ( "amount"      == $a ) return (string) $this -> Amount       ;
-  if ( "states"      == $a ) return (string) $this -> States       ;
-  if ( "item"        == $a ) return (string) $this -> Item         ;
-  if ( "group"       == $a ) return (string) $this -> Group        ;
-  if ( "description" == $a ) return (string) $this -> Description  ;
-  if ( "record"      == $a ) return (string) $this -> Record       ;
-  if ( "complete"    == $a ) return (string) $this -> Complete     ;
-  if ( "duedate"     == $a ) return (string) $this -> DueDate      ;
-  if ( "ltime"       == $a ) return (string) $this -> Update       ;
-  return ""                                                        ;
+public function get ( $item )                                                {
+  $a = strtolower   ( $item )                                                ;
+  if ( "id"          == $a ) return (string) $this -> Id                     ;
+  if ( "uuid"        == $a ) return (string) $this -> Uuid                   ;
+  if ( "payer"       == $a ) return (string) $this -> Payer                  ;
+  if ( "payerbank"   == $a ) return (string) $this -> PayerBank              ;
+  if ( "payee"       == $a ) return (string) $this -> Payee                  ;
+  if ( "payeebank"   == $a ) return (string) $this -> PayeeBank              ;
+  if ( "currency"    == $a ) return (string) $this -> Currency               ;
+  if ( "amount"      == $a ) return (string) $this -> Amount                 ;
+  if ( "states"      == $a ) return (string) $this -> States                 ;
+  if ( "item"        == $a ) return (string) $this -> Item                   ;
+  if ( "group"       == $a ) return (string) $this -> Group                  ;
+  if ( "description" == $a ) return (string) $this -> Description            ;
+  if ( "record"      == $a ) return (string) $this -> Record                 ;
+  if ( "complete"    == $a ) return (string) $this -> Complete               ;
+  if ( "duedate"     == $a ) return (string) $this -> DueDate                ;
+  if ( "ltime"       == $a ) return (string) $this -> Update                 ;
+  return ""                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Pair($item)
-{
-  if ( $item == "currency" )                              {
-    return "`{$item}` = '" . $this -> get ( $item ) . "'" ;
-  }                                                       ;
-  return "`{$item}` = " . $this -> get ( $item )          ;
+public function Pair ( $item )                                               {
+  if ( $item == "currency" )                                                 {
+    return "`{$item}` = '" . $this -> get ( $item ) . "'"                    ;
+  }                                                                          ;
+  return "`{$item}` = " . $this -> get ( $item )                             ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Pairs($Items)
-{
-  $P = array ( )                                ;
-  foreach ( $Items as $item )                   {
-    array_push ( $P , $this -> Pair ( $item ) ) ;
-  }                                             ;
-  $Q = implode ( " , " , $P )                   ;
-  unset        ( $P         )                   ;
-  return $Q                                     ;
+public function Pairs ( $Items )                                             {
+  $P = array ( )                                                             ;
+  foreach ( $Items as $item )                                                {
+    array_push ( $P , $this -> Pair ( $item ) )                              ;
+  }                                                                          ;
+  $Q = implode ( " , " , $P )                                                ;
+  unset        ( $P         )                                                ;
+  return $Q                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ItemPair($item)
-{
-  $a = strtolower ( $item )                            ;
-  if ( "id"          == $a )                           {
-    return "`{$a}` = " . (string) $this -> Id          ;
-  }                                                    ;
-  if ( "uuid"        == $a )                           {
-    return "`{$a}` = " . (string) $this -> Uuid        ;
-  }                                                    ;
-  if ( "payer"       == $a )                           {
-    return "`{$a}` = " . (string) $this -> Payer       ;
-  }                                                    ;
-  if ( "payerbank"   == $a )                           {
-    return "`{$a}` = " . (string) $this -> PayerBank   ;
-  }                                                    ;
-  if ( "payee"       == $a )                           {
-    return "`{$a}` = " . (string) $this -> Payee       ;
-  }                                                    ;
-  if ( "payeebank"   == $a )                           {
-    return "`{$a}` = " . (string) $this -> PayeeBank   ;
-  }                                                    ;
-  if ( "currency"    == $a )                           {
-    return "`{$a}` = " . (string) $this -> Currency    ;
-  }                                                    ;
-  if ( "amount"      == $a )                           {
-    return "`{$a}` = " . (string) $this -> Amount      ;
-  }                                                    ;
-  if ( "states"      == $a )                           {
-    return "`{$a}` = " . (string) $this -> States      ;
-  }                                                    ;
-  if ( "item"        == $a )                           {
-    return "`{$a}` = " . (string) $this -> Item        ;
-  }                                                    ;
-  if ( "group" == $a )                                 {
-    return "`{$a}` = " . (string) $this -> Group       ;
-  }                                                    ;
-  if ( "description" == $a )                           {
-    return "`{$a}` = " . (string) $this -> Description ;
-  }                                                    ;
-  if ( "record"      == $a )                           {
-    return "`{$a}` = " . (string) $this -> Record      ;
-  }                                                    ;
-  if ( "complete"    == $a )                           {
-    return "`{$a}` = " . (string) $this -> Complete    ;
-  }                                                    ;
-  if ( "duedate"     == $a )                           {
-    return "`{$a}` = " . (string) $this -> DueDate     ;
-  }                                                    ;
-  if ( "ltime"       == $a )                           {
-    return "`{$a}` = " . (string) $this -> Update      ;
-  }                                                    ;
-  return ""                                            ;
+public function ItemPair ( $item )                                           {
+  $a = strtolower ( $item )                                                  ;
+  if ( "id"          == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Id                                ;
+  }                                                                          ;
+  if ( "uuid"        == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Uuid                              ;
+  }                                                                          ;
+  if ( "payer"       == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Payer                             ;
+  }                                                                          ;
+  if ( "payerbank"   == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> PayerBank                         ;
+  }                                                                          ;
+  if ( "payee"       == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Payee                             ;
+  }                                                                          ;
+  if ( "payeebank"   == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> PayeeBank                         ;
+  }                                                                          ;
+  if ( "currency"    == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Currency                          ;
+  }                                                                          ;
+  if ( "amount"      == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Amount                            ;
+  }                                                                          ;
+  if ( "states"      == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> States                            ;
+  }                                                                          ;
+  if ( "item"        == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Item                              ;
+  }                                                                          ;
+  if ( "group" == $a )                                                       {
+    return "`{$a}` = " . (string) $this -> Group                             ;
+  }                                                                          ;
+  if ( "description" == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Description                       ;
+  }                                                                          ;
+  if ( "record"      == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Record                            ;
+  }                                                                          ;
+  if ( "complete"    == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Complete                          ;
+  }                                                                          ;
+  if ( "duedate"     == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> DueDate                           ;
+  }                                                                          ;
+  if ( "ltime"       == $a )                                                 {
+    return "`{$a}` = " . (string) $this -> Update                            ;
+  }                                                                          ;
+  return ""                                                                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isToken()
-{
-  $des = $this -> Description                          ;
-  if ( gmp_cmp ( $des , "0"      ) == 0 ) return false ;
-  $duidmin = "3400000000000000000"                     ;
-  $duidmax = "3400000001000000000"                     ;
-  if ( gmp_cmp ( $des , $duidmin )  < 0 ) return false ;
-  if ( gmp_cmp ( $des , $duidmax )  > 0 ) return false ;
-  return true                                          ;
+public function isToken ( )                                                  {
+  $des = $this -> Description                                                ;
+  if ( gmp_cmp ( $des , "0"      ) == 0 ) return false                       ;
+  $duidmin = "3400000000000000000"                                           ;
+  $duidmax = "3400000001000000000"                                           ;
+  if ( gmp_cmp ( $des , $duidmin )  < 0 ) return false                       ;
+  if ( gmp_cmp ( $des , $duidmax )  > 0 ) return false                       ;
+  return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isClass()
-{
-  $des = $this -> Description                          ;
-  if ( gmp_cmp ( $des , "0"      ) == 0 ) return false ;
-  $duidmin = "3600000000000000000"                     ;
-  $duidmax = "3600000001000000000"                     ;
-  if ( gmp_cmp ( $des , $duidmin )  < 0 ) return false ;
-  if ( gmp_cmp ( $des , $duidmax )  > 0 ) return false ;
-  return true                                          ;
+public function isClass ( )                                                  {
+  $des = $this -> Description                                                ;
+  if ( gmp_cmp ( $des , "0"      ) == 0 ) return false                       ;
+  $duidmin = "3600000000000000000"                                           ;
+  $duidmax = "3600000001000000000"                                           ;
+  if ( gmp_cmp ( $des , $duidmin )  < 0 ) return false                       ;
+  if ( gmp_cmp ( $des , $duidmax )  > 0 ) return false                       ;
+  return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function toString()
-{
-  return sprintf ( "trs5%08d" , gmp_mod ( $this -> Uuid , 100000000 ) ) ;
+public function toString ( )                                                 {
+  return sprintf ( "trs5%08d" , gmp_mod ( $this -> Uuid , 100000000 ) )      ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function setId($ID)
