@@ -153,9 +153,9 @@ public function GetZoneName  ( $DB , $Table , $U                           ) {
 //////////////////////////////////////////////////////////////////////////////
 public function GetTimeZone    ( $DB                                         ,
                                  $Table                                      ,
-								 $U                                          ,
-								 $Default                                    ,
-								 $Type = "People"                          ) {
+                                 $U                                          ,
+                                 $Default                                    ,
+                                 $Type = "People"                          ) {
   ////////////////////////////////////////////////////////////////////////////
   $CT   = 0                                                                  ;
   $RI   = new Relation         (                                           ) ;
@@ -184,8 +184,8 @@ public function GetTimeZone    ( $DB                                         ,
 //////////////////////////////////////////////////////////////////////////////
 public function addSelector ( $NameMaps                                      ,
                               $CurrentTimeZone                               ,
-							  $TzMenu                                        ,
-							  $TzClass = ""                                ) {
+                              $TzMenu                                        ,
+                              $TzClass = ""                                ) {
   ////////////////////////////////////////////////////////////////////////////
   $CT  = $CurrentTimeZone                                                    ;
   $HS  = new Html           (                                              ) ;

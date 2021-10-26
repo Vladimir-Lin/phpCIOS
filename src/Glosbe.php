@@ -1,32 +1,30 @@
 <?php
 //////////////////////////////////////////////////////////////////////////////
-namespace CIOS ;
+// 
 //////////////////////////////////////////////////////////////////////////////
-class Glosbe
-{
+namespace CIOS                                                               ;
 //////////////////////////////////////////////////////////////////////////////
-public $Path    ;
-public $From    ;
-public $Dest    ;
-public $Format  ;
-public $Tm      ;
-public $Pretty  ;
-public $Results ;
-public $JSON    ;
+class Glosbe                                                                 {
 //////////////////////////////////////////////////////////////////////////////
-function __construct()
-{
-  $this -> Clear ( ) ;
+public $Path                                                                 ;
+public $From                                                                 ;
+public $Dest                                                                 ;
+public $Format                                                               ;
+public $Tm                                                                   ;
+public $Pretty                                                               ;
+public $Results                                                              ;
+public $JSON                                                                 ;
+//////////////////////////////////////////////////////////////////////////////
+function __construct ( )                                                     {
+  $this -> Clear     ( )                                                     ;
 }
 //////////////////////////////////////////////////////////////////////////////
-function __destruct()
-{
+function __destruct ( )                                                      {
 }
 //////////////////////////////////////////////////////////////////////////////
 // 
 //////////////////////////////////////////////////////////////////////////////
-public function Clear ( )
-{
+public function Clear ( )                                                    {
   $this -> Path   = "https://glosbe.com/gapi/translate?"                     ;
   $this -> From   = "eng"                                                    ;
   $this -> Dest   = "zho"                                                    ;
@@ -37,8 +35,7 @@ public function Clear ( )
 //////////////////////////////////////////////////////////////////////////////
 // 
 //////////////////////////////////////////////////////////////////////////////
-public function Query ( $Phrase )
-{
+public function Query ( $Phrase )                                            {
   $PAVH   = $this -> Path                                                    ;
   $FPAT   = "from={$this->From}"                                             ;
   $PAXH   = "{$PAVH}{$FPAT}"                                                 ;
