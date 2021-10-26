@@ -154,7 +154,7 @@ public static function LoginWords ( $NAME )                                  {
 }
 //////////////////////////////////////////////////////////////////////////////
 public static function PurgeEmail ( $EMAIL                                 ) {
-  KEYs     = [ "\b" , "\r" , "\f" , "\n" , "\t" , "\"" ]                     ;
+  $KEYs    = [ "\b" , "\r" , "\f" , "\n" , "\t" , "\"" ]                     ;
   foreach                         ( $KEYs as $K                            ) {
     $EMAIL = str_replace          ( $K , "" , $EMAIL                       ) ;
   }                                                                          ;
