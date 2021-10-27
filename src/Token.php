@@ -845,31 +845,31 @@ public function addDateTimeInput      ( $ITEM                                ,
 //////////////////////////////////////////////////////////////////////////////
 // to be obsoleted
 //////////////////////////////////////////////////////////////////////////////
-public function addDateTime($HD,$ITEM,$TZ,$editable=false)
-{
-  ////////////////////////////////////////////////////
-  global $Translations                               ;
-  global $WeekDays                                   ;
-  global $AMPM                                       ;
-  ////////////////////////////////////////////////////
-  if ( $editable )                                   {
-    $DTI = $this -> addDateTimeInput ( $ITEM , $TZ ) ;
-    $HD -> AddTag                    ( $DTI        ) ;
-  } else                                             {
-    $SD  = new StarDate (                          ) ;
-    $SD -> Stardate = $this -> Creation              ;
-    $SW  = $WeekDays   [ $SD -> Weekday ( $TZ )    ] ;
-    $SP  = $AMPM       [ $SD -> isPM    ( $TZ )    ] ;
-    $SJ  = " {$SW} {$SP} "                           ;
-    $DTI = $this -> toDateTimeString                 (
-                             $ITEM                   ,
-                             $TZ                     ,
-                             $SJ                     ,
-                             "Y/m/d"                 ,
-                             "H:i:s"               ) ;
-    $HD -> AddPair ( "nowrap" , "nowrap"           ) ;
-    $HD -> AddText ( $DTI                          ) ;
-  }                                                  ;
+public function addDateTime ( $HD , $ITEM , $TZ , $editable = false )        {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  global $WeekDays                                                           ;
+  global $AMPM                                                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( $editable )                                                           {
+    $DTI = $this -> addDateTimeInput ( $ITEM , $TZ )                         ;
+    $HD -> AddTag                    ( $DTI        )                         ;
+  } else                                                                     {
+    $SD  = new StarDate (                          )                         ;
+    $SD -> Stardate = $this -> Creation                                      ;
+    $SW  = $WeekDays   [ $SD -> Weekday ( $TZ )    ]                         ;
+    $SP  = $AMPM       [ $SD -> isPM    ( $TZ )    ]                         ;
+    $SJ  = " {$SW} {$SP} "                                                   ;
+    $DTI = $this -> toDateTimeString                                         (
+                             $ITEM                                           ,
+                             $TZ                                             ,
+                             $SJ                                             ,
+                             "Y/m/d"                                         ,
+                             "H:i:s"               )                         ;
+    $HD -> AddPair ( "nowrap" , "nowrap"           )                         ;
+    $HD -> AddText ( $DTI                          )                         ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 // to be obsoleted
@@ -940,69 +940,70 @@ public function addSkips($HD,$TKNCLASS="NameInput",$editable=false)
 //////////////////////////////////////////////////////////////////////////////
 // to be obsoleted
 //////////////////////////////////////////////////////////////////////////////
-public function ownerInput($IDV,$INPCLASS="NameInput")
-{
-  $JSC  = "changeOwner(this.value,'{$this->Uuid}') ;" ;
-  /////////////////////////////////////////////////////
-  $INP  = new HtmlTag (                        )      ;
-  $INP -> setInput    (                        )      ;
-  $INP -> AddPair     ( "type"     , "text"    )      ;
-  $INP -> AddPair     ( "class"    , $INPCLASS )      ;
-  $INP -> AddPair     ( "onchange" , $JSC      )      ;
-  $INP -> SafePair    ( "value"    , $IDV      )      ;
-  /////////////////////////////////////////////////////
-  return $INP                                         ;
+public function ownerInput($IDV,$INPCLASS="NameInput")                      {
+  ////////////////////////////////////////////////////////////////////////////
+  $JSC  = "changeOwner(this.value,'{$this->Uuid}') ;"                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $INP  = new HtmlTag (                        )                             ;
+  $INP -> setInput    (                        )                             ;
+  $INP -> AddPair     ( "type"     , "text"    )                             ;
+  $INP -> AddPair     ( "class"    , $INPCLASS )                             ;
+  $INP -> AddPair     ( "onchange" , $JSC      )                             ;
+  $INP -> SafePair    ( "value"    , $IDV      )                             ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $INP                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // to be obsoleted
 //////////////////////////////////////////////////////////////////////////////
-public function addOwner($HD,$INPCLASS="NameInput",$editable=false)
-{
-  $HH    = new Parameters      (                  ) ;
-  if ( gmp_cmp ( $this -> Owner , "0" ) > 0 )       {
-    $IDV = $HH -> PeopleString ( $this -> Owner   ) ;
-  } else $IDV = ""                                  ;
-  if                           ( $editable        ) {
-    $DTV = $this -> ownerInput ( $IDV , $INPCLASS ) ;
-    $HD -> AddTag              ( $DTV             ) ;
-  } else                                            {
-    $HD -> AddText             ( $IDV             ) ;
-  }                                                 ;
-  unset                        ( $HH              ) ;
+public function addOwner ( $HD , $INPCLASS = "NameInput" , $editable=false ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $HH    = new Parameters      (                  )                          ;
+  if ( gmp_cmp ( $this -> Owner , "0" ) > 0 )                                {
+    $IDV = $HH -> PeopleString ( $this -> Owner   )                          ;
+  } else $IDV = ""                                                           ;
+  if                           ( $editable        )                          {
+    $DTV = $this -> ownerInput ( $IDV , $INPCLASS )                          ;
+    $HD -> AddTag              ( $DTV             )                          ;
+  } else                                                                     {
+    $HD -> AddText             ( $IDV             )                          ;
+  }                                                                          ;
+  unset                        ( $HH              )                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 // to be obsoleted
 //////////////////////////////////////////////////////////////////////////////
-public function addRemoveToken ( $CLASSID , $BTNCLASS = "SelectionButton" )  {
-  ////////////////////////////////////////////////////////////
-  global $Translations                                       ;
-  ////////////////////////////////////////////////////////////
-  $JSC  = "RemoveToken('{$this->Uuid}','$CLASSID') ;"        ;
-  ////////////////////////////////////////////////////////////
-  $BTN  = new HtmlTag (                                    ) ;
-  $BTN -> setTag      ( "button"                           ) ;
-  $BTN -> AddPair     ( "class"   , $BTNCLASS              ) ;
-  $BTN -> AddPair     ( "onclick" , $JSC                   ) ;
-  $BTN -> AddText     ( $Translations [ "Tokens::Remove" ] ) ;
-  ////////////////////////////////////////////////////////////
-  return $BTN                                                ;
+public function addRemoveToken ( $CLASSID , $BTNCLASS = "SelectionButton"  ) {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $JSC  = "RemoveToken('{$this->Uuid}','$CLASSID') ;"                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $BTN  = new Html             (                                           ) ;
+  $BTN -> setTag               ( "button"                                  ) ;
+  $BTN -> AddPair              ( "class"   , $BTNCLASS                     ) ;
+  $BTN -> AddPair              ( "onclick" , $JSC                          ) ;
+  $BTN -> AddText              ( $Translations [ "Tokens::Remove" ]        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $BTN                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // to be obsoleted
 //////////////////////////////////////////////////////////////////////////////
 public function addAppendButton ( $CLASSID , $BTNCLASS = "SelectionButton" ) {
-  ////////////////////////////////////////////////////////////
-  global $Translations                                       ;
-  ////////////////////////////////////////////////////////////
-  $JSC  = "AppendToken('$CLASSID') ;"                        ;
-  ////////////////////////////////////////////////////////////
-  $BTN  = new HtmlTag (                                    ) ;
-  $BTN -> setTag      ( "button"                           ) ;
-  $BTN -> AddPair     ( "class"   , $BTNCLASS              ) ;
-  $BTN -> AddPair     ( "onclick" , $JSC                   ) ;
-  $BTN -> AddText     ( $Translations [ "Tokens::Append" ] ) ;
-  ////////////////////////////////////////////////////////////
-  return $BTN                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $JSC  = "AppendToken('$CLASSID') ;"                                        ;
+  ////////////////////////////////////////////////////////////////////////////
+  $BTN  = new Html              (                                          ) ;
+  $BTN -> setTag                ( "button"                                 ) ;
+  $BTN -> AddPair               ( "class"   , $BTNCLASS                    ) ;
+  $BTN -> AddPair               ( "onclick" , $JSC                         ) ;
+  $BTN -> AddText               ( $Translations [ "Tokens::Append" ]       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $BTN                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // to be obsoleted

@@ -242,56 +242,51 @@ public function toString ( )                                                 {
   return sprintf ( "trs5%08d" , gmp_mod ( $this -> Uuid , 100000000 ) )      ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function setId($ID)
-{
-  $HH           = new Parameters (     ) ;
-  $this -> Uuid = $HH -> TradeID ( $ID ) ;
-  unset ( $HH )                          ;
-  return $this -> Uuid                   ;
+public function setId            ( $ID )                                     {
+  $HH           = new Parameters (     )                                     ;
+  $this -> Uuid = $HH -> TradeID ( $ID )                                     ;
+  unset                          ( $HH )                                     ;
+  return $this -> Uuid                                                       ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Money()
-{
-  return number_format ( $this -> Amount , 0 , "" , "," ) ;
+public function Money  (                                )                    {
+  return number_format ( $this -> Amount , 0 , "" , "," )                    ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function setMoney($amount)
-{
-  $A = (string) str_replace ( "," , "" , $amount ) ;
-  $this -> Amount = intval ( $A , 10 )             ;
-  return $this -> Amount                           ;
+public function setMoney    ( $amount            )                           {
+  $A = (string) str_replace ( "," , "" , $amount )                           ;
+  $this -> Amount = intval  ( $A , 10            )                           ;
+  return $this -> Amount                                                     ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function GetMoney ( $SPLITTER = " " )
-{
-  return $this -> Money ( ) . $SPLITTER . $this -> Currency ;
+public function GetMoney ( $SPLITTER = " " )                                 {
+  return $this -> Money ( ) . $SPLITTER . $this -> Currency                  ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Payment($PUID)
-{
-  global $Translations                           ;
-  $WAY = ""                                      ;
-  if ( gmp_cmp ( $this -> Payer , $PUID ) == 0 ) {
-    $WAY = $Translations [ "Trade::Pay"    ]     ;
+public function Payment ( $PUID )                                            {
+  global $Translations                                                       ;
+  $WAY = ""                                                                  ;
+  if ( gmp_cmp ( $this -> Payer , $PUID ) == 0 )                             {
+    $WAY = $Translations [ "Trade::Pay"    ]                                 ;
   } else
-  if ( gmp_cmp ( $this -> Payee , $PUID ) == 0 ) {
-    $WAY = $Translations [ "Trade::Refund" ]     ;
-  }                                              ;
-  return $WAY                                    ;
+  if ( gmp_cmp ( $this -> Payee , $PUID ) == 0 )                             {
+    $WAY = $Translations [ "Trade::Refund" ]                                 ;
+  }                                                                          ;
+  return $WAY                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isPaid($PUID)
-{
-  return ( gmp_cmp ( $this -> Payer , $PUID ) == 0 ) ;
+public function isPaid ( $PUID                                   )           {
+  return               ( gmp_cmp ( $this -> Payer , $PUID ) == 0 )           ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function isRefund($PUID)
-{
-  return ( gmp_cmp ( $this -> Payee , $PUID ) == 0 ) ;
+public function isRefund ( $PUID                                   )         {
+  return                 ( gmp_cmp ( $this -> Payee , $PUID ) == 0 )         ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function TradeRecord($TZ,$JOIN=" ",$DateFormat="Y/m/d",$TimeFormat="H:i:s")
-{
+public function TradeRecord ( $TZ                                            ,
+                              $JOIN       = " "                              ,
+                              $DateFormat = "Y/m/d"                          ,
+                              $TimeFormat = "H:i:s"                        ) {
   $SD  = new StarDate ( )                                                    ;
   $SD -> setSD ( $this -> Record )                                           ;
   $TT  = $SD -> toDateTimeString ( $TZ , $JOIN , $DateFormat , $TimeFormat ) ;
@@ -299,36 +294,39 @@ public function TradeRecord($TZ,$JOIN=" ",$DateFormat="Y/m/d",$TimeFormat="H:i:s
   return $TT                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function TradeTime($TZ,$JOIN=" ",$DateFormat="Y/m/d",$TimeFormat="H:i:s")
-{
-  $SD  = new StarDate ( )                                        ;
-  $SD -> setSD ( $this -> Record )                               ;
-  $TT  = $SD -> toLongString ( $TZ , $DateFormat , $TimeFormat ) ;
-  unset ( $SD )                                                  ;
-  return $TT                                                     ;
+public function TradeTime ( $TZ                                              ,
+                            $JOIN       = " "                                ,
+                            $DateFormat = "Y/m/d"                            ,
+                            $TimeFormat = "H:i:s"                          ) {
+  $SD  = new StarDate ( )                                                    ;
+  $SD -> setSD ( $this -> Record )                                           ;
+  $TT  = $SD -> toLongString ( $TZ , $DateFormat , $TimeFormat )             ;
+  unset ( $SD )                                                              ;
+  return $TT                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function obtain($R)
-{
-  $this -> Id          = $R [ "id"          ]            ;
-  $this -> Uuid        = $R [ "uuid"        ]            ;
-  $this -> Payer       = $R [ "payer"       ]            ;
-  $this -> PayerBank   = $R [ "payerbank"   ]            ;
-  $this -> Payee       = $R [ "payee"       ]            ;
-  $this -> PayeeBank   = $R [ "payeebank"   ]            ;
-  $this -> Currency    = $R [ "currency"    ]            ;
-  $this -> Amount      = $R [ "amount"      ]            ;
-  $this -> States      = $R [ "states"      ]            ;
-  $this -> Item        = $R [ "item"        ]            ;
-  $this -> Group       = $R [ "group"       ]            ;
-  $this -> Description = $R [ "description" ]            ;
-  $this -> Record      = $R [ "record"      ]            ;
-  $this -> Complete    = $R [ "complete"    ]            ;
-  $this -> DueDate     = $R [ "duedate"     ]            ;
-  $this -> Update      = $R [ "ltime"       ]            ;
-  ////////////////////////////////////////////////////////
-  $this -> Item        = intval ( $this -> Item   , 10 ) ;
-  $this -> States      = intval ( $this -> States , 10 ) ;
+public function obtain ( $R )                                                {
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> Id          = $R [ "id"          ]                                ;
+  $this -> Uuid        = $R [ "uuid"        ]                                ;
+  $this -> Payer       = $R [ "payer"       ]                                ;
+  $this -> PayerBank   = $R [ "payerbank"   ]                                ;
+  $this -> Payee       = $R [ "payee"       ]                                ;
+  $this -> PayeeBank   = $R [ "payeebank"   ]                                ;
+  $this -> Currency    = $R [ "currency"    ]                                ;
+  $this -> Amount      = $R [ "amount"      ]                                ;
+  $this -> States      = $R [ "states"      ]                                ;
+  $this -> Item        = $R [ "item"        ]                                ;
+  $this -> Group       = $R [ "group"       ]                                ;
+  $this -> Description = $R [ "description" ]                                ;
+  $this -> Record      = $R [ "record"      ]                                ;
+  $this -> Complete    = $R [ "complete"    ]                                ;
+  $this -> DueDate     = $R [ "duedate"     ]                                ;
+  $this -> Update      = $R [ "ltime"       ]                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> Item        = intval ( $this -> Item   , 10 )                     ;
+  $this -> States      = intval ( $this -> States , 10 )                     ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 public function InsertInto($Table)

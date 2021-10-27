@@ -194,78 +194,79 @@ public function setFull ( $n )                                               {
   return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function installSplitters()
-{
-  if ( ! is_numeric ( $this -> ISD  ) ) return    ;
-  /////////////////////////////////////////////////
-  $area  = ( strlen ( $this -> Area ) > 0 )       ;
-  $isd   = intval ( $this -> ISD  , 10 )          ;
-  if ( $area and is_numeric ( $this -> Area ) )   {
-    $acode = intval ( $this -> Area , 10 )        ;
-  } else                                          {
-    $acode = 0                                    ;
-    $area  = false                                ;
-  }                                               ;
-  if ( $this -> ForcelyMobile ) $area = false     ;
-  $this -> Splitters = array ( )                  ;
-  /////////////////////////////////////////////////
-  switch ( $isd )                                 {
-    case  63                                      :
+public function installSplitters ( )                                         {
+  ////////////////////////////////////////////////////////////////////////////
+  if ( ! is_numeric ( $this -> ISD  ) ) return                               ;
+  ////////////////////////////////////////////////////////////////////////////
+  $area  = ( strlen ( $this -> Area ) > 0 )                                  ;
+  $isd   = intval ( $this -> ISD  , 10 )                                     ;
+  if ( $area and is_numeric ( $this -> Area ) )                              {
+    $acode = intval ( $this -> Area , 10 )                                   ;
+  } else                                                                     {
+    $acode = 0                                                               ;
+    $area  = false                                                           ;
+  }                                                                          ;
+  if ( $this -> ForcelyMobile ) $area = false                                ;
+  $this -> Splitters = array ( )                                             ;
+  ////////////////////////////////////////////////////////////////////////////
+  switch ( $isd )                                                            {
+    case  63                                                                 :
       // Philippines
-      if ( $area )                                {
-        array_push ( $this -> Splitters , 4     ) ;
-      } else                                      {
-        array_push ( $this -> Splitters , 3 , 4 ) ;
-      }                                           ;
-    break                                         ;
-    case 81                                       :
+      if ( $area )                                                           {
+        array_push ( $this -> Splitters , 4     )                            ;
+      } else                                                                 {
+        array_push ( $this -> Splitters , 3 , 4 )                            ;
+      }                                                                      ;
+    break                                                                    ;
+    case 81                                                                  :
       // Japan
-      if ( $area )                                {
-        array_push ( $this -> Splitters , 3 , 3 ) ;
-      } else                                      {
-        array_push ( $this -> Splitters , 3 , 4 ) ;
-      }                                           ;
-    break                                         ;
-    case 852                                      :
+      if ( $area )                                                           {
+        array_push ( $this -> Splitters , 3 , 3 )                            ;
+      } else                                                                 {
+        array_push ( $this -> Splitters , 3 , 4 )                            ;
+      }                                                                      ;
+    break                                                                    ;
+    case 852                                                                 :
       // Hong Kong
-      if ( $area )                                {
-        array_push ( $this -> Splitters , 3     ) ;
-      } else                                      {
-        array_push ( $this -> Splitters , 4     ) ;
-      }                                           ;
-    break                                         ;
-    case 853                                      :
+      if ( $area )                                                           {
+        array_push ( $this -> Splitters , 3     )                            ;
+      } else                                                                 {
+        array_push ( $this -> Splitters , 4     )                            ;
+      }                                                                      ;
+    break                                                                    ;
+    case 853                                                                 :
       // Macau
-      if ( $area )                                {
-        array_push ( $this -> Splitters , 3     ) ;
-      } else                                      {
-        array_push ( $this -> Splitters , 4     ) ;
-      }                                           ;
-    break                                         ;
-    case 86                                       :
+      if ( $area )                                                           {
+        array_push ( $this -> Splitters , 3     )                            ;
+      } else                                                                 {
+        array_push ( $this -> Splitters , 4     )                            ;
+      }                                                                      ;
+    break                                                                    ;
+    case 86                                                                  :
       // China
-      if ( $area )                                {
-        array_push ( $this -> Splitters , 3 , 3 ) ;
-      } else                                      {
-        array_push ( $this -> Splitters , 4 , 3 ) ;
-      }                                           ;
-    break                                         ;
-    case 886                                      :
+      if ( $area )                                                           {
+        array_push ( $this -> Splitters , 3 , 3 )                            ;
+      } else                                                                 {
+        array_push ( $this -> Splitters , 4 , 3 )                            ;
+      }                                                                      ;
+    break                                                                    ;
+    case 886                                                                 :
       // Taiwan
-      if ( $area )                                {
-        switch ( $acode )                         {
-          case 1                                  :
-            array_push ( $this -> Splitters , 4 ) ;
-          break                                   ;
-          default                                 :
-            array_push ( $this -> Splitters , 3 ) ;
-          break                                   ;
-        }                                         ;
-      } else                                      {
-        array_push ( $this -> Splitters , 3 , 3 ) ;
-      }                                           ;
-    break                                         ;
+      if ( $area )                                                           {
+        switch ( $acode )                                                    {
+          case 1                                                             :
+            array_push ( $this -> Splitters , 4 )                            ;
+          break                                                              ;
+          default                                                            :
+            array_push ( $this -> Splitters , 3 )                            ;
+          break                                                              ;
+        }                                                                    ;
+      } else                                                                 {
+        array_push ( $this -> Splitters , 3 , 3 )                            ;
+      }                                                                      ;
+    break                                                                    ;
   }
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 public function Obtains     ( $q        )                                    {
@@ -443,33 +444,35 @@ public function EchoUuidInput ( $ItemName                                  ) {
   return $HS                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoPositionInput ( $ItemName , $ID ) {
-  $HT  = new HtmlTag    (                     ) ;
-  $HT -> setHiddenInput (                     ) ;
-  $HT -> SafePair       ( "id"    , $ItemName ) ;
-  $HT -> SafePair       ( "name"  , $ItemName ) ;
-  $HT -> AddPair        ( "value" , $ID       ) ;
-  ///////////////////////////////////////////////
-  return $HT                                    ;
+public function EchoPositionInput ( $ItemName , $ID     )                    {
+  ////////////////////////////////////////////////////////////////////////////
+  $HT  = new Html                 (                     )                    ;
+  $HT -> setHiddenInput           (                     )                    ;
+  $HT -> SafePair                 ( "id"    , $ItemName )                    ;
+  $HT -> SafePair                 ( "name"  , $ItemName )                    ;
+  $HT -> AddPair                  ( "value" , $ID       )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HT                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoAreaInput($ClassName,$ItemName,$Width) {
-  /////////////////////////////////////////////////////////
-  global $Translations                                    ;
-  /////////////////////////////////////////////////////////
-  $HS  = new HtmlTag (                                  ) ;
-  $HS -> setInput    (                                  ) ;
-  $HS -> AddPair     ( "type"  , "text"                 ) ;
-  $HS -> AddPair     ( "size"  , $Width                 ) ;
-  $HS -> SafePair    ( "class" , $ClassName             ) ;
-  $HS -> SafePair    ( "id"    , $ItemName              ) ;
-  $HS -> SafePair    ( "name"  , $ItemName              ) ;
-  $HS -> SafePair    ( "value" , (string) $this -> Area ) ;
-  if                 ( strlen ( $this -> Area ) <= 0    ) {
-    $MSG = $Translations [ "Registration::AreaCode" ]     ;
-    $HS -> AddPair   ( "placeholder" , $MSG             ) ;
-  }                                                       ;
-  return $HS                                              ;
+public function EchoAreaInput ( $ClassName , $ItemName , $Width )            {
+  ////////////////////////////////////////////////////////////////////////////
+  global $Translations                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HS  = new HtmlTag (                                  )                    ;
+  $HS -> setInput    (                                  )                    ;
+  $HS -> AddPair     ( "type"  , "text"                 )                    ;
+  $HS -> AddPair     ( "size"  , $Width                 )                    ;
+  $HS -> SafePair    ( "class" , $ClassName             )                    ;
+  $HS -> SafePair    ( "id"    , $ItemName              )                    ;
+  $HS -> SafePair    ( "name"  , $ItemName              )                    ;
+  $HS -> SafePair    ( "value" , (string) $this -> Area )                    ;
+  if                 ( strlen ( $this -> Area ) <= 0    )                    {
+    $MSG = $Translations [ "Registration::AreaCode" ]                        ;
+    $HS -> AddPair   ( "placeholder" , $MSG             )                    ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HS                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function EchoPhoneInput ( $ClassName,$ItemName,$Width,$Holder=""    ) {
@@ -485,148 +488,153 @@ public function EchoPhoneInput ( $ClassName,$ItemName,$Width,$Holder=""    ) {
   return $HS                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoDIV($ITU,$ID,$Width,$Holder="")
-{
-  $OC  = "portfolioPhoneChanged("     . $ID . ");"        ;
+public function EchoDIV ( $ITU , $ID , $Width , $Holder = "" )               {
+  ////////////////////////////////////////////////////////////////////////////
+  $OC  = "portfolioPhoneChanged("     . $ID . ");"                           ;
 //  $OE  = "portfolioPhoneEnter(event," . $ID . ");"        ;
-  /////////////////////////////////////////////////////////
-  $HD  = new HtmlTag (                                  ) ;
-  $HD -> setSplitter ( "\n"                             ) ;
-  $HD -> setTag      ( "div"                            ) ;
-  $HD -> SafePair    ( "class" , "phone-div"            ) ;
-  /////////////////////////////////////////////////////////
-  $HT  = new HtmlTag (                                  ) ;
-  $HT -> setTag      ( "table"                          ) ;
-  $HT -> AddPair     ( "width"       , "100%"           ) ;
-  $HT -> AddPair     ( "border"      , "0"              ) ;
-  $HT -> AddPair     ( "cellspacing" , "0"              ) ;
-  $HT -> AddPair     ( "cellpadding" , "0"              ) ;
-  $HD -> AddTag      ( $HT                              ) ;
-  /////////////////////////////////////////////////////////
-  $HB  = new HtmlTag (                                  ) ;
-  $HB -> setTag      ( "tbody"                          ) ;
-  $HT -> AddTag      ( $HB                              ) ;
-  /////////////////////////////////////////////////////////
-  $HR  = new HtmlTag (                                  ) ;
-  $HR -> setTag      ( "tr"                             ) ;
-  $HR -> setSplitter ( "\n"                             ) ;
-  $HB -> AddTag      ( $HR                              ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> AddPair     ( "width" , "5%"                   ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HX -> AddTag      ( $this -> EchoUuidInput             (
-                         "phone-uuid-" . $ID          ) ) ;
-  $HX -> AddTag      ( $this -> EchoPositionInput         (
-                       "phone-position-" . $ID            ,
-                       $ID                            ) ) ;
-  $HX -> AddTag      ( $this -> EchoSelection             (
-                         "phone-selection"                ,
-                         "phone-isd-"  . $ID              ,
-                         $ITU                         ) ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> AddPair     ( "width" , "5%"                   ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HA  = $this -> EchoAreaInput                           (
-                       "phone-areacode"                   ,
-                       "phone-area-" . $ID                ,
-                       6                                ) ;
-  $HA -> AddPair     ( "onchange"   , $OC               ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HD  = new HtmlTag (                                  )                    ;
+  $HD -> setSplitter ( "\n"                             )                    ;
+  $HD -> setTag      ( "div"                            )                    ;
+  $HD -> SafePair    ( "class" , "phone-div"            )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HT  = new HtmlTag (                                  )                    ;
+  $HT -> setTag      ( "table"                          )                    ;
+  $HT -> AddPair     ( "width"       , "100%"           )                    ;
+  $HT -> AddPair     ( "border"      , "0"              )                    ;
+  $HT -> AddPair     ( "cellspacing" , "0"              )                    ;
+  $HT -> AddPair     ( "cellpadding" , "0"              )                    ;
+  $HD -> AddTag      ( $HT                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HB  = new HtmlTag (                                  )                    ;
+  $HB -> setTag      ( "tbody"                          )                    ;
+  $HT -> AddTag      ( $HB                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HR  = new HtmlTag (                                  )                    ;
+  $HR -> setTag      ( "tr"                             )                    ;
+  $HR -> setSplitter ( "\n"                             )                    ;
+  $HB -> AddTag      ( $HR                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HX  = new HtmlTag (                                  )                    ;
+  $HX -> setTag      ( "td"                             )                    ;
+  $HX -> AddPair     ( "width" , "5%"                   )                    ;
+  $HX -> setSplitter ( "\n"                             )                    ;
+  $HR -> AddTag      ( $HX                              )                    ;
+  $HX -> AddTag      ( $this -> EchoUuidInput                                (
+                         "phone-uuid-" . $ID          ) )                    ;
+  $HX -> AddTag      ( $this -> EchoPositionInput                            (
+                       "phone-position-" . $ID                               ,
+                       $ID                            ) )                    ;
+  $HX -> AddTag      ( $this -> EchoSelection                                (
+                         "phone-selection"                                   ,
+                         "phone-isd-"  . $ID                                 ,
+                         $ITU                         ) )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HX  = new HtmlTag (                                  )                    ;
+  $HX -> setTag      ( "td"                             )                    ;
+  $HX -> AddPair     ( "width" , "5%"                   )                    ;
+  $HX -> setSplitter ( "\n"                             )                    ;
+  $HR -> AddTag      ( $HX                              )                    ;
+  $HA  = $this -> EchoAreaInput                                              (
+                       "phone-areacode"                                      ,
+                       "phone-area-" . $ID                                   ,
+                       6                                )                    ;
+  $HA -> AddPair     ( "onchange"   , $OC               )                    ;
 //  $HA -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HA                              ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HI  = $this -> EchoPhoneInput                          (
-                       "NameInput"                        ,
-                       "phone-"      . $ID                ,
-                       $Width                             ,
-                       $Holder                          ) ;
-  $HI -> AddPair     ( "onchange"   , $OC               ) ;
+  $HX -> AddTag      ( $HA                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HX  = new HtmlTag (                                  )                    ;
+  $HX -> setTag      ( "td"                             )                    ;
+  $HX -> setSplitter ( "\n"                             )                    ;
+  $HR -> AddTag      ( $HX                              )                    ;
+  $HI  = $this -> EchoPhoneInput                                             (
+                       "NameInput"                                           ,
+                       "phone-"      . $ID                                   ,
+                       $Width                                                ,
+                       $Holder                          )                    ;
+  $HI -> AddPair     ( "onchange"   , $OC               )                    ;
 //  $HI -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HI                              ) ;
-  /////////////////////////////////////////////////////////
-  return $HD                                              ;
+  $HX -> AddTag      ( $HI                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HD                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoPersonalPhone($PUID,$ITU,$ID,$Width,$Holder="",$SMS=false)
-{
-  $OC  = "personalPhoneChanged('{$PUID}',{$ID},{$SMS});"  ;
-  /////////////////////////////////////////////////////////
-  $HD  = new HtmlTag (                                  ) ;
-  $HD -> setSplitter ( "\n"                             ) ;
-  $HD -> setTag      ( "div"                            ) ;
-  $HD -> SafePair    ( "class" , "phone-div"            ) ;
-  /////////////////////////////////////////////////////////
-  $HT  = new HtmlTag (                                  ) ;
-  $HT -> setTag      ( "table"                          ) ;
-  $HT -> AddPair     ( "width"       , "100%"           ) ;
-  $HT -> AddPair     ( "border"      , "0"              ) ;
-  $HT -> AddPair     ( "cellspacing" , "0"              ) ;
-  $HT -> AddPair     ( "cellpadding" , "0"              ) ;
-  $HD -> AddTag      ( $HT                              ) ;
-  /////////////////////////////////////////////////////////
-  $HB  = new HtmlTag (                                  ) ;
-  $HB -> setTag      ( "tbody"                          ) ;
-  $HT -> AddTag      ( $HB                              ) ;
-  /////////////////////////////////////////////////////////
-  $HR  = new HtmlTag (                                  ) ;
-  $HR -> setTag      ( "tr"                             ) ;
-  $HR -> setSplitter ( "\n"                             ) ;
-  $HB -> AddTag      ( $HR                              ) ;
-  /////////////////////////////////////////////////////////
-  $ESI = $this -> EchoSelection                           (
-                       "phone-selection"                  ,
-                       "phone-isd-"  . $ID                ,
-                       $ITU                            )  ;
-  $ESI -> AddPair    ( "onchange"   , $OC               ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> AddPair     ( "width" , "5%"                   ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HX -> AddTag      ( $this -> EchoUuidInput             (
-                         "phone-uuid-" . $ID          ) ) ;
-  $HX -> AddTag      ( $this -> EchoPositionInput         (
-                       "phone-position-" . $ID            ,
-                       $ID                            ) ) ;
-  $HX -> AddTag      ( $ESI                             ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> AddPair     ( "width" , "5%"                   ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HA  = $this -> EchoAreaInput                           (
-                       "phone-areacode"                   ,
-                       "phone-area-" . $ID                ,
-                       6                                ) ;
-  $HA -> AddPair     ( "onchange"   , $OC               ) ;
+public function EchoPersonalPhone ( $PUID                                    ,
+                                    $ITU                                     ,
+                                    $ID                                      ,
+                                    $Width                                   ,
+                                    $Holder = ""                             ,
+                                    $SMS    = false                        ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $OC  = "personalPhoneChanged('{$PUID}',{$ID},{$SMS});"                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HD  = new HtmlTag (                                  )                    ;
+  $HD -> setSplitter ( "\n"                             )                    ;
+  $HD -> setTag      ( "div"                            )                    ;
+  $HD -> SafePair    ( "class" , "phone-div"            )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HT  = new HtmlTag (                                  )                    ;
+  $HT -> setTag      ( "table"                          )                    ;
+  $HT -> AddPair     ( "width"       , "100%"           )                    ;
+  $HT -> AddPair     ( "border"      , "0"              )                    ;
+  $HT -> AddPair     ( "cellspacing" , "0"              )                    ;
+  $HT -> AddPair     ( "cellpadding" , "0"              )                    ;
+  $HD -> AddTag      ( $HT                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HB  = new HtmlTag (                                  )                    ;
+  $HB -> setTag      ( "tbody"                          )                    ;
+  $HT -> AddTag      ( $HB                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HR  = new HtmlTag (                                  )                    ;
+  $HR -> setTag      ( "tr"                             )                    ;
+  $HR -> setSplitter ( "\n"                             )                    ;
+  $HB -> AddTag      ( $HR                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $ESI = $this -> EchoSelection                                              (
+                       "phone-selection"                                     ,
+                       "phone-isd-"  . $ID                                   ,
+                       $ITU                             )                    ;
+  $ESI -> AddPair    ( "onchange"   , $OC               )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HX  = new HtmlTag (                                  )                    ;
+  $HX -> setTag      ( "td"                             )                    ;
+  $HX -> AddPair     ( "width" , "5%"                   )                    ;
+  $HX -> setSplitter ( "\n"                             )                    ;
+  $HR -> AddTag      ( $HX                              )                    ;
+  $HX -> AddTag      ( $this -> EchoUuidInput                                (
+                         "phone-uuid-" . $ID          ) )                    ;
+  $HX -> AddTag      ( $this -> EchoPositionInput                            (
+                       "phone-position-" . $ID                               ,
+                       $ID                            ) )                    ;
+  $HX -> AddTag      ( $ESI                             )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HX  = new HtmlTag (                                  )                    ;
+  $HX -> setTag      ( "td"                             )                    ;
+  $HX -> AddPair     ( "width" , "5%"                   )                    ;
+  $HX -> setSplitter ( "\n"                             )                    ;
+  $HR -> AddTag      ( $HX                              )                    ;
+  $HA  = $this -> EchoAreaInput                                              (
+                       "phone-areacode"                                      ,
+                       "phone-area-" . $ID                                   ,
+                       6                                )                    ;
+  $HA -> AddPair     ( "onchange"   , $OC               )                    ;
 //  $HA -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HA                              ) ;
-  /////////////////////////////////////////////////////////
-  $HX  = new HtmlTag (                                  ) ;
-  $HX -> setTag      ( "td"                             ) ;
-  $HX -> setSplitter ( "\n"                             ) ;
-  $HR -> AddTag      ( $HX                              ) ;
-  $HI  = $this -> EchoPhoneInput                          (
-                       "NameInput"                        ,
-                       "phone-"      . $ID                ,
-                       $Width                             ,
-                       $Holder                          ) ;
-  $HI -> AddPair     ( "onchange"   , $OC               ) ;
+  $HX -> AddTag      ( $HA                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HX  = new HtmlTag (                                  )                    ;
+  $HX -> setTag      ( "td"                             )                    ;
+  $HX -> setSplitter ( "\n"                             )                    ;
+  $HR -> AddTag      ( $HX                              )                    ;
+  $HI  = $this -> EchoPhoneInput                                             (
+                       "NameInput"                                           ,
+                       "phone-"      . $ID                                   ,
+                       $Width                                                ,
+                       $Holder                          )                    ;
+  $HI -> AddPair     ( "onchange"   , $OC               )                    ;
 //  $HI -> AddPair     ( "onkeypress" , $OE               ) ;
-  $HX -> AddTag      ( $HI                              ) ;
-  /////////////////////////////////////////////////////////
-  return $HD                                              ;
+  $HX -> AddTag      ( $HI                              )                    ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HD                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
 }

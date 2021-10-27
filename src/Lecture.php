@@ -1548,25 +1548,25 @@ public function addSectionsEditor($HD,$SECTIONCLASS="")                      {
   $BTN   -> AddPair          ( "onclick" , $JSC              ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function TimeSectionEditor($SECTID="",$SECTIONCLASS="")               {
-  /////////////////////////////////////////////////////////
-  $HT    = new HtmlTag           (                      ) ;
-  $HB    = $HT -> ConfigureTable (                      ) ;
-  /////////////////////////////////////////////////////////
-  $HR    = $HB -> addTr          (                      ) ;
-  /////////////////////////////////////////////////////////
-  $HD    = $HR -> addTd          (                      ) ;
-  $HD   -> setSplitter           ( "\n"                 ) ;
-  $HD   -> AddPair               ( "nowrap" , "nowrap"  ) ;
-  $HD   -> AddPair               ( "align"  , "left"    ) ;
-  $HD   -> AddPair               ( "width"  , "3%"      ) ;
-  $DIV   = $HD -> addDiv         ( "" , $SECTID , ""    ) ;
-  $this -> addSectionsEditor     ( $DIV , $SECTIONCLASS ) ;
-  /////////////////////////////////////////////////////////
-  $HD    = $HR -> addTd          (                      ) ;
-  $this -> addTimeSections       ( $HD                  ) ;
-  /////////////////////////////////////////////////////////
-  return $HT                                              ;
+public function TimeSectionEditor ( $SECTID = "" , $SECTIONCLASS = ""      ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $HT    = new Html               (                                        ) ;
+  $HB    = $HT -> ConfigureTable  (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HR    = $HB -> addTr           (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HD    = $HR -> addTd           (                                        ) ;
+  $HD   -> setSplitter            ( "\n"                                   ) ;
+  $HD   -> AddPair                ( "nowrap" , "nowrap"                    ) ;
+  $HD   -> AddPair                ( "align"  , "left"                      ) ;
+  $HD   -> AddPair                ( "width"  , "3%"                        ) ;
+  $DIV   = $HD -> addDiv          ( "" , $SECTID , ""                      ) ;
+  $this -> addSectionsEditor      ( $DIV , $SECTIONCLASS                   ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $HD    = $HR -> addTd           (                                        ) ;
+  $this -> addTimeSections        ( $HD                                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $HT                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
 function AppendSections($DIV,$editable,$SELECTIONS="Selections")             {

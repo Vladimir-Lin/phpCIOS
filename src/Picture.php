@@ -2,72 +2,67 @@
 //////////////////////////////////////////////////////////////////////////////
 // 
 //////////////////////////////////////////////////////////////////////////////
-namespace CIOS                                     ;
-use Intervention\Image\ImageManagerStatic as Image ;
+namespace CIOS                                                               ;
+use Intervention\Image\ImageManagerStatic as Image                           ;
 //////////////////////////////////////////////////////////////////////////////
-class Picture
-{
+class Picture                                                                {
 //////////////////////////////////////////////////////////////////////////////
-public $Uuid          ;
-public $Width         ;
-public $Height        ;
-public $MIME          ;
-public $Suffix        ;
-public $Image         ;
-public $Icon          ;
-public $Checksum      ;
-public $Raw           ;
-public $IconRaw       ;
-public $FileSize      ;
-public $Filename      ;
-public $Upload        ;
-public $Removal       ;
-public $CheckSize     ;
-public $MaxLimit      ;
-public $PictureOrders ;
-public $PictureTable  ;
-public $PictureDepot  ;
-public $ThumbTable    ;
-public $ThumbDepot    ;
-public $MainTable     ;
+public $Uuid                                                                 ;
+public $Width                                                                ;
+public $Height                                                               ;
+public $MIME                                                                 ;
+public $Suffix                                                               ;
+public $Image                                                                ;
+public $Icon                                                                 ;
+public $Checksum                                                             ;
+public $Raw                                                                  ;
+public $IconRaw                                                              ;
+public $FileSize                                                             ;
+public $Filename                                                             ;
+public $Upload                                                               ;
+public $Removal                                                              ;
+public $CheckSize                                                            ;
+public $MaxLimit                                                             ;
+public $PictureOrders                                                        ;
+public $PictureTable                                                         ;
+public $PictureDepot                                                         ;
+public $ThumbTable                                                           ;
+public $ThumbDepot                                                           ;
+public $MainTable                                                            ;
 //////////////////////////////////////////////////////////////////////////////
-public function __construct()
-{
-  $this -> Clear ( ) ;
+public function __construct ( )                                              {
+  $this -> Clear            ( )                                              ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function __destruct()
-{
+public function __destruct ( )                                               {
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Clear()
-{
-  $this -> Uuid          = 0                       ;
-  $this -> Width         = 0                       ;
-  $this -> Height        = 0                       ;
-  $this -> MIME          = ""                      ;
-  $this -> Suffix        = ""                      ;
-  $this -> Image         = ""                      ;
-  $this -> Icon          = ""                      ;
-  $this -> Checksum      = 0                       ;
-  $this -> Raw           = ""                      ;
-  $this -> IconRaw       = ""                      ;
-  $this -> FileSize      = -1                      ;
-  $this -> Filename      = ""                      ;
-  $this -> Upload        = ""                      ;
-  $this -> Removal       = true                    ;
-  $this -> CheckSize     = true                    ;
-  $this -> MaxLimit      = 32 * 1024 * 1024        ;
-  $this -> PictureOrders = "`erp`.`pictureorders`" ;
-  $this -> PictureTable  = "`erp`.`pictures`"      ;
-  $this -> PictureDepot  = "`erp`.`picturedepot`"  ;
-  $this -> ThumbTable    = "`erp`.`thumbs`"        ;
-  $this -> ThumbDepot    = "`erp`.`thumbdepot`"    ;
-  $this -> MainTable     = "`erp`.`uuids`"         ;
+public function Clear ( )                                                    {
+  $this -> Uuid          = 0                                                 ;
+  $this -> Width         = 0                                                 ;
+  $this -> Height        = 0                                                 ;
+  $this -> MIME          = ""                                                ;
+  $this -> Suffix        = ""                                                ;
+  $this -> Image         = ""                                                ;
+  $this -> Icon          = ""                                                ;
+  $this -> Checksum      = 0                                                 ;
+  $this -> Raw           = ""                                                ;
+  $this -> IconRaw       = ""                                                ;
+  $this -> FileSize      = -1                                                ;
+  $this -> Filename      = ""                                                ;
+  $this -> Upload        = ""                                                ;
+  $this -> Removal       = true                                              ;
+  $this -> CheckSize     = true                                              ;
+  $this -> MaxLimit      = 32 * 1024 * 1024                                  ;
+  $this -> PictureOrders = "`erp`.`pictureorders`"                           ;
+  $this -> PictureTable  = "`erp`.`pictures`"                                ;
+  $this -> PictureDepot  = "`erp`.`picturedepot`"                            ;
+  $this -> ThumbTable    = "`erp`.`thumbs`"                                  ;
+  $this -> ThumbDepot    = "`erp`.`thumbdepot`"                              ;
+  $this -> MainTable     = "`erp`.`uuids`"                                   ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function GetUuid ( $DB )
-{
+public function GetUuid ( $DB )                                              {
   global $DataTypes                                                          ;
   $BASE         = "3800000000000000000"                                      ;
   $TYPE         = $DataTypes [ "Picture" ]                                   ;
@@ -79,186 +74,178 @@ public function GetUuid ( $DB )
   return $this -> Uuid                                                       ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsUuid($DB)
-{
-  $QQ = "select `uuid` from {$this->PictureTable}"     .
-        " where `filesize` = {$this->FileSize}"        .
-          " and `checksum` = {$this->Checksum} ;"      .
-          " ;"                                         ;
-  $UU = $DB -> ObtainUuids ( $QQ )                     ;
-  if ( count ( $UU ) <= 0 ) return false               ;
-  //////////////////////////////////////////////////////
-  $UX   = implode ( " , " , $UU )                      ;
-  $QQ   = "select `uuid` from {$this -> PictureDepot}" .
-          " where `uuid` in ( {$UX} )"                 .
-          " and ( `file` = ? )"                        .
-          " order by `ltime` desc ;"                   ;
-  $qq   = $DB -> Prepare    ( $QQ                    ) ;
-  $qq  -> bind_param        ( 's' , $this -> Raw     ) ;
-  $qq  -> execute           (                        ) ;
-  $kk   = $qq -> get_result (                        ) ;
-  //////////////////////////////////////////////////////
-  if ( $DB -> hasResult ( $kk ) )                      {
-    $rr           = $kk -> fetch_array ( MYSQLI_BOTH ) ;
-    $this -> Uuid = $rr [ 0 ]                          ;
-    return true                                        ;
-  }                                                    ;
-  //////////////////////////////////////////////////////
-  return false                                         ;
+public function ObtainsUuid ( $DB )                                          {
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ = "select `uuid` from {$this->PictureTable}"                           .
+        " where `filesize` = {$this->FileSize}"                              .
+          " and `checksum` = {$this->Checksum} ;"                            .
+          " ;"                                                               ;
+  $UU = $DB -> ObtainUuids ( $QQ )                                           ;
+  if ( count ( $UU ) <= 0 ) return false                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $UX   = implode ( " , " , $UU )                                            ;
+  $QQ   = "select `uuid` from {$this -> PictureDepot}"                       .
+          " where `uuid` in ( {$UX} )"                                       .
+          " and ( `file` = ? )"                                              .
+          " order by `ltime` desc ;"                                         ;
+  $qq   = $DB -> Prepare    ( $QQ                    )                       ;
+  $qq  -> bind_param        ( 's' , $this -> Raw     )                       ;
+  $qq  -> execute           (                        )                       ;
+  $kk   = $qq -> get_result (                        )                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( $DB -> hasResult ( $kk ) )                                            {
+    $rr           = $kk -> fetch_array ( MYSQLI_BOTH )                       ;
+    $this -> Uuid = $rr [ 0 ]                                                ;
+    return true                                                              ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function UpdateImage ( $DB )
-{
-  $QQ = "update {$this->PictureTable} set"          .
-            " `suffix` = '{$this->Suffix}' ,"       .
-          " `filesize` = {$this->FileSize} ,"       .
-          " `checksum` = {$this->Checksum} ,"       .
-             " `width` = {$this->Width} ,"          .
-            " `height` = {$this->Height}"           .
-        " where `uuid` = {$this->Uuid} ;"           ;
-  $DB -> Query ( $QQ )                              ;
-  ///////////////////////////////////////////////////
-  $QQ   = "insert into {$this -> PictureDepot}"     .
-          " ( `uuid` , `file` ) values"             .
-          " ( {$this->Uuid} , ? ) ;"                ;
-  $qq   = $DB -> Prepare ( $QQ                    ) ;
-  $qq  -> bind_param     ( 's' , $this -> Raw     ) ;
-  $qq  -> execute        (                        ) ;
+public function UpdateImage ( $DB )                                          {
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ = "update {$this->PictureTable} set"                                   .
+            " `suffix` = '{$this->Suffix}' ,"                                .
+          " `filesize` = {$this->FileSize} ,"                                .
+          " `checksum` = {$this->Checksum} ,"                                .
+             " `width` = {$this->Width} ,"                                   .
+            " `height` = {$this->Height}"                                    .
+        " where `uuid` = {$this->Uuid} ;"                                    ;
+  $DB -> Query ( $QQ )                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "insert into {$this -> PictureDepot}"                              .
+          " ( `uuid` , `file` ) values"                                      .
+          " ( {$this->Uuid} , ? ) ;"                                         ;
+  $qq   = $DB -> Prepare ( $QQ                    )                          ;
+  $qq  -> bind_param     ( 's' , $this -> Raw     )                          ;
+  $qq  -> execute        (                        )                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-public function UpdateThumb ( $DB )
-{
-  $ICONSIZE = strlen ( $this -> IconRaw )           ;
-  $IWIDTH   = $this -> Icon -> width  ( )           ;
-  $IHEIGHT  = $this -> Icon -> height ( )           ;
-  $QQ = "update {$this->ThumbTable} set"            .
-          " `filesize` = {$this->FileSize} ,"       .
-          " `iconsize` = {$ICONSIZE} ,"             .
-            " `format` = 'png' ,"                   .
-             " `width` = {$this->Width} ,"          .
-            " `height` = {$this->Height} ,"         .
-         " `iconwidth` = {$IWIDTH} ,"               .
-        " `iconheight` = {$IHEIGHT}"                .
-        " where `uuid` = {$this->Uuid} ;"           ;
-  $DB -> Query ( $QQ )                              ;
-  ///////////////////////////////////////////////////
-  $QQ   = "insert into {$this -> ThumbDepot}"       .
-          " ( `uuid` , `thumb` ) values"            .
-          " ( {$this->Uuid} , ? ) ;"                ;
-  $qq   = $DB -> Prepare ( $QQ                    ) ;
-  $qq  -> bind_param     ( 's' , $this -> IconRaw ) ;
-  $qq  -> execute        (                        ) ;
+public function UpdateThumb ( $DB )                                          {
+  ////////////////////////////////////////////////////////////////////////////
+  $ICONSIZE = strlen ( $this -> IconRaw )                                    ;
+  $IWIDTH   = $this -> Icon -> width  ( )                                    ;
+  $IHEIGHT  = $this -> Icon -> height ( )                                    ;
+  $QQ = "update {$this->ThumbTable} set"                                     .
+          " `filesize` = {$this->FileSize} ,"                                .
+          " `iconsize` = {$ICONSIZE} ,"                                      .
+            " `format` = 'png' ,"                                            .
+             " `width` = {$this->Width} ,"                                   .
+            " `height` = {$this->Height} ,"                                  .
+         " `iconwidth` = {$IWIDTH} ,"                                        .
+        " `iconheight` = {$IHEIGHT}"                                         .
+        " where `uuid` = {$this->Uuid} ;"                                    ;
+  $DB -> Query ( $QQ )                                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "insert into {$this -> ThumbDepot}"                                .
+          " ( `uuid` , `thumb` ) values"                                     .
+          " ( {$this->Uuid} , ? ) ;"                                         ;
+  $qq   = $DB -> Prepare ( $QQ                    )                          ;
+  $qq  -> bind_param     ( 's' , $this -> IconRaw )                          ;
+  $qq  -> execute        (                        )                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-public function Import ( $DB )
-{
-  if ( $this -> GetUuid ( $DB ) === false ) return false ;
-  $this -> UpdateImage ( $DB )                           ;
-  $this -> UpdateThumb ( $DB )                           ;
-  return true                                            ;
+public function Import ( $DB )                                               {
+  if ( $this -> GetUuid ( $DB ) === false ) return false                     ;
+  $this -> UpdateImage ( $DB )                                               ;
+  $this -> UpdateThumb ( $DB )                                               ;
+  return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsDetails( $DB )
-{
-  $QQ = "select `suffix`,`filesize`,`checksum`,`width`,`height` from {$this->PictureTable}" .
-        " where `uuid` = {$this->Uuid} ;"                  ;
-  $qq = $DB -> Query ( $QQ )                               ;
-  if ( $DB -> hasResult ( $qq ) )                          {
-    $rr               = $qq -> fetch_array ( MYSQLI_BOTH ) ;
-    $this -> Suffix   = $rr [ "suffix"   ]                 ;
-    $this -> MIME     = "image/" . $this -> Suffix         ;
-    $this -> Width    = $rr [ "width"    ]                 ;
-    $this -> Height   = $rr [ "height"   ]                 ;
-    $this -> Checksum = $rr [ "checksum" ]                 ;
-    $this -> FileSize = $rr [ "filesize" ]                 ;
-    return true                                            ;
-  }                                                        ;
-  return false                                             ;
+public function ObtainsDetails ( $DB )                                       {
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ = "select `suffix`,`filesize`,`checksum`,`width`,`height`"             .
+        " from {$this->PictureTable}"                                        .
+        " where `uuid` = {$this->Uuid} ;"                                    ;
+  $qq = $DB -> Query ( $QQ )                                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  if ( $DB -> hasResult ( $qq ) )                                            {
+    $rr               = $qq -> fetch_array ( MYSQLI_BOTH )                   ;
+    $this -> Suffix   = $rr [ "suffix"   ]                                   ;
+    $this -> MIME     = "image/" . $this -> Suffix                           ;
+    $this -> Width    = $rr [ "width"    ]                                   ;
+    $this -> Height   = $rr [ "height"   ]                                   ;
+    $this -> Checksum = $rr [ "checksum" ]                                   ;
+    $this -> FileSize = $rr [ "filesize" ]                                   ;
+    return true                                                              ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsImage( $DB )
-{
-  $QQ = "select `file` from {$this->PictureDepot}"    .
-        " where `uuid` = {$this->Uuid} ;"             ;
-  $qq = $DB -> Query ( $QQ )                          ;
-  if ( $DB -> hasResult ( $qq ) )                     {
-    $rr          = $qq -> fetch_array ( MYSQLI_BOTH ) ;
-    $this -> Raw = $rr [ 0 ]                          ;
-    return true                                       ;
-  }                                                   ;
-  return false                                        ;
+public function ObtainsImage ( $DB )                                         {
+  $QQ = "select `file` from {$this->PictureDepot}"                           .
+        " where `uuid` = {$this->Uuid} ;"                                    ;
+  $qq = $DB -> Query ( $QQ )                                                 ;
+  if ( $DB -> hasResult ( $qq ) )                                            {
+    $rr          = $qq -> fetch_array ( MYSQLI_BOTH )                        ;
+    $this -> Raw = $rr [ 0 ]                                                 ;
+    return true                                                              ;
+  }                                                                          ;
+  return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsIcon( $DB )
-{
-  $QQ = "select `thumb` from {$this->ThumbDepot}"         .
-        " where `uuid` = {$this->Uuid} ;"                 ;
-  $qq = $DB -> Query ( $QQ )                              ;
-  if ( $DB -> hasResult ( $qq ) )                         {
-    $rr              = $qq -> fetch_array ( MYSQLI_BOTH ) ;
-    $this -> IconRaw = $rr [ 0 ]                          ;
-    return true                                           ;
-  }                                                       ;
-  return false                                            ;
+public function ObtainsIcon ( $DB )                                          {
+  $QQ = "select `thumb` from {$this->ThumbDepot}"                            .
+        " where `uuid` = {$this->Uuid} ;"                                    ;
+  $qq = $DB -> Query ( $QQ )                                                 ;
+  if ( $DB -> hasResult ( $qq ) )                                            {
+    $rr              = $qq -> fetch_array ( MYSQLI_BOTH )                    ;
+    $this -> IconRaw = $rr [ 0 ]                                             ;
+    return true                                                              ;
+  }                                                                          ;
+  return false                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function MakeImage()
-{
-  $this -> Image = Image::make( $this -> Raw ) ;
+public function MakeImage      (              )                              {
+  $this -> Image = Image::make ( $this -> Raw )                              ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function MakeIcon()
-{
-  $this -> Icon = Image::make( $this -> IconRaw ) ;
+public function MakeIcon      (                  )                           {
+  $this -> Icon = Image::make ( $this -> IconRaw )                           ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function FixIcon()
-{
-  $img  = Image::canvas ( 128 , 128                ) ;
-  $img -> insert        ( $this -> Icon , "center" ) ;
-  return $img -> encode ( "png"                    ) ;
+public function FixIcon (                          )                         {
+  $img  = Image::canvas ( 128 , 128                )                         ;
+  $img -> insert        ( $this -> Icon , "center" )                         ;
+  return $img -> encode ( "png"                    )                         ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ResizeIcon($WIDTH,$HEIGHT)
-{
-  $img  = Image::canvas  ( 128           , 128      ) ;
-  $img -> insert         ( $this -> Icon , "center" ) ;
-  $img  = $img -> resize ( $WIDTH        , $HEIGHT  ) ;
-  return $img  -> encode ( "png"                    ) ;
+public function ResizeIcon ( $WIDTH        , $HEIGHT  )                      {
+  $img  = Image::canvas    ( 128           , 128      )                      ;
+  $img -> insert           ( $this -> Icon , "center" )                      ;
+  $img  = $img -> resize   ( $WIDTH        , $HEIGHT  )                      ;
+  return $img  -> encode   ( "png"                    )                      ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ResizeImage($WIDTH,$HEIGHT)
-{
-  $img  = $this -> Image -> resize            (
-             $WIDTH                           ,
-             $HEIGHT                          ,
-             function ( $constraint )         {
-               $constraint -> aspectRatio ( ) ;
-             }                              ) ;
-  return $img -> encode ( "png" )             ;
+public function ResizeImage ( $WIDTH , $HEIGHT )                             {
+  $img  = $this -> Image -> resize                                           (
+             $WIDTH                                                          ,
+             $HEIGHT                                                         ,
+             function ( $constraint )                                        {
+               $constraint -> aspectRatio ( )                                ;
+             }                              )                                ;
+  return $img -> encode ( "png" )                                            ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ImageContentType()
-{
-  return "Content-Type: {$this->MIME}" ;
+public function ImageContentType ( )                                         {
+  return "Content-Type: {$this->MIME}"                                       ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ImageContentLength()
-{
-  $FILESIZE = $this -> FileSize        ;
-  return "Content-Length: {$FILESIZE}" ;
+public function ImageContentLength ( )                                       {
+  $FILESIZE = $this -> FileSize                                              ;
+  return "Content-Length: {$FILESIZE}"                                       ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoIcon()
-{
+public function EchoIcon ( )                                                 {
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoFixIcon()
-{
+public function EchoFixIcon ( )                                              {
 }
 //////////////////////////////////////////////////////////////////////////////
-public function fromUpload($KEY,$UploadPath)
-{
+public function fromUpload ( $KEY , $UploadPath )                            {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   ////////////////////////////////////////////////////////////////////////////
@@ -354,8 +341,10 @@ public function fromUpload($KEY,$UploadPath)
   return $AA                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function UploadForm($FORM="uploadForm",$INPUT="uploadImage",$PERCENT="uploadPercent",$LABEL="inputImage")
-{
+public function UploadForm           ( $FORM    = "uploadForm"               ,
+                                       $INPUT   = "uploadImage"              ,
+                                       $PERCENT = "uploadPercent"            ,
+                                       $LABEL   = "inputImage"             ) {
   ////////////////////////////////////////////////////////////////////////////
   global $Translations                                                       ;
   ////////////////////////////////////////////////////////////////////////////
@@ -409,8 +398,9 @@ public function UploadForm($FORM="uploadForm",$INPUT="uploadImage",$PERCENT="upl
   return $HTF                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ShortForm($FORM="uploadForm",$INPUT="uploadImage",$LABEL="uploadButton")
-{
+public function ShortForm            ( $FORM  = "uploadForm"                 ,
+                                       $INPUT = "uploadImage"                ,
+                                       $LABEL = "uploadButton"             ) {
   ////////////////////////////////////////////////////////////////////////////
   $LBL    = new HtmlTag              (                                     ) ;
   $LBL   -> setTag                   ( "label"                             ) ;
