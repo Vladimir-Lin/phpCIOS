@@ -372,7 +372,7 @@ public function Subordination ( $DB , $Table , $U , $Type = "People"       ) {
 }
 //////////////////////////////////////////////////////////////////////////////
 public function GetOwners ( $DB , $Table , $Type = "People"                ) {
-  $RI  = new RelationItem (                                                ) ;
+  $RI  = new Relation     (                                                ) ;
   $RI -> set              ( "second" , $this -> Uuid                       ) ;
   $RI -> setT1            ( $Type                                          ) ;
   $RI -> setT2            ( "Phone"                                        ) ;
