@@ -82,7 +82,7 @@ public function Verify ( )                                                   {
 }
 //////////////////////////////////////////////////////////////////////////////
 public function Name ( )                                                     {
-  return $this -> Account . "@" . $this -> Hostname ;
+  return $this -> Account . "@" . $this -> Hostname                          ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function isEqual ( $email                                           ) {
