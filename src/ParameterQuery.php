@@ -146,20 +146,20 @@ public function InsertIntoData ( $DB , $Uuid , $Name )
          "'" . (string) $Name                             . "',?) ;" ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function assureValue ( $DB , $Uuid , $Name , $Value )
-{
-  $Id = $this -> ObtainsId ( $DB , $Uuid , $Name )                  ;
-  $QQ = ""                                                          ;
-  if ( $Id <= 0 )                                                   {
-    $QQ = $this -> InsertIntoValue ( $DB , $Uuid , $Name , $Value ) ;
-  } else                                                            {
-    $QQ = $this -> UpdateId        ( $Id , "value"       , $Value ) ;
-  }                                                                 ;
-  return $DB -> Query ( $QQ )                                       ;
+public function assureValue        ( $DB , $Uuid , $Name , $Value          ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $Id   = $this -> ObtainsId       ( $DB , $Uuid , $Name                   ) ;
+  $QQ   = ""                                                                 ;
+  if                               ( $Id <= 0                              ) {
+    $QQ = $this -> InsertIntoValue ( $DB , $Uuid , $Name , $Value          ) ;
+  } else                                                                     {
+    $QQ = $this -> UpdateId        ( $Id , "value"       , $Value          ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB    -> Query           ( $QQ                                   ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function assureData ( $DB , $Uuid , $Name , $BLOB )
-{
+public function assureData ( $DB , $Uuid , $Name , $BLOB ) {
   $Id = $this -> ObtainsId        ( $DB , $Uuid , $Name ) ;
   $QQ = ""                                                ;
   if ( $Id <= 0 )                                         {
