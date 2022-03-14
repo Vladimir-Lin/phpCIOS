@@ -3,12 +3,10 @@ SOURCES += $${PWD}/*.js
 SOURCES += $${PWD}/*.css
 SOURCES += $${PWD}/*.html
 SOURCES += $${PWD}/*.txt
-SOURCES += $${PWD}/*.json
 SOURCES += $${PWD}/*.py
 SOURCES += $${PWD}/*.pl
 SOURCES += $${PWD}/*.rb
 SOURCES += $${PWD}/*.rs
-SOURCES += $${PWD}/*.bat
-
-include ($${PWD}/src/src.pri)
-include ($${PWD}/documents/documents.pri)
+SOURCES += $${PWD}/*.odt
+SOURCES += $${PWD}/*.odg
+SOURCES += $${PWD}/*.odf
