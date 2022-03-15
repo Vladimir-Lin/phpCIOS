@@ -89,6 +89,18 @@ public function isEqual ( $email                                           ) {
   return                ( $email == $this -> Name ( )                      ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function mailContains ( $part                                       ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $LL = strtolower           ( $this -> Appellation                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return                     ( strpos ( $LL , $part ) !== false            ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function isGoogle       (                                           ) {
+  return $this -> mailContains ( "@gmail.com"                              ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function assign ( $email )                                            {
   $this -> Position    = $email -> Position                                  ;
   $this -> Uuid        = $email -> Uuid                                      ;
@@ -323,7 +335,7 @@ public function AppendProperties ( $DB , $TABLE , $MX , $SHARE , $CONFIRM  ) {
           " values"                                                          .
           " ( {$UUID} , {$MX} , {$SHARE} , {$CONFIRM} ) ;"                   ;
   ////////////////////////////////////////////////////////////////////////////
-  $DB  -> Query                  ( $QQ                                     ) ;
+  return $DB  -> Query           ( $QQ                                     ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -335,13 +347,13 @@ public function UpdateProperty ( $DB , $TABLE , $ITEM , $VALUE             ) {
           " set `{$ITEM}` = {$VALUE}"                                        .
           " where ( `uuid` = {$UUID} ) ;"                                    ;
   ////////////////////////////////////////////////////////////////////////////
-  $DB  -> Query                ( $QQ                                       ) ;
+  return $DB  -> Query         ( $QQ                                       ) ;
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 public function GetProperties   ( $DB , $TABLE                             ) {
   ////////////////////////////////////////////////////////////////////////////
-  $UUID = $this -> Uuid                                                      ;
+  $UUID    = $this -> Uuid                                                   ;
   ////////////////////////////////////////////////////////////////////////////
   $QQ      = "select `mx` , `shareable` , `confirm` from {$TABLE}"           .
              " where ( `uuid` = {$UUID} ) ;"                                 ;
@@ -365,6 +377,39 @@ public function GetProperties   ( $DB , $TABLE                             ) {
   return array                  ( "MX"        => $MX                         ,
                                   "Shareable" => $SHARE                      ,
                                   "Confirm"   => $CONFIRM                  ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function setReceiveMessage ( $DB , $PUID , $RECEIVE                 ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PAMTAB = $GLOBALS [ "TableMapping" ] [ "Parameters" ]                     ;
+  $PQ     = ParameterQuery::NewParameter ( 71 , 47 , "ReceiveMessage"      ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $DB    -> LockWrites            ( [ $PAMTAB                            ] ) ;
+  $PQ    -> assureValue           ( $DB , $this -> Uuid , $PUID , $RECEIVE ) ;
+  $DB    -> UnlockTables          (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetGoogleEMails ( $DB , $TABLE , $PUID                     ) {
+  $U  = $this -> Uuid                                                        ;
+  $RI = $this -> GetRelation    ( $PUID , 0 , "People" , "Google"          ) ;
+  return $RI  -> Subordination  ( $DB , $TABLE                             ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function attachGoogleLogin ( $DB , $TABLE , $PUID , $CONFIRM        ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $EUID   = $this -> Uuid                                                    ;
+  $REL    = $this -> GetRelation  ( $PUID , $EUID , "People" , "Google"    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $DB    -> LockWrites            ( [ $TABLE                             ] ) ;
+  if                              ( $CONFIRM > 0                           ) {
+    $REL -> Join                  ( $DB , $TABLE                           ) ;
+  } else                                                                     {
+    $QQ   = $REL -> Delete        ( $TABLE                                 ) ;
+    $DB  -> Query                 ( $QQ                                    ) ;
+  }                                                                          ;
+  $DB    -> UnlockTables          (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 }
