@@ -13,6 +13,7 @@ public $Account                                                              ;
 public $Hostname                                                             ;
 public $Appellation                                                          ;
 public $Updated                                                              ;
+public $Properties                                                           ;
 public $Owners                                                               ;
 //////////////////////////////////////////////////////////////////////////////
 function __construct  ( )                                                    {
@@ -24,7 +25,7 @@ function __destruct  ( )                                                     {
   parent::__destruct ( )                                                     ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function clear ( )                                                    {
+public function clear          (                                           ) {
   $this -> Position    = -1                                                  ;
   $this -> Uuid        = "0"                                                 ;
   $this -> HostId      = "0"                                                 ;
@@ -32,7 +33,8 @@ public function clear ( )                                                    {
   $this -> Hostname    = ""                                                  ;
   $this -> Appellation = ""                                                  ;
   $this -> Updated     = false                                               ;
-  $this -> Owners      = array ( )                                           ;
+  $this -> Properties  = array (                                           ) ;
+  $this -> Owners      = array (                                           ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function isLoaded (                                                 ) {
@@ -109,6 +111,8 @@ public function assign ( $email )                                            {
   $this -> Hostname    = $email -> Hostname                                  ;
   $this -> Appellation = $email -> Appellation                               ;
   $this -> Updated     = $email -> Updated                                   ;
+  $this -> Properties  = $email -> Properties                                ;
+  $this -> Owners      = $email -> Owners                                    ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function tableItems (                                               ) {
@@ -379,6 +383,23 @@ public function GetProperties   ( $DB , $TABLE                             ) {
                                   "Confirm"   => $CONFIRM                  ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function getReceiveMessage ( $DB , $PUID , $DEFAULT = 1             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $RECEIVE   = $DEFAULT                                                      ;
+  $EUID      = $this -> Uuid                                                 ;
+  $PQ        = ParameterQuery::NewParameter                                  (
+                                    71                                       ,
+                                    47                                       ,
+                                    "ReceiveMessage"                       ) ;
+  $RMC       = $PQ -> Fetch       ( $DB , "value" , $EUID , $PUID          ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                              ( strlen ( $RMC ) > 0                    ) {
+    $RECEIVE = intval             ( $RMC , 10                              ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $RECEIVE                                                            ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function setReceiveMessage ( $DB , $PUID , $RECEIVE                 ) {
   ////////////////////////////////////////////////////////////////////////////
   $PAMTAB = $GLOBALS [ "TableMapping" ] [ "Parameters" ]                     ;
@@ -409,6 +430,17 @@ public function attachGoogleLogin ( $DB , $TABLE , $PUID , $CONFIRM        ) {
     $DB  -> Query                 ( $QQ                                    ) ;
   }                                                                          ;
   $DB    -> UnlockTables          (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetCONFs              ( $DB , $PROPTAB , $PUID , $RECEIVE  ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PRTS  = $this -> GetProperties     ( $DB , $PROPTAB                     ) ;
+  $RECV  = $this -> getReceiveMessage ( $DB ,            $PUID , $RECEIVE  ) ;
+  $this -> Properties [ "MX"        ] = $PRTS [ "MX"                       ] ;
+  $this -> Properties [ "Confirm"   ] = $PRTS [ "Confirm"                  ] ;
+  $this -> Properties [ "Shareable" ] = $PRTS [ "Shareable"                ] ;
+  $this -> Properties [ "Receive"   ] = $RECV                                ;
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
