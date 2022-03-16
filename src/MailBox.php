@@ -412,7 +412,6 @@ public function setReceiveMessage ( $DB , $PUID , $RECEIVE                 ) {
 }
 //////////////////////////////////////////////////////////////////////////////
 public function GetGoogleEMails ( $DB , $TABLE , $PUID                     ) {
-  $U  = $this -> Uuid                                                        ;
   $RI = $this -> GetRelation    ( $PUID , 0 , "People" , "Google"          ) ;
   return $RI  -> Subordination  ( $DB , $TABLE                             ) ;
 }
@@ -442,6 +441,15 @@ public function GetCONFs              ( $DB , $PROPTAB , $PUID , $RECEIVE  ) {
   $this -> Properties [ "Shareable" ] = $PRTS [ "Shareable"                ] ;
   $this -> Properties [ "Receive"   ] = $RECV                                ;
   ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetProperty  ( $KEY , $DEFAULT = 0                         ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                         ( ! in_array ( $KEY , $this -> Properties )   ) {
+    return $DEFAULT                                                          ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $this -> Properties [ $KEY                                        ] ;
 }
 //////////////////////////////////////////////////////////////////////////////
 }
