@@ -28,7 +28,9 @@ public function clear ( )                                                    {
   $this -> Area          = ""                                                ;
   $this -> Number        = ""                                                ;
   $this -> ForcelyMobile = false                                             ;
-  $this -> Splitters     = array ( )                                         ;
+  $this -> Splitters     = array (                                         ) ;
+  $this -> Properties    = array (                                         ) ;
+  $this -> Owners        = array (                                         ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function Purge ( $n                                                 ) {
@@ -70,12 +72,16 @@ public function isAllow ( $n )                                               {
 }
 //////////////////////////////////////////////////////////////////////////////
 public function assign ( $phone )                                            {
+  ////////////////////////////////////////////////////////////////////////////
   $this -> Uuid          = $phone -> Uuid                                    ;
   $this -> ISD           = $phone -> ISD                                     ;
   $this -> Area          = $phone -> Area                                    ;
   $this -> Number        = $phone -> Number                                  ;
-  $this -> Splitters     = $phone -> Splitters                               ;
   $this -> ForcelyMobile = $phone -> ForcelyMobile                           ;
+  $this -> Splitters     = $phone -> Splitters                               ;
+  $this -> Properties    = $phone -> Properties                              ;
+  $this -> Owners        = $phone -> Owners                                  ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 public function setSplitters ( $splitters )                                  {
@@ -408,6 +414,128 @@ public function FindByName  ( $DB , $TABLE , $NAME                         ) {
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   return $TMP                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function AppendProperties ( $DB                                       ,
+                                   $TABLE                                    ,
+                                   $CORRECT                                  ,
+                                   $MOBILE                                   ,
+                                   $SHARE                                    ,
+                                   $CONFIRM                                  ,
+                                   $REGION = "TW"                          ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $UUID = $this -> Uuid                                                      ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ   = "insert into {$TABLE}"                                             .
+          " ( `uuid` , `correct` , `mobile` , `shareable` , `confirm` , `region` )" .
+          " values"                                                          .
+          " ( {$UUID} , {$CORRECT} , {$MOBILE} , {$SHARE} , {$CONFIRM} , '{$REGION}' ) ;" ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB  -> Query           ( $QQ                                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function UpdateProperty ( $DB , $TABLE , $ITEM , $VALUE             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $UUID    = $this -> Uuid                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                           ( $ITEM == "region"                         ) {
+    $VALUE = "'{$VALUE}'"                                                    ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ      = "update {$TABLE}"                                               .
+             " set `{$ITEM}` = {$VALUE}"                                     .
+             " where ( `uuid` = {$UUID} ) ;"                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DB  -> Query         ( $QQ                                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetProperties   ( $DB , $TABLE                             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $UUID    = $this -> Uuid                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ      = "select `correct` , `mobile` , `shareable` , `confirm` , `region`" .
+             " from {$TABLE}"                                                .
+             " where ( `uuid` = {$UUID} ) ;"                                 ;
+  ////////////////////////////////////////////////////////////////////////////
+  $qq      = $DB -> Query       ( $QQ                                      ) ;
+  if                            ( ! $DB -> hasResult ( $qq )               ) {
+    return array                ( "Correct"   => 0                           ,
+                                  "Mobile"    => 0                           ,
+                                  "Shareable" => 0                           ,
+                                  "Confirm"   => 0                           ,
+                                  "Region"    => ""                        ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $NN      = $qq -> fetch_array ( MYSQLI_BOTH                              ) ;
+  $CORRECT = $NN                [ "correct"                                ] ;
+  $MOBILE  = $NN                [ "mobile"                                 ] ;
+  $SHARE   = $NN                [ "shareable"                              ] ;
+  $CONFIRM = $NN                [ "confirm"                                ] ;
+  $REGION  = $NN                [ "region"                                 ] ;
+  ////////////////////////////////////////////////////////////////////////////
+  $CORRECT = intval             ( $CORRECT , 10                            ) ;
+  $MOBILE  = intval             ( $MOBILE  , 10                            ) ;
+  $SHARE   = intval             ( $SHARE   , 10                            ) ;
+  $CONFIRM = intval             ( $CONFIRM , 10                            ) ;
+  $REGION  = "{$REGION}"                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  return array                  ( "Correct"   => $CORRECT                    ,
+                                  "Mobile"    => $MOBILE                     ,
+                                  "Shareable" => $SHARE                      ,
+                                  "Confirm"   => $CONFIRM                    ,
+                                  "Region"    => $REGION                   ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function getReceiveMessage ( $DB , $PUID , $DEFAULT = 1             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $RECEIVE   = $DEFAULT                                                      ;
+  $EUID      = $this -> Uuid                                                 ;
+  $PQ        = ParameterQuery::NewParameter                                  (
+                                    71                                       ,
+                                    47                                       ,
+                                    "ReceiveMessage"                       ) ;
+  $RMC       = $PQ -> Fetch       ( $DB , "value" , $EUID , $PUID          ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                              ( strlen ( $RMC ) > 0                    ) {
+    $RECEIVE = intval             ( $RMC , 10                              ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $RECEIVE                                                            ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function setReceiveMessage ( $DB , $PUID , $RECEIVE                 ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PAMTAB = $GLOBALS [ "TableMapping" ] [ "Parameters" ]                     ;
+  $PQ     = ParameterQuery::NewParameter ( 71 , 47 , "ReceiveMessage"      ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $DB    -> LockWrites            ( [ $PAMTAB                            ] ) ;
+  $PQ    -> assureValue           ( $DB , $this -> Uuid , $PUID , $RECEIVE ) ;
+  $DB    -> UnlockTables          (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetCONFs              ( $DB , $PROPTAB , $PUID , $RECEIVE  ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PRTS  = $this -> GetProperties     ( $DB , $PROPTAB                     ) ;
+  $RECV  = $this -> getReceiveMessage ( $DB ,            $PUID , $RECEIVE  ) ;
+  $this -> Properties [ "Correct"   ] = $PRTS [ "Correct"                  ] ;
+  $this -> Properties [ "Mobile"    ] = $PRTS [ "Mobile"                   ] ;
+  $this -> Properties [ "Shareable" ] = $PRTS [ "Shareable"                ] ;
+  $this -> Properties [ "Confirm"   ] = $PRTS [ "Confirm"                  ] ;
+  $this -> Properties [ "Region"    ] = $PRTS [ "Region"                   ] ;
+  $this -> Properties [ "Receive"   ] = $RECV                                ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetProperty  ( $KEY , $DEFAULT = 0                         ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                         ( ! in_array ( $KEY , $this -> Properties )   ) {
+    return $DEFAULT                                                          ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $this -> Properties [ $KEY                                        ] ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function EchoOptions ( $HS , $ITU )                                   {

@@ -374,9 +374,9 @@ public function GetProperties   ( $DB , $TABLE                             ) {
   $SHARE   = $NN                [ "shareable"                              ] ;
   $CONFIRM = $NN                [ "confirm"                                ] ;
   ////////////////////////////////////////////////////////////////////////////
-  $MX      = intval             ( $MX    , 10                              ) ;
-  $SHARE   = intval             ( $SHARE , 10                              ) ;
-  $CONFIRM = intval             ( $MX    , 10                              ) ;
+  $MX      = intval             ( $MX      , 10                            ) ;
+  $SHARE   = intval             ( $SHARE   , 10                            ) ;
+  $CONFIRM = intval             ( $CONFIRM , 10                            ) ;
   ////////////////////////////////////////////////////////////////////////////
   return array                  ( "MX"        => $MX                         ,
                                   "Shareable" => $SHARE                      ,
