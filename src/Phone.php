@@ -538,18 +538,23 @@ public function GetProperty  ( $KEY , $DEFAULT = 0                         ) {
   return $this -> Properties [ $KEY                                        ] ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function EchoOptions ( $HS , $ITU )                                   {
-  if ( count ( $ITU ) <= 0 ) return                                          ;
-  foreach ( $ITU as $itx )                                                   {
-    $HE = new Html ( )                                                       ;
-    $HE -> setTag ( "option" )                                               ;
-    if ( $itx == $this -> ISD )                                              {
-      $HE -> AddMember ( "selected" )                                        ;
+public function EchoOptions ( $HS , $ITU                                   ) {
+  ////////////////////////////////////////////////////////////////////////////
+  if                        ( count ( $ITU ) <= 0                          ) {
+    return                                                                   ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  foreach                   ( $ITU as $itx                                 ) {
+    $HE  = new Html         (                                              ) ;
+    $HE -> setTag           ( "option"                                     ) ;
+    if                      ( $itx == $this -> ISD                         ) {
+      $HE -> AddMember      ( "selected"                                   ) ;
     }                                                                        ;
-    $HE -> AddPair ( "value" , $itx )                                        ;
-    $HE -> AddText ( "+" . $itx     )                                        ;
-    $HS -> AddTag  ( $HE            )                                        ;
-  }
+    $HE -> AddPair          ( "value" , $itx                               ) ;
+    $HE -> AddText          ( "+{$itx}"                                    ) ;
+    $HS -> AddTag           ( $HE                                          ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
 public function EchoSelection ( $ClassName , $ItemName , $ITU              ) {
