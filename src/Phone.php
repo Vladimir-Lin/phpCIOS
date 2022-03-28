@@ -339,7 +339,7 @@ public function ObtainsITU ( $DB , $TABLE )                                  {
   $QQ = "select `itu` from {$TABLE} order by `id` asc ;"                     ;
   $qq = $DB -> Query ( $QQ )                                                 ;
   while ( $rr = $qq -> fetch_array ( MYSQLI_BOTH ) )                         {
-    array_push ( $IU , $rr [ 0 ] )                                           ;
+    array_push ( $IU , intval ( $rr [ 0 ] , 10 ) )                           ;
   }                                                                          ;
   return $IU                                                                 ;
 }
