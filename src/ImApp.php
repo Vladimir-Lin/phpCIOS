@@ -399,7 +399,6 @@ public function GetProperties   ( $DB , $TABLE                             ) {
   ////////////////////////////////////////////////////////////////////////////
   $SHARE   = intval             ( $SHARE   , 10                            ) ;
   $CONFIRM = intval             ( $CONFIRM , 10                            ) ;
-  $REGION  = "{$REGION}"                                                     ;
   ////////////////////////////////////////////////////////////////////////////
   return array                  ( "Shareable" => $SHARE                      ,
                                   "Confirm"   => $CONFIRM                  ) ;
