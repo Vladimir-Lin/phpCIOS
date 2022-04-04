@@ -432,13 +432,47 @@ public function setReceiveMessage ( $DB , $PUID , $RECEIVE                 ) {
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-public function GetCONFs              ( $DB , $PROPTAB , $PUID , $RECEIVE  ) {
+public function getAllowOnClasses ( $DB , $PUID , $DEFAULT = 1             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $RECEIVE   = $DEFAULT                                                      ;
+  $EUID      = $this -> Uuid                                                 ;
+  $PQ        = ParameterQuery::NewParameter                                  (
+                                    71                                       ,
+                                    53                                       ,
+                                    "AllowOnClasses"                       ) ;
+  $RMC       = $PQ -> Fetch       ( $DB , "value" , $EUID , $PUID          ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                              ( strlen ( $RMC ) > 0                    ) {
+    $RECEIVE = intval             ( $RMC , 10                              ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $RECEIVE                                                            ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function setAllowOnClasses ( $DB , $PUID , $ALLOW                   ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PAMTAB = $GLOBALS [ "TableMapping" ] [ "Parameters" ]                     ;
+  $PQ     = ParameterQuery::NewParameter ( 71 , 53 , "AllowOnClasses"      ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $DB    -> LockWrites            ( [ $PAMTAB                            ] ) ;
+  $PQ    -> assureValue           ( $DB , $this -> Uuid , $PUID , $ALLOW   ) ;
+  $DB    -> UnlockTables          (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function GetCONFs              ( $DB                                  ,
+                                        $PROPTAB                             ,
+                                        $PUID                                ,
+                                        $RECEIVE                             ,
+                                        $ALLOW = 1                         ) {
   ////////////////////////////////////////////////////////////////////////////
   $PRTS  = $this -> GetProperties     ( $DB , $PROPTAB                     ) ;
   $RECV  = $this -> getReceiveMessage ( $DB ,            $PUID , $RECEIVE  ) ;
+  $ALLOW = $this -> getReceiveMessage ( $DB ,            $PUID , $ALLOW    ) ;
   $this -> Properties [ "Shareable" ] = $PRTS [ "Shareable"                ] ;
   $this -> Properties [ "Confirm"   ] = $PRTS [ "Confirm"                  ] ;
   $this -> Properties [ "Receive"   ] = $RECV                                ;
+  $this -> Properties [ "OnClasses" ] = $ALLOW                               ;
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
