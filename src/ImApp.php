@@ -31,6 +31,7 @@ public function clear ( )                                                    {
   $this -> Uuid       = "0"                                                  ;
   $this -> Type       = 1                                                    ;
   $this -> Account    = ""                                                   ;
+  $this -> Explain    = ""                                                   ;
   $this -> Properties = array (                                            ) ;
   $this -> Owners     = array (                                            ) ;
   ////////////////////////////////////////////////////////////////////////////
@@ -41,6 +42,7 @@ public function assign ( $ims )                                              {
   $this -> Uuid       = $ims -> Uuid                                         ;
   $this -> Type       = $ims -> Type                                         ;
   $this -> Account    = $ims -> Account                                      ;
+  $this -> Explain    = $ims -> Explain                                      ;
   $this -> Properties = $ims -> Properties                                   ;
   $this -> Owners     = $ims -> Owners                                       ;
   ////////////////////////////////////////////////////////////////////////////
@@ -468,7 +470,7 @@ public function GetCONFs              ( $DB                                  ,
   ////////////////////////////////////////////////////////////////////////////
   $PRTS  = $this -> GetProperties     ( $DB , $PROPTAB                     ) ;
   $RECV  = $this -> getReceiveMessage ( $DB ,            $PUID , $RECEIVE  ) ;
-  $ALLOW = $this -> getReceiveMessage ( $DB ,            $PUID , $ALLOW    ) ;
+  $ALLOW = $this -> getAllowOnClasses ( $DB ,            $PUID , $ALLOW    ) ;
   $this -> Properties [ "Shareable" ] = $PRTS [ "Shareable"                ] ;
   $this -> Properties [ "Confirm"   ] = $PRTS [ "Confirm"                  ] ;
   $this -> Properties [ "Receive"   ] = $RECV                                ;
