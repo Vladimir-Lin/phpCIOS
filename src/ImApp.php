@@ -387,7 +387,7 @@ public function ObtainsExplain ( $DB , $TABLE                              ) {
                " and ( `type` = 113 ) ;"                                     ;
   $RR      = $DB -> FetchOne   ( $QQ                                       ) ;
   if                           ( strlen ( $RR ) > 0                        ) {
-    $this -> Explain = $EXPLAIN                                              ;
+    $this -> Explain = $RR                                                   ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
 }
