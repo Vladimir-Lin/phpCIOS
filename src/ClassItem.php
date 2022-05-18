@@ -743,32 +743,44 @@ public function CalendarRenderScript()
   return $CDCF                                                               ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function SkypeID($DB,$TABLE,$CUID)
-{
-  $IMP = "0"                                       ;
-  $RI  = new Relation         (                  ) ;
-  $RI -> set                  ( "first" , $CUID  ) ;
-  $RI -> setT1                ( "People"         ) ;
-  $RI -> setT2                ( "InstantMessage" ) ;
-  $RI -> setRelation          ( "Subordination"  ) ;
-  $UX  = $RI -> Subordination ( $DB , $TABLE     ) ;
-  if ( count ( $UX ) > 0 ) $IMP = $UX [ 0 ]        ;
-  return $IMP                                      ;
+public function GetImsIDs     ( $DB , $TABLE , $CUID                       ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $RI  = new Relation         (                                            ) ;
+  $RI -> set                  ( "first" , $CUID                            ) ;
+  $RI -> setT1                ( "People"                                   ) ;
+  $RI -> setT2                ( "InstantMessage"                           ) ;
+  $RI -> setRelation          ( "Subordination"                            ) ;
+  $UX  = $RI -> Subordination ( $DB , $TABLE                               ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $UX                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function IconID($DB,$TABLE,$CUID)
-{
-  $DID = "3800000000000000319"                    ;
-  /////////////////////////////////////////////////
-  $RI  = new RelationItem     (                 ) ;
-  $RI -> set                  ( "first" , $CUID ) ;
-  $RI -> setT1                ( "People"        ) ;
-  $RI -> setT2                ( "Picture"       ) ;
-  $RI -> setRelation          ( "Using"         ) ;
-  $UX  = $RI -> Subordination ( $DB , $TABLE    ) ;
-  if ( count ( $UX ) > 0 ) $DID = $UX [ 0 ]       ;
-  /////////////////////////////////////////////////
-  return $DID                                     ;
+public function SkypeID       ( $DB , $TABLE , $CUID                       ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $IMP   = "0"                                                               ;
+  $UX    = $this -> GetImsIDs ( $DB , $TABLE , $CUID                       ) ;
+  if                          ( count ( $UX ) > 0                          ) {
+    $IMP = $UX                [ 0                                          ] ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $IMP                                                                ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function IconID          ( $DB , $TABLE , $CUID                     ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $DID   = "3800000000000000319"                                             ;
+  ////////////////////////////////////////////////////////////////////////////
+  $RI    = new RelationItem     (                                          ) ;
+  $RI   -> set                  ( "first" , $CUID                          ) ;
+  $RI   -> setT1                ( "People"                                 ) ;
+  $RI   -> setT2                ( "Picture"                                ) ;
+  $RI   -> setRelation          ( "Using"                                  ) ;
+  $UX    = $RI -> Subordination ( $DB , $TABLE                             ) ;
+  if                            ( count ( $UX ) > 0                        ) {
+    $DID = $UX                  [ 0                                        ] ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $DID                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function IconPath($ICONPATH,$DID,$WIDTH=128,$HEIGHT=128)
