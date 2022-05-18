@@ -411,6 +411,34 @@ public function setReceiveMessage ( $DB , $PUID , $RECEIVE                 ) {
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
+public function getUseOnClasses   ( $DB , $PUID , $DEFAULT = 1             ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $RECEIVE   = $DEFAULT                                                      ;
+  $EUID      = $this -> Uuid                                                 ;
+  $PQ        = ParameterQuery::NewParameter                                  (
+                                    71                                       ,
+                                    59                                       ,
+                                    "UseOnClasses"                         ) ;
+  $RMC       = $PQ -> Fetch       ( $DB , "value" , $EUID , $PUID          ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                              ( strlen ( $RMC ) > 0                    ) {
+    $RECEIVE = intval             ( $RMC , 10                              ) ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $RECEIVE                                                            ;
+}
+//////////////////////////////////////////////////////////////////////////////
+public function setUseOnClasses   ( $DB , $PUID , $ALLOW                   ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $PAMTAB = $GLOBALS [ "TableMapping" ] [ "Parameters" ]                     ;
+  $PQ     = ParameterQuery::NewParameter ( 71 , 59 , "UseOnClasses"        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $DB    -> LockWrites            ( [ $PAMTAB                            ] ) ;
+  $PQ    -> assureValue           ( $DB , $this -> Uuid , $PUID , $ALLOW   ) ;
+  $DB    -> UnlockTables          (                                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
 public function GetGoogleEMails ( $DB , $TABLE , $PUID                     ) {
   $RI = $this -> GetRelation    ( $PUID , 0 , "People" , "Google"          ) ;
   return $RI  -> Subordination  ( $DB , $TABLE                             ) ;
@@ -432,14 +460,20 @@ public function attachGoogleLogin ( $DB , $TABLE , $PUID , $CONFIRM        ) {
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-public function GetCONFs              ( $DB , $PROPTAB , $PUID , $RECEIVE  ) {
+public function GetCONFs              ( $DB                                  ,
+                                        $PROPTAB                             ,
+                                        $PUID                                ,
+                                        $RECEIVE                             ,
+                                        $USEDOC = 1                        ) {
   ////////////////////////////////////////////////////////////////////////////
   $PRTS  = $this -> GetProperties     ( $DB , $PROPTAB                     ) ;
   $RECV  = $this -> getReceiveMessage ( $DB ,            $PUID , $RECEIVE  ) ;
+  $USEC  = $this -> getUseOnClasses   ( $DB ,            $PUID , $USEDOC   ) ;
   $this -> Properties [ "MX"        ] = $PRTS [ "MX"                       ] ;
   $this -> Properties [ "Confirm"   ] = $PRTS [ "Confirm"                  ] ;
   $this -> Properties [ "Shareable" ] = $PRTS [ "Shareable"                ] ;
   $this -> Properties [ "Receive"   ] = $RECV                                ;
+  $this -> Properties [ "Material"  ] = $USEC                                ;
   ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
