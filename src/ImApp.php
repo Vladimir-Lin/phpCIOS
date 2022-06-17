@@ -169,8 +169,8 @@ public function ObtainsByAccount ( $DB , $Table                            ) {
   ////////////////////////////////////////////////////////////////////////////
   $QQ    = "select `uuid` from {$Table}"                                     .
            " where ( convert ( `account` using utf8 ) = ? )"                 .
-               " and ( `imapp` = {$T} )"                                     .
-                " and ( `used` = 1 ) ;"                                      ;
+             " and ( `imapp` = {$T} )"                                       .
+             " and ( `used` = 1 ) ;"                                         ;
   $qq    = $DB -> Prepare    ( $QQ                                         ) ;
   $qq   -> bind_param        ( 's' , $this -> Account                      ) ;
   $qq   -> execute           (                                             ) ;
