@@ -165,21 +165,22 @@ public function ObtainsByAccount ( $DB , $Table                            ) {
   $this -> Uuid = "0"                                                        ;
   $T     = $this -> Type                                                     ;
   $A     = $this -> Account                                                  ;
+  $TMP   = array                 (                                         ) ;
   ////////////////////////////////////////////////////////////////////////////
   $QQ    = "select `uuid` from {$Table}"                                     .
-           " where ( `account` = '{$A}' )"                                   .
+           " where ( convert ( `account` using utf8 ) = ? )"                 .
                " and ( `imapp` = {$T} )"                                     .
                 " and ( `used` = 1 ) ;"                                      ;
-  $qq    = $DB -> Query          ( $QQ                                     ) ;
-  if                             ( ! $DB -> hasResult ( $qq )              ) {
+  $qq    = $DB -> Prepare    ( $QQ                                         ) ;
+  $qq   -> bind_param        ( 's' , $this -> Account                      ) ;
+  $qq   -> execute           (                                             ) ;
+  $kk    = $qq -> get_result (                                             ) ;
+  $TMP   = $DB -> FetchUuids ( $kk , $TMP                                  ) ;
+  if                         ( count ( $TMP ) <= 0                         ) {
     return false                                                             ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $N     = $qq -> fetch_array    ( MYSQLI_BOTH                             ) ;
-  if                             ( ! $N                                    ) {
-    return false                                                             ;
-  }                                                                          ;
-  $this -> Uuid = $N             [ "uuid"                                  ] ;
+  $this -> Uuid = $TMP       [ 0                                           ] ;
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
 }
