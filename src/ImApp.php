@@ -171,10 +171,13 @@ public function ObtainsByAccount ( $DB , $Table                            ) {
            " where ( convert ( `account` using utf8 ) = ? )"                 .
              " and ( `imapp` = {$T} )"                                       .
              " and ( `used` = 1 ) ;"                                         ;
-  $qq    = $DB -> Prepare    ( $QQ                                         ) ;
-  $qq   -> bind_param        ( 's' , $this -> Account                      ) ;
-  $qq   -> execute           (                                             ) ;
-  $kk    = $qq -> get_result (                                             ) ;
+  $qx    = $DB -> Prepare    ( $QQ                                         ) ;
+  $qx   -> bind_param        ( 's' , $this -> Account                      ) ;
+  $ANS   = $qx -> execute    (                                             ) ;
+  if                         ( ! $ANS                                      ) {
+    return false                                                             ;
+  }                                                                          ;
+  $kk    = $qx -> get_result (                                             ) ;
   $TMP   = $DB -> FetchUuids ( $kk , $TMP                                  ) ;
   if                         ( count ( $TMP ) <= 0                         ) {
     return false                                                             ;
