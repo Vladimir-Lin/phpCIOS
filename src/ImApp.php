@@ -176,9 +176,9 @@ public function ObtainsByAccount ( $DB , $Table                            ) {
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $N     = $qq -> fetch_array    ( MYSQLI_BOTH                             ) ;
-  // if                             ( ! $N                                    ) {
-  //   return false                                                             ;
-  // }                                                                          ;
+  if                             ( ! $N                                    ) {
+    return false                                                             ;
+  }                                                                          ;
   $this -> Uuid = $N             [ "uuid"                                  ] ;
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
