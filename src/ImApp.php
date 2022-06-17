@@ -167,18 +167,18 @@ public function ObtainsByAccount ( $DB , $Table                            ) {
   $A     = $this -> Account                                                  ;
   ////////////////////////////////////////////////////////////////////////////
   $QQ    = "select `uuid` from {$Table}"                                     .
-           " where `account` = '{$A}'"                                       .
-               " and `imapp` = {$T}"                                         .
-                " and `used` = 1 ;"                                          ;
-  $qq    = $DB -> Query ( $QQ )                                              ;
+           " where ( `account` = '{$A}' )"                                   .
+               " and ( `imapp` = {$T} )"                                     .
+                " and ( `used` = 1 ) ;"                                      ;
+  $qq    = $DB -> Query          ( $QQ                                     ) ;
   if                             ( ! $DB -> hasResult ( $qq )              ) {
     return false                                                             ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
   $N     = $qq -> fetch_array    ( MYSQLI_BOTH                             ) ;
-  if                             ( ! $N                                    ) {
-    return false                                                             ;
-  }                                                                          ;
+  // if                             ( ! $N                                    ) {
+  //   return false                                                             ;
+  // }                                                                          ;
   $this -> Uuid = $N             [ "uuid"                                  ] ;
   ////////////////////////////////////////////////////////////////////////////
   return true                                                                ;
