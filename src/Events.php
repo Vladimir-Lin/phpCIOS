@@ -458,7 +458,7 @@ public static function StudentClassEvent                                     (
     $BTID   = $PE -> Between   ( $NOW -> Stardate                          ) ;
     switch                     ( $BTID                                     ) {
       case  1                                                                :
-        if                     ( $CLASS -> isCancelled ( )                 ) {
+        if                     ( $CLASS -> isEventCancelled ( )            ) {
           $E -> Classes        ( [ "StudentClassRemove" ]                  ) ;
           $E -> TextColor      ( "#212165"                                 ) ;
         } else                                                               {
@@ -467,7 +467,7 @@ public static function StudentClassEvent                                     (
         }                                                                    ;
       break                                                                  ;
       case  0                                                                :
-        if                     ( $CLASS -> isCancelled ( )                 ) {
+        if                     ( $CLASS -> isEventCancelled ( )            ) {
           $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
           $E -> TextColor      ( "#008B00"                                 ) ;
         } else                                                               {
@@ -476,7 +476,7 @@ public static function StudentClassEvent                                     (
         }                                                                    ;
       break                                                                  ;
       case -1                                                                :
-        if                     ( $CLASS -> isCancelled ( )                 ) {
+        if                     ( $CLASS -> isEventCancelled ( )            ) {
           $E -> Classes        ( [ "StudentClassCancel" ]                  ) ;
           $E -> TextColor      ( "#8B0000"                                 ) ;
         } else                                                               {

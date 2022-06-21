@@ -262,6 +262,10 @@ public function isCancelled()
   return ( $this -> Type == 3 ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
+public function isEventCancelled (                                         ) {
+  return in_array                ( $this -> Type , [ 3 , 9 ]               ) ;
+}
+//////////////////////////////////////////////////////////////////////////////
 public function isAbsent($ROLE)
 {
   $r = strtolower ( $ROLE )         ;
