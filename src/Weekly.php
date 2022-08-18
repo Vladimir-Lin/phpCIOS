@@ -186,26 +186,39 @@ public function Obtains      ( $DB , $TABLE , $PUID , $RUID                ) {
 //   PUID  : 人物長編號
 //   RUID  : 角色長編號
 //////////////////////////////////////////////////////////////////////////////
-public function Update  ( $DB , $TABLE , $PUID , $RUID                     ) {
+public function Update       ( $DB , $TABLE , $PUID , $RUID                ) {
   ////////////////////////////////////////////////////////////////////////////
-  $DB      -> LockWrite ( $TABLE                                           ) ;
+  $DB        -> LockWrite    ( $TABLE                                      ) ;
   ////////////////////////////////////////////////////////////////////////////
-  $QQ       = "delete from {$TABLE}"                                         .
-              " where `uuid` = {$PUID} and `acting` = {$RUID} ;"             ;
-  $DB      -> Query     ( $QQ                                              ) ;
+  $QQ         = "delete from {$TABLE}"                                       .
+                " where `uuid` = {$PUID} and `acting` = {$RUID} ;"           ;
+  $DB        -> Query        ( $QQ                                         ) ;
   ////////////////////////////////////////////////////////////////////////////
-  foreach               ( $this -> TimeSlots as $ts                        ) {
-    $START  = $ts -> Start                                                   ;
-    $END    = $ts -> End                                                     ;
-    $STATES = $ts -> States                                                  ;
-    $QQ     = "insert into {$TABLE}"                                         .
-              " (`uuid`,`acting`,`start`,`end`,`states`)"                    .
-              " values"                                                      .
-              " ( {$PUID} , {$RUID} , {$START} , {$END} , {$STATES} ) ;"     ;
-     $DB   -> Query     ( $QQ                                              ) ;
+  if                         ( count ( $this -> TimeSlots ) > 0            ) {
+    //////////////////////////////////////////////////////////////////////////
+    $VALUES   = array        (                                             ) ;
+    //////////////////////////////////////////////////////////////////////////
+    foreach                  ( $this -> TimeSlots as $ts                   ) {
+      ////////////////////////////////////////////////////////////////////////
+      $START  = $ts -> Start                                                 ;
+      $END    = $ts -> End                                                   ;
+      $STATES = $ts -> States                                                ;
+      $LINE   = "({$PUID},{$RUID},{$START},{$END},{$STATES})"                ;
+      ////////////////////////////////////////////////////////////////////////
+      array_push             ( $VALUES , $LINE                             ) ;
+      ////////////////////////////////////////////////////////////////////////
+    }                                                                        ;
+    //////////////////////////////////////////////////////////////////////////
+    $VAL      = implode      ( "," , $VALUES                               ) ;
+    //////////////////////////////////////////////////////////////////////////
+    $QQ       = "insert into {$TABLE}"                                       .
+                " (`uuid`,`acting`,`start`,`end`,`states`)"                  .
+                " values {$VAL} ;"                                           ;
+    $DB      -> Query        ( $QQ                                         ) ;
+    //////////////////////////////////////////////////////////////////////////
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
-  $DB -> UnlockTables   ( $TABLE                                           ) ;
+  $DB        -> UnlockTables ( $TABLE                                      ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // 判斷時段是否存在
