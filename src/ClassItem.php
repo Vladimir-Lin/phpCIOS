@@ -340,29 +340,26 @@ public function setTutor($ST)
   $this -> States = intval ( ( $ST * 1000 ) + $SS , 10 ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function TutorStates()
-{
-  $ST = $this -> States             ;
-  return intval ( $ST / 1000 , 10 ) ;
+public function TutorStates (                                              ) {
+  $ST = $this -> States                                                      ;
+  return intval             ( $ST / 1000 , 10                              ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function TutorString()
-{
-  global $TutorWeekly            ;
-  $TS = $this -> TutorStates ( ) ;
-  return $TutorWeekly [ $TS ]    ;
+public function TutorString  (                                             ) {
+  global $TutorWeekly                                                        ;
+  $TS = $this -> TutorStates (                                             ) ;
+  return $TutorWeekly        [ $TS                                         ] ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function TutorListing()
-{
-  global $TutorWeekly                                      ;
-  $JSC = "ClassStates(this.value,'tutor','$this->Uuid') ;" ;
-  $SS  = $this -> TutorStates (                     )      ;
-  $HS  = new HtmlTag          (                     )      ;
-  $HS -> setTag               ( "select"            )      ;
-  $HS -> addOptions           ( $TutorWeekly , $SS  )      ;
-  $HS -> AddPair              ( "onchange"   , $JSC )      ;
-  return $HS                                               ;
+public function TutorListing  (                                            ) {
+  global $TutorWeekly                                                        ;
+  $JSC = "ClassStates(this.value,'tutor','$this->Uuid') ;"                   ;
+  $SS  = $this -> TutorStates (                                            ) ;
+  $HS  = new HtmlTag          (                                            ) ;
+  $HS -> setTag               ( "select"                                   ) ;
+  $HS -> addOptions           ( $TutorWeekly , $SS                         ) ;
+  $HS -> AddPair              ( "onchange"   , $JSC                        ) ;
+  return $HS                                                                 ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function setPeriod($PERIODE)
