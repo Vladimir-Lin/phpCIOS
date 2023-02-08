@@ -1865,11 +1865,11 @@ public static function GetPublicEventsByType ( $DB                           ,
   ////////////////////////////////////////////////////////////////////////////
   $QQ    = "select `uuid` from {$TABLE}"                                     .
            " where ( `used` = 1 )"                                           .
-             " and ( `type` = {$TYPE} )"                                     .
+             " and ( `type` in ( {$TYPE} ) )"                                .
            " and ( {$C1} or {$C2} or {$C3} or {$C4} )"                       .
            " order by `start` asc ;"                                         ;
   ////////////////////////////////////////////////////////////////////////////
-  return $DB -> ObtainUuids ( $QQ )                                          ;
+  return $DB -> ObtainUuids                  ( $QQ                         ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 // 取得個人行事曆事件列表
