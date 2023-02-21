@@ -2067,6 +2067,23 @@ public static function PublicEventItem ( $DB                                 ,
     // 月薪日
     //////////////////////////////////////////////////////////////////////////
     case 16                                                                  :
+      ////////////////////////////////////////////////////////////////////////
+      $RI   -> set                  ( "first" , $PERIOD -> Uuid            ) ;
+      $RI   -> setT1                ( "Period"                             ) ;
+      $RI   -> setT2                ( "Period"                             ) ;
+      $RI   -> setRelation          ( "Equivalent"                         ) ;
+      $UX    = $RI -> Subordination ( $DB     , $RELT                      ) ;
+      if                            ( count ( $UX ) > 0                    ) {
+        $PRX -> Uuid = $UX          [ 0                                    ] ;
+        $PRX -> ObtainsByUuid       ( $DB     , $PERT                      ) ;
+        $E  = self::PaymentTermItem ( $DB                                    ,
+                                      $PEOPLE                                ,
+                                      $TZ                                    ,
+                                      $E                                     ,
+                                      $PERIOD                                ,
+                                      $PRX                                 ) ;
+      }                                                                      ;
+      ////////////////////////////////////////////////////////////////////////
     break                                                                    ;
     //////////////////////////////////////////////////////////////////////////
     // 授課期間
