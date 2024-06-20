@@ -399,10 +399,9 @@ public function obtain ( $R                                                ) {
 //////////////////////////////////////////////////////////////////////////////
 public function GetUuid ( $DB , $Table , $Main                             ) {
   ////////////////////////////////////////////////////////////////////////////
-  global $DataTypes                                                          ;
-  ////////////////////////////////////////////////////////////////////////////
   $BASE         = "3500000000000000000"                                      ;
-  $TYPE         = $DataTypes [ "Period" ]                                    ;
+  $RI           = new Relation   (                                         ) ;
+  $TYPE         = $RI -> Types [ "Period" ]                                  ;
   $this -> Uuid = $DB -> LastUuid ( $Table , "uuid" , $BASE )                ;
   if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false                   ;
   $DB -> AddUuid ( $Table , $this -> Uuid , $this -> Type )                  ;

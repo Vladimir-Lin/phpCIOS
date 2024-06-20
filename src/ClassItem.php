@@ -466,15 +466,14 @@ public function obtain($R)
   $this -> Update       = $R [ "ltime"        ] ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function GetUuid ( $DB , $Table , $Main )
-{
-  global $DataTypes                                          ;
-  $BASE         = "3600000000000000000"                      ;
-  $TYPE         = $DataTypes [ "Class" ]                     ;
-  $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE ) ;
-  if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false   ;
-  $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;
-  return $this -> Uuid                                       ;
+public function GetUuid ( $DB , $Table , $Main                             ) {
+  $BASE         = "3600000000000000000"                                      ;
+  $RI           = new Relation   (                                         ) ;
+  $TYPE         = $RI -> Types [ "Class" ]                                   ;
+  $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE )                 ;
+  if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false                   ;
+  $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )                           ;
+  return $this -> Uuid                                                       ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function UpdateItems($DB,$TABLE,$ITEMS)

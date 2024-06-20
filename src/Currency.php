@@ -318,10 +318,9 @@ public function obtain($R)
 //////////////////////////////////////////////////////////////////////////////
 public function GetUuid ( $DB , $Table , $Main )
 {
-  global $DataTypes                                          ;
   $BASE         = "7900000000000000000"                      ;
   $RI           = new Relation ( )                           ;
-  $TYPE         = $RI -> Types [ "Remittance" ]              ;
+  $TYPE         = $RI -> Types [ "Currency" ]                ;
   $this -> Uuid = $DB -> GetLast ( $Table , "uuid" , $BASE ) ;
   if ( gmp_cmp ( $this -> Uuid , "0" ) <= 0 ) return false   ;
   $DB -> AddUuid ( $Main , $this -> Uuid , $TYPE )           ;

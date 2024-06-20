@@ -318,7 +318,6 @@ public function obtain ( $R )                                                {
 }
 //////////////////////////////////////////////////////////////////////////////
 public function GetUuid ( $DB , $Table , $Main )                             {
-  global $DataTypes                                                          ;
   $BASE         = "7900000000000000000"                                      ;
   $RI           = new Relation ( )                                           ;
   $TYPE         = $RI -> Types [ "Remittance" ]                              ;

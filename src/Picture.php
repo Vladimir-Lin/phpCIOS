@@ -63,9 +63,9 @@ public function Clear ( )                                                    {
 }
 //////////////////////////////////////////////////////////////////////////////
 public function GetUuid ( $DB )                                              {
-  global $DataTypes                                                          ;
   $BASE         = "3800000000000000000"                                      ;
-  $TYPE         = $DataTypes [ "Picture" ]                                   ;
+  $RI           = new Relation   (                                         ) ;
+  $TYPE         = $RI -> Types [ "Picture" ]                                   ;
   $this -> Uuid = $DB -> GetLast ( $this -> PictureTable , "uuid" , $BASE  ) ;
   if ( gmp_cmp ( $this -> Uuid , "0" ) == 0 ) return false                   ;
   $DB -> AddUuid    ( $this -> MainTable , $this -> Uuid , $TYPE )           ;
