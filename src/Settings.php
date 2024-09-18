@@ -12,43 +12,53 @@ public $Scope                                                                ;
 public $Keyword                                                              ;
 public $Value                                                                ;
 public $Update                                                               ;
+public $Found                                                                ;
 //////////////////////////////////////////////////////////////////////////////
-function __construct  ( )                                                    {
-  parent::__construct ( )                                                    ;
-  $this -> clear      ( )                                                    ;
+function __construct  (                                                    ) {
+  ////////////////////////////////////////////////////////////////////////////
+  parent::__construct (                                                    ) ;
+  $this -> clear      (                                                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-function __destruct  ( )                                                     {
-  parent::__destruct ( )                                                     ;
+function __destruct  (                                                     ) {
+  ////////////////////////////////////////////////////////////////////////////
+  parent::__destruct (                                                     ) ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-function clear ( )                                                           {
+function clear (                                                           ) {
+  ////////////////////////////////////////////////////////////////////////////
   $this -> Id       = -1                                                     ;
   $this -> Username = ""                                                     ;
   $this -> Scope    = ""                                                     ;
   $this -> Keyword  = ""                                                     ;
   $this -> Value    = ""                                                     ;
   $this -> Update   = ""                                                     ;
+  $this -> Found    = false                                                  ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-public function assign ( $Item )                                             {
+public function assign ( $Item                                             ) {
+  ////////////////////////////////////////////////////////////////////////////
   $this -> Id       = $Item -> Id                                            ;
   $this -> Username = $Item -> Username                                      ;
   $this -> Scope    = $Item -> Scope                                         ;
   $this -> Keyword  = $Item -> Keyword                                       ;
   $this -> Value    = $Item -> Value                                         ;
   $this -> Update   = $Item -> Update                                        ;
+  $this -> Found    = $Item -> Found                                         ;
+  ////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////
-public function tableItems (                 )                               {
-  $S = array               (                 )                               ;
-  array_push               ( $S , "id"       )                               ;
-  array_push               ( $S , "username" )                               ;
-  array_push               ( $S , "scope"    )                               ;
-  array_push               ( $S , "keyword"  )                               ;
-  array_push               ( $S , "value"    )                               ;
-  array_push               ( $S , "ltime"    )                               ;
-  return $S                                                                  ;
+public function tableItems (                                               ) {
+  return                                                                     [
+    "id"                                                                     ,
+    "username"                                                               ,
+    "scope"                                                                  ,
+    "keyword"                                                                ,
+    "value"                                                                  ,
+    "ltime"                                                                ] ;
 }
 //////////////////////////////////////////////////////////////////////////////
 public function ItemPair ( $item )                                           {
@@ -141,56 +151,88 @@ public function DeleteId ( $DB , $TABLE , $ID )                              {
   return $DB -> Query ( $QQ )                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function obtainValue ( $DB , $TABLE )                                 {
-  $QQ   = "select `value` from {$TABLE}"                                     .
-          " where `username` = ?"                                            .
-               " and `scope` = ?"                                            .
-             " and `keyword` = ? ;"                                          ;
-  $qq   = $DB -> Prepare    ( $QQ              )                             ;
-  $qq  -> bind_param        ( 'sss'                                          ,
-                              $this -> Username                              ,
-                              $this -> Scope                                 ,
-                              $this -> Keyword )                             ;
-  $qq  -> execute           (                  )                             ;
-  $kk   = $qq -> get_result (                  )                             ;
+public function obtainValue   ( $DB , $TABLE                               ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> Found = false                                                     ;
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ    = "select `value` from {$TABLE}"                                    .
+           " where ( `username` = ? )"                                       .
+             " and ( `scope` = ? )"                                          .
+             " and ( `keyword` = ? ) ;"                                      ;
+  ////////////////////////////////////////////////////////////////////////////
+  $qq    = $DB -> Prepare     ( $QQ                                        ) ;
+  $qq   -> bind_param         ( 'sss'                                        ,
+                                $this -> Username                            ,
+                                $this -> Scope                               ,
+                                $this -> Keyword                           ) ;
+  $qq   -> execute            (                                            ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $kk    = $qq -> get_result  (                                            ) ;
+  ////////////////////////////////////////////////////////////////////////////
   if ( ! $DB -> hasResult ( $kk ) ) return ""                                ;
-  $rr   = $kk -> fetch_array ( MYSQLI_BOTH )                                 ;
-  return $rr [ 0 ]                                                           ;
+  $rr    = $kk -> fetch_array ( MYSQLI_BOTH                                ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $this -> Found = true                                                      ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $rr                  [ 0                                          ] ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function assureValue ( $DB , $TABLE , $VALUE )                        {
+public function assureValue  ( $DB , $TABLE , $VALUE                       ) {
+  ////////////////////////////////////////////////////////////////////////////
   $QQ   = "select `id` from {$TABLE}"                                        .
-          " where `username` = ?"                                            .
-               " and `scope` = ?"                                            .
-             " and `keyword` = ? ;"                                          ;
-  $qq   = $DB -> Prepare     ( $QQ                      )                    ;
+          " where ( `username` = ? )"                                        .
+            " and ( `scope` = ? )"                                           .
+            " and ( `keyword` = ? ) ;"                                       ;
+  ////////////////////////////////////////////////////////////////////////////
+  $qq   = $DB -> Prepare     ( $QQ                                         ) ;
   $qq  -> bind_param         ( 'sss'                                         ,
                                $this -> Username                             ,
                                $this -> Scope                                ,
-                               $this -> Keyword         )                    ;
-  $qq  -> execute            (                          )                    ;
-  $kk   = $qq -> get_result  (                          )                    ;
-  if                         ( $DB -> hasResult ( $kk ) )                    {
-    $rr = $kk -> fetch_array ( MYSQLI_BOTH              )                    ;
-    $ID = $rr [ 0 ]                                                          ;
+                               $this -> Keyword                            ) ;
+  $qq  -> execute            (                                             ) ;
+  $kk   = $qq -> get_result  (                                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  if                         ( $DB -> hasResult ( $kk )                    ) {
+    //////////////////////////////////////////////////////////////////////////
+    $rr = $kk -> fetch_array ( MYSQLI_BOTH                                 ) ;
+    $ID = $rr                [ 0                                           ] ;
+    //////////////////////////////////////////////////////////////////////////
     $QQ = "update {$TABLE}"                                                  .
           " set `value` = ?"                                                 .
-           " where `id` = {$ID} ;"                                           ;
-    $qq  = $DB -> Prepare      ( $QQ                    )                    ;
-    $qq -> bind_param          ( 's' , $VALUE           )                    ;
-    return $qq -> execute      (                        )                    ;
+           " where ( `id` = {$ID} ) ;"                                       ;
+    //////////////////////////////////////////////////////////////////////////
+    $qq  = $DB -> Prepare    ( $QQ                                         ) ;
+    $qq -> bind_param        ( 's' , $VALUE                                ) ;
+    //////////////////////////////////////////////////////////////////////////
+    return $qq -> execute    (                                             ) ;
+    //////////////////////////////////////////////////////////////////////////
   } else                                                                     {
+    //////////////////////////////////////////////////////////////////////////
     $QQ = "insert into {$TABLE}"                                             .
           " (`username`,`scope`,`keyword`,`value`)"                          .
           " values (?,?,?,?) ;"                                              ;
-    $qq   = $DB -> Prepare     ( $QQ                    )                    ;
-    $qq  -> bind_param         ( 'ssss'                                      ,
-                                 $this -> Username                           ,
-                                 $this -> Scope                              ,
-                                 $this -> Keyword                            ,
-                                 $VALUE                 )                    ;
-    return $qq  -> execute     (                        )                    ;
+    //////////////////////////////////////////////////////////////////////////
+    $qq   = $DB -> Prepare   ( $QQ                                         ) ;
+    $qq  -> bind_param       ( 'ssss'                                        ,
+                               $this -> Username                             ,
+                               $this -> Scope                                ,
+                               $this -> Keyword                              ,
+                               $VALUE                                      ) ;
+    //////////////////////////////////////////////////////////////////////////
+    return $qq  -> execute   (                                             ) ;
+    //////////////////////////////////////////////////////////////////////////
   }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
+public function UpdateValueById ( $DB , $TABLE , $ID , $VALUE              ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $QQ  = "update {$TABLE} set `value` = ? where ( `id` = {$ID} ) ;"          ;
+  ////////////////////////////////////////////////////////////////////////////
+  $qq  = $DB -> Prepare         ( $QQ                                      ) ;
+  $qq -> bind_param             ( 's' , $VALUE                             ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  return $qq -> execute         (                                          ) ;
 }
 //////////////////////////////////////////////////////////////////////////////
 }
