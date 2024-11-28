@@ -222,17 +222,19 @@ public function Insert ( $DB , $Table )                                      {
   return $DB -> Query ( $QQ )                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
-public function ObtainsByEMail ( $DB , $Table )                              {
-  $U = 0                                                                     ;
-  $Q = "select `uuid` from " . $Table                                        .
-       " where `email` = '"                                                  .
-       $this -> Appellation . "' ;"                                          ;
-  $q = $DB -> Query   ( $Q )                                                 ;
-  if ( ! $DB -> hasResult ( $q ) )                                           {
+public function ObtainsByEMail ( $DB , $Table                              ) {
+  ////////////////////////////////////////////////////////////////////////////
+  $EZL   = strtolower          ( $this -> Appellation                      ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  $U     = 0                                                                 ;
+  $Q     = "select `uuid` from " . $Table                                    .
+           " where lower ( `email` ) = '{$EZL}' ;"                           ;
+  $q     = $DB -> Query        ( $Q                                        ) ;
+  if                           ( ! $DB -> hasResult ( $q                 ) ) {
     return false                                                             ;
   }                                                                          ;
-  $N = $q -> fetch_array ( MYSQLI_BOTH )                                     ;
-  $this -> Uuid = $N [ "uuid" ]                                              ;
+  $N     = $q -> fetch_array   ( MYSQLI_BOTH                               ) ;
+  $this -> Uuid = $N           [ "uuid"                                    ] ;
   return true                                                                ;
 }
 //////////////////////////////////////////////////////////////////////////////
