@@ -228,7 +228,7 @@ public function ObtainsByEMail ( $DB , $Table                              ) {
   ////////////////////////////////////////////////////////////////////////////
   $U     = 0                                                                 ;
   $Q     = "select `uuid` from " . $Table                                    .
-           " where lower ( `email` ) = '{$EZL}' ;"                           ;
+           " where lower ( convert ( `email` using utf8 ) ) = '{$EZL}' ;"    ;
   $q     = $DB -> Query        ( $Q                                        ) ;
   if                           ( ! $DB -> hasResult ( $q                 ) ) {
     return false                                                             ;
