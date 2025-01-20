@@ -395,7 +395,7 @@ public function getReceiveMessage ( $DB , $PUID , $DEFAULT = 1             ) {
                                     "ReceiveMessage"                       ) ;
   $RMC       = $PQ -> Fetch       ( $DB , "value" , $EUID , $PUID          ) ;
   ////////////////////////////////////////////////////////////////////////////
-  if                              ( strlen ( $RMC ) > 0                    ) {
+  if                              ( strlen ( "{$RMC}" ) > 0                ) {
     $RECEIVE = intval             ( $RMC , 10                              ) ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
@@ -423,7 +423,7 @@ public function getUseOnClasses   ( $DB , $PUID , $DEFAULT = 1             ) {
                                     "UseOnClasses"                         ) ;
   $RMC       = $PQ -> Fetch       ( $DB , "value" , $EUID , $PUID          ) ;
   ////////////////////////////////////////////////////////////////////////////
-  if                              ( strlen ( $RMC ) > 0                    ) {
+  if                              ( strlen ( "{$RMC}" ) > 0                ) {
     $RECEIVE = intval             ( $RMC , 10                              ) ;
   }                                                                          ;
   ////////////////////////////////////////////////////////////////////////////
